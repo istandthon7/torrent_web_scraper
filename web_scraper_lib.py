@@ -310,6 +310,6 @@ class Programs:
   def __init__(self):
     settings = Settings()
 
-    with open(settings.data["program-list"],"r", encoding='utf-8') as json_file:
+    with open(os.path.realpath(os.path.dirname(__file__))+"/"+settings.data["program-list"],"r", encoding='utf-8') as json_file:
       self.data = json.load(json_file)
 
