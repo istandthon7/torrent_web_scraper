@@ -37,3 +37,7 @@ torrent_web_scraper는 파이썬3 기반으로 작성되었으며, 리눅스 기
 
 [torrent_web_scraper 설치 및 사용법](https://geeksvoyage.com/raspberry%20pi/torrent-web-scraper/) 보러가기
 
+web_scraper_daum_movie.py: 다음영화 관련 파싱 라이브러리  
+movie_title_scraper.py: 다음 인기영화 스크래퍼  
+"movie_list.txt": 다운받을 영화들, web_scraper_settings.json파일의 movie->list에서 설정     
+
