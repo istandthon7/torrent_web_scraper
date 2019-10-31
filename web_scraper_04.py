@@ -123,7 +123,7 @@ class site_scraper:
         if len(tag)>0:
 
           magnet = tag[0].get('href')
-          print("info, getmagnetDataFromPageUrl magnet = %s" % magnet)
+          #print("info, getmagnetDataFromPageUrl magnet = %s" % magnet)
 
 #        sys.exit()
 

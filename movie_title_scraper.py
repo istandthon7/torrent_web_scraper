@@ -14,7 +14,7 @@ if __name__ == '__main__':
     SETTING_PATH = os.path.realpath(os.path.dirname(__file__))+"/"
     SETTING_FILE = SETTING_PATH+"web_scraper_settings.json"
     HISTORY_FILE = SETTING_PATH+"web_scraper_history.csv"
-    MOVIE_TITLES = SETTING_PATH+"movie_titles.txt"
+    #MOVIE_TITLES = SETTING_PATH+"movie_titles.txt"
     runTime = dtime.now().strftime("%Y-%m-%d %H:%M:%S")
     #print( "%s %s is going to work at %s. %s" % (os.path.basename(__file__),
     #    __version__, runTime, sys.getdefaultencoding()) )

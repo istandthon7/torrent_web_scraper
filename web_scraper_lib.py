@@ -8,7 +8,7 @@ import sys
 import re
 import json
 import os.path
-import web_scraper_program_list
+from pathlib import Path
 
 categoryList = [ "kortv_ent", "kortv_social", "kortv_dra", "movie" ]
 
@@ -63,10 +63,13 @@ def checkVersionWithTitle(release, targetString):
 
 def checkTitleWithProgramList(targetString):
     targetString = targetString.lower()
-    for prog in web_scraper_program_list.title_list:
-        title = prog[0]
-        resolution = prog[1]
-        release = prog[2]
+
+    programs = Programs()
+
+    for prog in programs['title_list']:
+        title = prog['name']
+        resolution = prog['option']
+        release = prog['option2']
         #print(title, resolution, release, targetString)
 
         if not checkTitleWithTitle(title, targetString):
@@ -185,8 +188,8 @@ def get_id_transmission_remote(JD, session_id, torrent_title):
     }
 
     res = rpc(JD, payload, session_id)
-
-    for torrent in res.json()["arguments"]["torrents"]:
+    #print("info, get_id_transmission_remote res\n", res)
+    for torrent in res["arguments"]["torrents"]:
         if torrent["name"] == torrent_title:
             return torrent["id"]
 
@@ -203,7 +206,7 @@ def get_files_torrent_remote(JD, session_id, torrent_id):
 
     res = rpc(JD, payload, session_id)
 
-    for torrent in res.json()["arguments"]["torrents"]:
+    for torrent in res["arguments"]["torrents"]:
         if torrent["id"] == torrent_id:
             return torrent["files"]
 
@@ -248,18 +251,29 @@ def rpc(JD, payload, session_id):
     headers.update(session_id)
     #print("info, rpc header = ", headers)
 
-    print("info, rpc payload = \n", json.dumps(payload, indent=4))
+    #print("info, rpc payload = \n", json.dumps(payload, indent=4))
     response = requests.post(
         url, data=json.dumps(payload), headers=headers).json()
 
     #print("info, rpc resonse =", response.text)
 
-    print("info, rpc response = \n", json.dumps(response, indent=4))
+    #print("info, rpc response = \n", json.dumps(response, indent=4))
     assert response["result"] == "success"
     #assert response["jsonrpc"]
     #assert response["id"] == 0
 
     return response
+
+def create(path):
+    p = Path(path)
+    if p.is_file() == False:
+      f = open(path, "w+")
+      f.close()
+      return True
+    return False
+
+
+
 
 class JsonParser:
     def __init__(self, setfileName):
@@ -281,3 +295,18 @@ class JsonParser:
         with open(self.JsonFile, 'w', encoding='utf-8') as dataFile:
             self.data[key] = value
             json.dump(self.data, dataFile, sort_keys = True, ensure_ascii=False, indent = 4)
+
+class Settings:
+  def __init__(self)
+    SETTING_PATH = os.path.realpath(os.path.dirname(__file__))+"/"
+    SETTING_FILE = SETTING_PATH+"web_scraper_settings.json"
+    JP = JsonParser(SETTING_FILE)
+    self.data = JP.data
+
+class Programs:
+  def __init__(self)
+    settings = Settings()
+
+    with open(settings.data["program-list"]) as json_file
+      self.data = json.load(json_file)
+

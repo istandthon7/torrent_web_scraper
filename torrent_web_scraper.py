@@ -102,8 +102,8 @@ if __name__ == '__main__':
                         #print("needKeepgoing2 --> break")
                         break
 
-                    print("info: parse info=\t[%s][%s][%d][p. %d] - %s" % \
-                            (scraper.sitename, cateIdx, boardIdNum, count, title))
+                    #print("info: parse info=\t[%s][%s][%d][p. %d] - %s" % \
+                    #        (scraper.sitename, cateIdx, boardIdNum, count, title))
 
                     magnet = scraper.getmagnetDataFromPageUrl(href)
                     #print("\t%s" % magnet)
@@ -133,6 +133,8 @@ if __name__ == '__main__':
                         if not matched_name in line:
                           buffer += line
                         else:
+                          # 영화리스트 파일에 매치되어 파일에 기록하지 않으니 다운받았다는 메시지다.
+                          # 영화는 자주 다운로드 하지 않으니 일단 로그 놔두고, 메일 받는 것으로 하자.
                           print("info, main contain, matched_name = %s, line = %s" % (matched_name, line))
                       f.close()
 
