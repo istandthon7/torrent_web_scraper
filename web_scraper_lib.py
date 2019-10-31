@@ -10,7 +10,7 @@ import json
 import os.path
 from pathlib import Path
 
-categoryList = [ "kortv_ent", "kortv_social", "kortv_dra", "movie" ]
+#categoryList = [ "kortv_ent", "kortv_social", "kortv_dra", "movie" ]
 
 def getBsObj(addr):
     req = Request(addr, headers={'User-Agent': 'Mozilla/5.0'})
@@ -66,7 +66,7 @@ def checkTitleWithProgramList(targetString):
 
     programs = Programs()
 
-    for prog in programs['title_list']:
+    for prog in programs.data['title_list']:
         title = prog['name']
         resolution = prog['option']
         release = prog['option2']
@@ -279,7 +279,7 @@ class JsonParser:
     def __init__(self, setfileName):
         self.JsonFile = setfileName
         try:
-            dataFile = open(self.JsonFile, 'r')
+            dataFile = open(self.JsonFile, 'r', encoding='utf-8')
         except FileNotFoundError as e:
             print(str(e))
             print("Please, set your file path.")
@@ -295,18 +295,21 @@ class JsonParser:
         with open(self.JsonFile, 'w', encoding='utf-8') as dataFile:
             self.data[key] = value
             json.dump(self.data, dataFile, sort_keys = True, ensure_ascii=False, indent = 4)
+    def write(self):
+        with open(self.JsonFile, 'w', encoding='utf-8') as dataFile:
+            json.dump(self.data, dataFile, sort_keys = True, ensure_ascii=False, indent = 4)
 
 class Settings:
-  def __init__(self)
+  def __init__(self):
     SETTING_PATH = os.path.realpath(os.path.dirname(__file__))+"/"
     SETTING_FILE = SETTING_PATH+"web_scraper_settings.json"
     JP = JsonParser(SETTING_FILE)
     self.data = JP.data
 
 class Programs:
-  def __init__(self)
+  def __init__(self):
     settings = Settings()
 
-    with open(settings.data["program-list"]) as json_file
+    with open(settings.data["program-list"],"r", encoding='utf-8') as json_file:
       self.data = json.load(json_file)
 

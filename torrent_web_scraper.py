@@ -2,10 +2,7 @@
 from datetime import datetime as dtime
 import os
 import sys
-import web_scraper_01
-import web_scraper_02
-import web_scraper_03
-import web_scraper_04
+import web_scraper_tofiles
 import web_scraper_lib
 
 __version__ = 'v1.00'
@@ -26,14 +23,8 @@ if __name__ == '__main__':
     # This list is to scrap websites.
     siteList = []
 
-    if JD.get('enable-torrentboza') == "True":
-        siteList.append(web_scraper_01)
-    if JD.get('enable-torrentmap') == "True":
-        siteList.append(web_scraper_02)
-    if JD.get('enable-torrentdal') == "True":
-        siteList.append(web_scraper_03)
-    if  JD.get('enable-torrentwal') == "True":
-        siteList.append(web_scraper_04)
+    if  JD.get('tofiles').get("enable") == "True":
+        siteList.append(web_scraper_tofiles)    
 
     if len(siteList) == 0:
         print("Wrong, we should choice at least one analyzer.")
@@ -48,17 +39,18 @@ if __name__ == '__main__':
             continue
 
         #Step 2. Iterate category for this site
-        for cateIdx in web_scraper_lib.getCateList():
-
-        #Step 3. setup Latest Id for this site/this category
+        for index, category in enumerate(JD.get("tofiles").get("category")):
+            cateIdx = category.get("idx")
+            #Step 3. setup Latest Id for this site/this category
             needNewLatestId = True
             #print("scraping [%s][%s]" % (scraper.sitename, cateIdx))
 
-        #Step 4. iterate page (up to 10) for this site/this category
+            #Step 4. iterate page (up to 10) for this site/this category
             for count in range(1, webpage_max+1):
                 needKeepgoing = True
-                cateIdxNo = web_scraper_lib.getCateIdxFromStr(cateIdx)
-                url = scraper.getScrapUrl(cateIdxNo, count)
+                #cateIdxNo = web_scraper_lib.getCateIdxFromStr(cateIdx)
+                #scraper.getScrapUrl(cateIdxNo, count)
+                url = category.get("url") + "&page="+str(count)
                 boardList = scraper.getParseData(url)
 
                 #print("info: url=%s" % url)
@@ -83,11 +75,11 @@ if __name__ == '__main__':
 
                     #boardList의 첫 게시물의 id를 확인
                     if num == 1:
-                        if not (scraper.needKeepGoing(cateIdx, boardIdNum)):
+                        if (category['history']> boardIdNum):
                             needKeepgoing = False
                             #print("needKeepgoing is false --> break \tcateIdx=%s,boardIdNum=%s" % (cateIdx,boardIdNum))
                             break
-                    if cateIdx =="movie":
+                    if cateIdx.find("movie")>-1:
                       matched_name = web_scraper_lib.checkTitleWithMovieList(title, MOVIE_LIST_FILE, \
                         JD.get("movie").get("video_codec"), JD.get("movie").get("resolution"), dtime.now().strftime("%Y") )
                     else:
@@ -97,7 +89,7 @@ if __name__ == '__main__':
                         #print("info main matched_name ", title)
                         continue
 
-                    if not (scraper.needKeepGoing(cateIdx, boardIdNum)):
+                    if (category['history']> boardIdNum):
                         needKeepgoing = False
                         #print("needKeepgoing2 --> break")
                         break
@@ -150,7 +142,7 @@ if __name__ == '__main__':
                 if not needKeepgoing:
                     break
 
-        #Step 5. save scrap ID
-            scraper.saveNewLatestIDwithCate(cateIdx, newLatestId)
-
-    sys.exit()
+            #Step 5. save scrap ID
+            #scraper.saveNewLatestIDwithCate(cateIdx, newLatestId)
+            JD.data["tofiles"]["category"][index]["history"]=newLatestId
+            JD.write()
