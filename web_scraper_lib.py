@@ -132,7 +132,7 @@ def check_magnet_history(csv_file, magnet):
         ff = csv.reader(f)
         for row in ff:
             if magnet == row[3]:
-                print("\t\t-> magnet was already downloaded at web_scraper_history.csv")
+                #print("\t\t-> magnet was already downloaded at web_scraper_history.csv")
                 return True
     return False
 
