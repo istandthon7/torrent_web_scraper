@@ -104,7 +104,7 @@ if __name__ == '__main__':
                     if web_scraper_lib.check_magnet_history(HISTORY_FILE, magnet):
                         continue
 
-                    if cateIdx =="movie":
+                    if cateIdx.find("movie")>-1:
                       download_dir=JD.get("movie").get("download")
                     else:
                       download_dir=JD.get("download-base")+"/"+matched_name
