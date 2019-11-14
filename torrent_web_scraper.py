@@ -24,7 +24,7 @@ if __name__ == '__main__':
     siteList = []
 
     if  JD.get('tofiles').get("enable") == "True":
-        siteList.append(web_scraper_tofiles)    
+        siteList.append(web_scraper_tofiles)
 
     if len(siteList) == 0:
         print("Wrong, we should choice at least one analyzer.")
@@ -68,6 +68,7 @@ if __name__ == '__main__':
                     if needNewLatestId:
                         newLatestId = scraper.get_wr_id(href)
                         if newLatestId > 0:
+                            #웹페이지상의 게시판번호와 실제 게시물번호는 다를 수 있음
                             #print("We set up for new latest ID %d." % newLatestId)
                             needNewLatestId = False
                         else:
@@ -115,7 +116,7 @@ if __name__ == '__main__':
                     session_id = web_scraper_lib.get_session_id_torrent_rpc(JD)
                     web_scraper_lib.add_magnet_transmission_remote(magnet, JD, download_dir, session_id)
 
-                    if cateIdx == "movie":
+                    if cateIdx.find("movie")>-1:
                       #movie_list에서 삭제하기
                       f = open(MOVIE_LIST_FILE, "r", encoding="utf-8")
                       lines = f.readlines()
@@ -123,11 +124,12 @@ if __name__ == '__main__':
                       for line in lines:
                         #print("info, main matched_name = %s, line = %s" % (matched_name, line))
                         if not matched_name in line:
+                          #print("info, not contain: main matched_name = %s, line = %s" % (matched_name, line))
                           buffer += line
                         else:
                           # 영화리스트 파일에 매치되어 파일에 기록하지 않으니 다운받았다는 메시지다.
                           # 영화는 자주 다운로드 하지 않으니 일단 로그 놔두고, 메일 받는 것으로 하자.
-                          print("info, main contain, matched_name = %s, line = %s" % (matched_name, line))
+                          print("info, remove in movie_list, matched_name = %s, line = %s" % (matched_name, line))
                       f.close()
 
                       f = open(MOVIE_LIST_FILE, "w", encoding="utf-8")

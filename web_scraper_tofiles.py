@@ -43,7 +43,7 @@ class site_scraper:
 
             startp = tmp+len(checkStr)
             endp = startp
-           
+
             for endp in range(startp,len(url)):
                 if (url[endp]).isdigit():
                     continue

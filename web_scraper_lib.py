@@ -43,23 +43,16 @@ def checkTitleWithTitle(title, targetString):
     return True
 
 def checkResolutionWithTitle(resolution, targetString):
-    if resolution[0] == None:
-        return True
-
-    for tmp in resolution:
-        if tmp in targetString:
-            return True
-    return False
+  if resolution.lower() in targetString:
+    return True
+  return False
 
 def checkVersionWithTitle(release, targetString):
-    if release[0]  == None:
-        return True
-
-    for tmp in release:
-        tmp = tmp.lower()
-        if tmp in targetString:
-            return True
-    return False
+  if release.lower() in targetString:
+    #print("checkVersionWithTitle, return True, release: "+release+", targetString: "+targetString)
+    return True
+  #print("checkVersionWithTitle, return False, release: "+release+", targetString: "+targetString)
+  return False
 
 def checkTitleWithProgramList(targetString):
     targetString = targetString.lower()
