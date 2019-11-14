@@ -97,13 +97,11 @@ if __name__ == '__main__':
                         for keyword in JD.get("mail-noti").get("keywords"):
                           #print("noti keyword: "+keyword)
                           if keyword in title:
-                            
                             #print("mail noti: "+email)
                             cmd = JD.get("mail-noti").get("cmd")
-                            
                             cmd = cmd.replace("$board_title", title)
                             cmd = cmd.replace("$address",email)
-                            subprocess.run(cmd)
+                            subprocess.call(cmd, shell=True)
                         continue
 
                     if (category['history']> boardIdNum):
