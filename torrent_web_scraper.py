@@ -100,11 +100,10 @@ if __name__ == '__main__':
                             
                             #print("mail noti: "+email)
                             cmd = JD.get("mail-noti").get("cmd")
-                            bin = cmd.split(' ', 1)[0]
-                            param = cmd.replace(bin,"")
-                            param = param.replace("$board_title", title)
-                            param = param.replace("$address",email)
-                            subprocess.run([bin, param])
+                            
+                            cmd = cmd.replace("$board_title", title)
+                            cmd = cmd.replace("$address",email)
+                            subprocess.run(cmd)
                         continue
 
                     if (category['history']> boardIdNum):
