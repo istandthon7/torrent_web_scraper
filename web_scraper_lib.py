@@ -43,11 +43,15 @@ def checkTitleWithTitle(title, targetString):
     return True
 
 def checkResolutionWithTitle(resolution, targetString):
+  if resolution == "":
+    return True
   if resolution.lower() in targetString:
     return True
   return False
 
 def checkVersionWithTitle(release, targetString):
+  if release=="":
+    return True
   if release.lower() in targetString:
     #print("checkVersionWithTitle, return True, release: "+release+", targetString: "+targetString)
     return True
@@ -282,7 +286,9 @@ class JsonParser:
             dataFile.close()
 
     def get(self, key):
-        return (self.data[key])
+      if key not in self.data:
+        return ""
+      return (self.data[key])
 
     def set(self, key, value):
         with open(self.JsonFile, 'w', encoding='utf-8') as dataFile:

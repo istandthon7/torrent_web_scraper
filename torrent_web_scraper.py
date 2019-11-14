@@ -4,6 +4,7 @@ import os
 import sys
 import web_scraper_tofiles
 import web_scraper_lib
+import subprocess
 
 __version__ = 'v1.00'
 
@@ -88,6 +89,22 @@ if __name__ == '__main__':
 
                     if not matched_name:
                         #print("info main matched_name ", title)
+                        if JD.get("mail-noti")=="":
+                          continue;
+                        email = JD.get("mail-noti").get("address")
+                        if email =="":
+                          continue;
+                        for keyword in JD.get("mail-noti").get("keywords"):
+                          #print("noti keyword: "+keyword)
+                          if keyword in title:
+                            
+                            #print("mail noti: "+email)
+                            cmd = JD.get("mail-noti").get("cmd")
+                            bin = cmd.split(' ', 1)[0]
+                            param = cmd.replace(bin,"")
+                            param = param.replace("$board_title", title)
+                            param = param.replace("$address",email)
+                            subprocess.run([bin, param])
                         continue
 
                     if (category['history']> boardIdNum):

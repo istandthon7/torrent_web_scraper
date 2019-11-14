@@ -10,11 +10,12 @@ __version__ = 'v1.00'
 if __name__ == '__main__':
 
     SETTING_PATH = os.path.realpath(os.path.dirname(__file__))+"/"
-    SETTING_FILE = SETTING_PATH+"web_scraper_settings_test.json"
+    SETTING_FILE = SETTING_PATH+"web_scraper_settings.json"
     progarm_file_name="web_scraper_program_list.json"
     PROGRAM_FILE = SETTING_PATH+progarm_file_name
     default_download="/home/pi"
     default_movie_list= "movie_list.txt"
+    mainUrl = "https://tofiles8.net"
     runTime = dtime.now().strftime("%Y-%m-%d %H:%M:%S")
     #print("%s %s is going to work at %s. %s" % (os.path.basename(__file__),
     #    __version__, runTime,sys.getdefaultencoding()) )
@@ -49,22 +50,30 @@ if __name__ == '__main__':
 
       data["program-list"]=progarm_file_name
 
+      mail_noti={}
+      mail_noti['address']="email@address.com"
+      mail_noti["keywords"]=["관심키워드","키워드2"]
+      mail_noti["cmd"]="email_sender.sh '$board_title' '등록한 키워드가 포함된 프로그램입니다.' $address"
+      data['mail-noti']=mail_noti
+
       data['tofiles']={}
+      data['tofiles']['mainUrl']=mainUrl
+      data['tofiles']['enable']="True"
       data['tofiles']['category']=[]
-      data['tofiles']['category'].append({"history": 0,"idx": "torrent_kortv_ent","name": "예능","url": "https://tofiles7.net/bbs/board.php?bo_table=torrent_kortv_ent"})
-      data['tofiles']['category'].append({"history": 0,"idx": "torrent_kortv_social","name": "다큐","url": "https://tofiles7.net/bbs/board.php?bo_table=torrent_kortv_social"})
-      data['tofiles']['category'].append({"history": 0,"idx": "torrent_kortv_drama","name": "드라마","url": "https://tofiles7.net/bbs/board.php?bo_table=torrent_kortv_drama"})
+      data['tofiles']['category'].append({"history": 0,"idx": "torrent_kortv_ent","name": "예능","url": mainUrl+"/bbs/board.php?bo_table=torrent_kortv_ent"})
+      data['tofiles']['category'].append({"history": 0,"idx": "torrent_kortv_social","name": "다큐","url": mainUrl+"/bbs/board.php?bo_table=torrent_kortv_social"})
+      data['tofiles']['category'].append({"history": 0,"idx": "torrent_kortv_drama","name": "드라마","url": mainUrl+"/bbs/board.php?bo_table=torrent_kortv_drama"})
       data['tofiles']['category'].append({
                 "history": 0,
                 "idx": "torrent_movie_kor",
                 "name": "한국영화",
-                "url": "https://tofiles7.net/bbs/board.php?bo_table=torrent_movie_kor"
+                "url": mainUrl+"/bbs/board.php?bo_table=torrent_movie_kor"
             })
       data['tofiles']['category'].append({
                 "history": 0,
                 "idx": "torrent_movie_eng",
                 "name": "외국영화",
-                "url": "https://tofiles7.net/bbs/board.php?bo_table=torrent_movie_eng"
+                "url": mainUrl+"/bbs/board.php?bo_table=torrent_movie_eng"
             })
       with open(SETTING_FILE, 'w', encoding='utf-8') as dataFile:
         json.dump(data, dataFile, sort_keys = True, ensure_ascii=False, indent = 4)
