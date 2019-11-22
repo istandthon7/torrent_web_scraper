@@ -3,8 +3,10 @@ from datetime import datetime as dtime
 import os
 import sys
 import web_scraper_tofiles
+import web_scraper_torrentwal
 import web_scraper_lib
 import subprocess
+import time
 
 __version__ = 'v1.00'
 
@@ -19,28 +21,30 @@ if __name__ == '__main__':
 
     JD = web_scraper_lib.JsonParser(SETTING_FILE)
     MOVIE_LIST_FILE = SETTING_PATH+JD.get("movie").get("list")
-    webpage_max = JD.get('page_scrwap_max')
+    webpage_max = JD.get('page_scrap_max')
 
     # This list is to scrap websites.
     siteList = []
 
-    if  JD.get('tofiles').get("enable") == "True":
-        siteList.append(web_scraper_tofiles)
+    if JD.get('tofiles').get("enable") == "True":
+      siteList.append(web_scraper_tofiles.site_scraper('tofiles',JD.get('tofiles')))
+    if JD.get('torrentwal').get("enable") == "True":
+      siteList.append(web_scraper_torrentwal.site_scraper('torrentwal',JD.get('torrentwal')))
 
     if len(siteList) == 0:
         print("Wrong, we should choice at least one analyzer.")
         sys.exit()
 
     for site in siteList:
-        scraper = site.site_scraper(JD)
+        #scraper = site.site_scraper(JD)
 
         #Step 1. test for access with main url
         #print("====================================\n=> Try to access site : ", scraper.getMainUrl())
-        if not scraper.checkMainUrl():
+        if not site.checkMainUrl():
             continue
 
         #Step 2. Iterate category for this site
-        for index, category in enumerate(JD.get("tofiles").get("category")):
+        for index, category in enumerate(site.JD.get("category")):
             cateIdx = category.get("idx")
             #Step 3. setup Latest Id for this site/this category
             needNewLatestId = True
@@ -50,9 +54,9 @@ if __name__ == '__main__':
             for count in range(1, webpage_max+1):
                 needKeepgoing = True
                 #cateIdxNo = web_scraper_lib.getCateIdxFromStr(cateIdx)
-                #scraper.getScrapUrl(cateIdxNo, count)
-                url = category.get("url") + "&page="+str(count)
-                boardList = scraper.getParseData(url)
+                #
+                url = site.getScrapUrl(category, count)
+                boardList = site.getParseData(url)
 
                 #print("info: url=%s" % url)
 
@@ -61,13 +65,13 @@ if __name__ == '__main__':
                     #print("info: board=%s" % board)
                     #게시판 제목
                     title = board.get_text().replace('\t', '').replace('\n', '')
-                    href = board.get('href').replace('..', scraper.mainUrl)
+                    href = board.get('href').replace('..', site.mainUrl)
                     #print("info: href=\t%s" % href)
-                    boardIdNum = scraper.get_wr_id(href)
+                    boardIdNum = site.get_wr_id(href)
                     #print("[%d][%d] - %s" % (num, boardIdNum, title))
 
                     if needNewLatestId:
-                        newLatestId = scraper.get_wr_id(href)
+                        newLatestId = site.get_wr_id(href)
                         if newLatestId > 0:
                             #웹페이지상의 게시판번호와 실제 게시물번호는 다를 수 있음
                             #print("We set up for new latest ID %d." % newLatestId)
@@ -112,7 +116,8 @@ if __name__ == '__main__':
                     #print("info: parse info=\t[%s][%s][%d][p. %d] - %s" % \
                     #        (scraper.sitename, cateIdx, boardIdNum, count, title))
 
-                    magnet = scraper.getmagnetDataFromPageUrl(href)
+                    magnet = site.getmagnetDataFromPageUrl(href)
+                    time.sleep(3)
                     #print("\t%s" % magnet)
 
                     #magnet was already downloaded.
@@ -153,12 +158,12 @@ if __name__ == '__main__':
                       web_scraper_lib.remove_transmission_remote(JD, session_id, matched_name)
 
                     web_scraper_lib.add_magnet_info_to_file(HISTORY_FILE,
-                            runTime, scraper.sitename, title, magnet, matched_name)
+                            runTime, site.sitename, title, magnet, matched_name)
 
                 if not needKeepgoing:
                     break
 
             #Step 5. save scrap ID
             #scraper.saveNewLatestIDwithCate(cateIdx, newLatestId)
-            JD.data["tofiles"]["category"][index]["history"]=newLatestId
+            JD.data[site.sitename]["category"][index]["history"]=newLatestId
             JD.write()

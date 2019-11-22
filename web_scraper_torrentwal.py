@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup
 import subprocess
@@ -8,17 +9,55 @@ import web_scraper_lib
 import sys
 
 class site_scraper:
-    def __init__(self, name, JD):
+    def __init__(self, name, siteJson):
         self.sitename = name
-        #self.name = name
         self.mainUrl = siteJson.get('mainUrl')
         self.JD = siteJson
 
+    def getScrapUrl(self, category, count):
+      return category.get("url").replace("1",str(count))
+
+    def saveNewLatestIDwithCate(self, category, newId):
+        tmp = self.JD.get('history')
+        if category == 'kortv_ent':
+            tmp.update(torrentwal_kortv_ent = newId)
+            self.kortv_ent_id = newId
+        elif category == 'kortv_social':
+            tmp.update(torrentwal_kortv_soc = newId)
+            self.kortv_soc_id = newId
+        elif category == 'kortv_dra':
+            tmp.update(torrentwal_kortv_dra = newId)
+            self.kortv_dra_id = newId
+        elif category == "movie":
+            tmp.update(torrentwal_movie = newId)
+            self.movie_id = newId
+        else:
+            print("Something Wrong, category = %s" % category)
+
+        self.JD.set('history', tmp)
+        return
+
+    def needKeepGoing(self, category, id):
+        tmp = None
+        if category == 'kortv_ent':
+            tmp = self.kortv_ent_id
+        elif category == 'kortv_social':
+            tmp = self.kortv_soc_id
+        elif category == 'kortv_dra':
+            tmp = self.kortv_dra_id
+        elif category == "movie":
+            tmp = self.movie_id
+        else:
+            print("Something Wrong, category = %s" % category)
+            return False
+        #print("info: tmp=%s" % tmp)
+        if id > tmp:
+            return True
+
+        return False
+
     def getMainUrl(self):
         return self.mainUrl
-
-    def getScrapUrl(category, count):
-      return category.get("url") + "&page="+str(count)
 
     def checkMainUrl(self):
         ret = web_scraper_lib.checkUrl(self.mainUrl)
@@ -27,22 +66,19 @@ class site_scraper:
     def getName(self):
         return (self.name)
 
-    def getScrapUrl(self, cateIdxNo, count):
-        return (webpage_addr[cateIdxNo]+str(count)+".htm")
-
     def getParseData(self, url):
         bsObj = web_scraper_lib.getBsObj(url)
-        nameList = bsObj.find('table', attrs={'class' : 'table table-hover'}).find_all('a',href=True)
+        nameList = bsObj.find('table', attrs={'class' : 'board_list'}).find_all('a',href=True)
         return nameList
 
-    #게시판 아이디 파싱, url을 기반으로 wr_id text를 뒤의 id parsing
+    #url을 기반으로 wr_id text를 뒤의 id parsing
     def get_wr_id(self, url):
 
-        tmp = url.rfind('wr_id=')
+        tmp = url.rfind('/')
         if (tmp < 0): # 둘다 검색 못하면 포기
             return 0
         else:
-            checkStr = 'wr_id='
+            checkStr = '/'
 
             startp = tmp+len(checkStr)
             endp = startp
@@ -53,7 +89,7 @@ class site_scraper:
                 else:
                     endp = endp-1
                     break
-        
+
             endp = endp+1
         return int((url[startp:endp]))
 
