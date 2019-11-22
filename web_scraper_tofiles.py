@@ -8,7 +8,7 @@ import web_scraper_lib
 import sys
 
 class site_scraper:
-    def __init__(self, name, JD):
+    def __init__(self, name, siteJson):
         self.sitename = name
         #self.name = name
         self.mainUrl = siteJson.get('mainUrl')
