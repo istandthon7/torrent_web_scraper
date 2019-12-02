@@ -16,7 +16,7 @@
         "video_codec": "264"
     },
     "page_scrap_max": 1,
-    "program-list": "web_scraper_program_list.json",
+    "program-list": "program_list.json",
     "tofiles": {
         "category": [
             {
