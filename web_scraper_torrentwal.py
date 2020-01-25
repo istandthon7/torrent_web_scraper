@@ -7,12 +7,15 @@ import re
 import json
 import web_scraper_lib
 import sys
+import ssl
 
 class site_scraper:
     def __init__(self, name, siteJson):
         self.sitename = name
         self.mainUrl = siteJson.get('mainUrl')
         self.JD = siteJson
+        #인증서 관련 에러
+        ssl._create_default_https_context = ssl._create_unverified_context
 
     def getScrapUrl(self, category, count):
       return category.get("url").replace("1",str(count))
