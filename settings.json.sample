@@ -1,0 +1,124 @@
+{
+    "download-base": "/home/pi",
+    "mail-noti": {
+        "address": "email@sample.com",
+        "cmd": "email_sender.sh '$board_title' '등록한 키워드가 포함된 프로그램이 토렌트사이트에 등록되었습니다..' $address",
+        "keywords": [
+            "키워드",
+            "키워드2"
+        ]
+    },
+    "movie": {
+        "download": "/home/pi",
+        "list": "movie_list.txt",
+        "ranking": 8,
+        "resolution": "1080",
+        "video_codec": "264"
+    },
+    "page_scrap_max": 1,
+    "program-list": "program_list.json",
+    "sites": [
+        {
+            "category": [
+                {
+                    "history": 0,
+                    "idx": "torrent_kortv_ent",
+                    "name": "예능",
+                    "url": "https://torrentview3.net/bbs/board.php?bo_table=enter"
+                },
+                {
+                    "history": 0,
+                    "idx": "torrent_kortv_social",
+                    "name": "다큐",
+                    "url": "https://torrentview3.net/bbs/board.php?bo_table=tv"
+                },
+                {
+                    "history": 0,
+                    "idx": "torrent_kortv_drama",
+                    "name": "드라마",
+                    "url": "https://torrentview3.net/bbs/board.php?bo_table=drama"
+                },
+                {
+                    "history": 0,
+                    "idx": "torrent_movie",
+                    "name": "영화",
+                    "url": "https://torrentview3.net/bbs/board.php?bo_table=mov"
+                }
+            ],
+            "enable": "True",
+            "mainUrl": "https://torrentview3.net/",
+            "name": "torrentview"
+        },
+        {
+            "category": [
+                {
+                    "history": 0,
+                    "idx": "torrent_kortv_ent",
+                    "name": "예능",
+                    "url": "https://tofiles8.net/bbs/board.php?bo_table=torrent_kortv_ent"
+                },
+                {
+                    "history": 0,
+                    "idx": "torrent_kortv_social",
+                    "name": "다큐",
+                    "url": "https://tofiles8.net/bbs/board.php?bo_table=torrent_kortv_social"
+                },
+                {
+                    "history": 0,
+                    "idx": "torrent_kortv_drama",
+                    "name": "드라마",
+                    "url": "https://tofiles8.net/bbs/board.php?bo_table=torrent_kortv_drama"
+                },
+                {
+                    "history": 0,
+                    "idx": "torrent_movie_kor",
+                    "name": "한국영화",
+                    "url": "https://tofiles8.net/bbs/board.php?bo_table=torrent_movie_kor"
+                },
+                {
+                    "history": 0,
+                    "idx": "torrent_movie_eng",
+                    "name": "외국영화",
+                    "url": "https://tofiles8.net/bbs/board.php?bo_table=torrent_movie_eng"
+                }
+            ],
+            "enable": "False",
+            "mainUrl": "https://tofiles8.net"
+        },
+        {
+            "category": [
+                {
+                    "history": 0,
+                    "idx": "torrent_kortv_social",
+                    "name": "시사교양",
+                    "url": "https://torrentwal.com/torrent_docu/torrent1.htm"
+                },
+                {
+                    "history": 0,
+                    "idx": "torrent_movie",
+                    "name": "영화",
+                    "url": "https://torrentwal.com/torrent_movie/torrent1.htm"
+                },
+                {
+                    "history": 0,
+                    "idx": "torrent_variety",
+                    "name": "예능",
+                    "url": "https://torrentwal.com/torrent_variety/torrent1.htm"
+                },
+                {
+                    "history": 0,
+                    "idx": "torrent_tv",
+                    "name": "드라마",
+                    "url": "https://torrentwal.com/torrent_tv/torrent1.htm"
+                }
+            ],
+            "enable": "False",
+            "mainUrl": "https://torrentwal.com",
+            "scraper": "web_scraper_torrentwal.py"
+        }
+    ],
+    "trans-host": "",
+    "trans-id": "",
+    "trans-port": "9091",
+    "trans-pw": ""
+}

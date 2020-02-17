@@ -4,6 +4,7 @@ import os
 import sys
 import web_scraper_tofiles
 import web_scraper_torrentwal
+import web_scraper_torrentview
 import web_scraper_lib
 import subprocess
 import time
@@ -13,7 +14,8 @@ __version__ = 'v1.00'
 if __name__ == '__main__':
 
     SETTING_PATH = os.path.realpath(os.path.dirname(__file__))+"/"
-    SETTING_FILE = SETTING_PATH+"web_scraper_settings.json"
+    
+    SETTING_FILE = SETTING_PATH+"settings.json.sample"
     HISTORY_FILE = SETTING_PATH+"web_scraper_history.csv"
     runTime = dtime.now().strftime("%Y-%m-%d %H:%M:%S")
     #print("%s %s is going to work at %s. %s" % (os.path.basename(__file__),
@@ -25,17 +27,21 @@ if __name__ == '__main__':
 
     # This list is to scrap websites.
     siteList = []
-
-    if JD.get('tofiles').get("enable") == "True":
-      siteList.append(web_scraper_tofiles.site_scraper('tofiles',JD.get('tofiles')))
-    if JD.get('torrentwal').get("enable") == "True":
-      siteList.append(web_scraper_torrentwal.site_scraper('torrentwal',JD.get('torrentwal')))
+    #이걸 하드코딩하지 않을 방법: 
+    
+    for index, torrent_site in enumerate(JD.get("sites")):
+      if torrent_site.get("enable") == "True":
+        siteName = torrent_site.get("name")
+        if siteName == "torrentview":
+          siteList.append(web_scraper_torrentview.site_scraper(siteName, torrent_site))
+        if siteName == 'torrentwal':
+          siteList.append(web_scraper_torrentwal.site_scraper(siteName, torrent_site))
 
     if len(siteList) == 0:
         print("Wrong, we should choice at least one analyzer.")
         sys.exit()
 
-    for site in siteList:
+    for site_index, site in enumerate(siteList):
         #scraper = site.site_scraper(JD)
 
         #Step 1. test for access with main url
@@ -158,12 +164,12 @@ if __name__ == '__main__':
                       web_scraper_lib.remove_transmission_remote(JD, session_id, matched_name)
 
                     web_scraper_lib.add_magnet_info_to_file(HISTORY_FILE,
-                            runTime, site.sitename, title, magnet, matched_name)
+                            runTime, site.name, title, magnet, matched_name)
 
                 if not needKeepgoing:
                     break
 
             #Step 5. save scrap ID
             #scraper.saveNewLatestIDwithCate(cateIdx, newLatestId)
-            JD.data[site.sitename]["category"][index]["history"]=newLatestId
+            JD.data["sites"][site_index]["category"][index]["history"]=newLatestId
             JD.write()
