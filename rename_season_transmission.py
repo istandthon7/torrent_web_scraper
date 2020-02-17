@@ -5,6 +5,7 @@ import os
 import sys
 import web_scraper_lib
 import re
+import json
 
 __version__ = 'v1.00'
 
@@ -17,7 +18,7 @@ def set_season_torrent_file(JD, torrent_title, season):
     print("info, set_season_torrent_file id = %s" % torrent_id)
 
     files = web_scraper_lib.get_files_torrent_remote(JD, session_id, torrent_id)
-#get_mp4_file_torrent_rpc(JD, torrent_id, session_id)
+    #get_mp4_file_torrent_rpc(JD, torrent_id, session_id)
     print("info set_season_torrent_file files = %s" % files)
 
     for item in files:
@@ -55,12 +56,13 @@ if __name__ == '__main__':
       for prog in data['title_list']:
 
         prog_name = prog['name']
-      #print("info, main program name = %s" % prog_name)
+        #print("info, main program name = %s, torrent_title = %s, prog length = %d" % (prog_name, torrent_title, len(prog)))
 
-      if prog_name in torrent_title and len(prog) == 4:
+        if prog_name in torrent_title and len(prog) >= 4:
 
-        print("info, main program name = %s, season = %d" % (torrent_title, prog['season']))
-        set_season_torrent_file(JD, torrent_title, prog['season'])
-
+          print("info, main program name = %s, season = %d" % (torrent_title, prog['season']))
+          set_season_torrent_file(JD, torrent_title, prog['season'])
+        #else:
+        #  print("not equal")
     sys.exit()
 

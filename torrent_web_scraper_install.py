@@ -11,8 +11,8 @@ __version__ = 'v1.00'
 if __name__ == '__main__':
 
     SETTING_PATH = os.path.realpath(os.path.dirname(__file__))+"/"
-    SETTING_FILE = SETTING_PATH+"web_scraper_settings.json"
-    progarm_file_name="web_scraper_program_list.json"
+    SETTING_FILE = SETTING_PATH+"settings.json"
+    progarm_file_name="program_list.json"
     PROGRAM_FILE = SETTING_PATH+progarm_file_name
     default_download="/home/pi"
     default_movie_list= "movie_list.txt"
@@ -35,13 +35,13 @@ if __name__ == '__main__':
       print("transmission을 설치하고 연결정보를 설정해주세요")
       print(SETTING_FILE+"에서 변경할 수 있습니다.\n")
 
-      shutil.copyfile("./web_scraper_settings.json.sample", SETTING_FILE)
+      shutil.copyfile("./settings.json.sample", SETTING_FILE)
 
     # 프로그램 파일
     isNotExist = web_scraper_lib.create(PROGRAM_FILE)
 
     if isNotExist:
-      shutil.copyfile("./web_scraper_program_list.json.sample", PROGRAM_FILE)
+      shutil.copyfile("./program_list.json.sample", PROGRAM_FILE)
 
       print("다운로드할 프로그램을 설정하세요.")
       print(PROGRAM_FILE+"에서 변경할 수 있습니다.\n")

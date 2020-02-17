@@ -17,16 +17,16 @@ torrent_web_scraper의 동작 개념도는 아래와 같습니다.
 
 ![토렌트 자동 다운로드 torrent_web_scraper 개념도](https://geeksvoyage.com/assets/images/2018-09-16-torrent-web-scraper-2-concept.jpg       )
 
-다음 명령을 실행하면 파이썬라이브러리와 web_scraper_settings.json 파일과 web_scraper_program_list.json 파일이 생성됩니다. 이를 수정해서 사용하세요.
+다음 명령을 실행하면 파이썬라이브러리와 settings.json 파일과 program_list.json 파일이 생성됩니다. 이를 수정해서 사용하세요.
  $ ./install.sh
 
-torrent_web_scraper를 실행하면, web_scraper_settings.json 파일과 web_scraper_program_list.json 파일에서 설정 내용을 
-가져옵니다. web_scraper_settings.json 파일에는 로컬 컴퓨터의 transmission 정보가 담겨있고 
-web_scraper_program_list.json 파일에는 다운로드를 진행할 TV 프로그램 정보가 담겨있습니다. 
+torrent_web_scraper를 실행하면, settings.json 파일과 program_list.json 파일에서 설정 내용을 
+가져옵니다. settings.json 파일에는 로컬 컴퓨터의 transmission 정보가 담겨있고 
+program_list.json 파일에는 다운로드를 진행할 TV 프로그램 정보가 담겨있습니다. 
 torrent_web_scraper는 다운로드할 TV 프로그램 정보가 새로 업로드 되었는지 토렌트 사이트를 검색합니다. 
 
 게시판에서 새로운 TV 프로그램 업로드가 확인되면 마그넷 정보를 읽어서 transmission으로 전달하여 다운로드를 진행합니다.
-transmission과는 rpc통신을 하므로 활성화시켜야 하며, web_scraper_settings.json파일의 "trans-"로 시작하는 부분을 설정하여야 합니다.
+transmission과는 rpc통신을 하므로 활성화시켜야 하며, settings.json파일의 "trans-"로 시작하는 부분을 설정하여야 합니다.
 
 
 torrent_web_scraper를 주기적으로 실행하게 설정해두면, 토렌트 사이트를 방문하여 새로 등록된 마그넷 파일이 있는지 확인하고,
@@ -42,5 +42,5 @@ torrent_web_scraper는 파이썬3 기반으로 작성되었으며, 리눅스 기
 
 web_scraper_daum_movie.py: 다음영화 관련 파싱 라이브러리  
 movie_title_scraper.py: 다음 인기영화 스크래퍼  
-"movie_list.txt": 다운받을 영화들, web_scraper_settings.json파일의 movie->list에서 설정     
+"movie_list.txt": 다운받을 영화들, settings.json파일의 movie->list에서 설정     
 
