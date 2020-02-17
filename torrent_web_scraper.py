@@ -15,7 +15,7 @@ if __name__ == '__main__':
 
     SETTING_PATH = os.path.realpath(os.path.dirname(__file__))+"/"
     
-    SETTING_FILE = SETTING_PATH+"settings.json.sample"
+    SETTING_FILE = SETTING_PATH+"settings.json"
     HISTORY_FILE = SETTING_PATH+"web_scraper_history.csv"
     runTime = dtime.now().strftime("%Y-%m-%d %H:%M:%S")
     #print("%s %s is going to work at %s. %s" % (os.path.basename(__file__),
@@ -95,7 +95,7 @@ if __name__ == '__main__':
                       matched_name = web_scraper_lib.checkTitleWithMovieList(title, MOVIE_LIST_FILE, \
                         JD.get("movie").get("video_codec"), JD.get("movie").get("resolution"), dtime.now().strftime("%Y") )
                     else:
-                      matched_name=web_scraper_lib.checkTitleWithProgramList(title)
+                      matched_name=web_scraper_lib.checkTitleWithProgramList(title, JD.get("program-list"))
 
                     if not matched_name:
                         #print("info main matched_name ", title)

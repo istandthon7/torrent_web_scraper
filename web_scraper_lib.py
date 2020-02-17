@@ -58,10 +58,10 @@ def checkVersionWithTitle(release, targetString):
   #print("checkVersionWithTitle, return False, release: "+release+", targetString: "+targetString)
   return False
 
-def checkTitleWithProgramList(targetString):
+def checkTitleWithProgramList(targetString, program_list_file_name):
     targetString = targetString.lower()
 
-    programs = Programs()
+    programs = Programs(program_list_file_name)
 
     for prog in programs.data['title_list']:
         title = prog['name']
@@ -298,17 +298,9 @@ class JsonParser:
         with open(self.JsonFile, 'w', encoding='utf-8') as dataFile:
             json.dump(self.data, dataFile, sort_keys = True, ensure_ascii=False, indent = 4)
 
-class Settings:
-  def __init__(self):
-    SETTING_PATH = os.path.realpath(os.path.dirname(__file__))+"/"
-    SETTING_FILE = SETTING_PATH+"web_scraper_settings.json"
-    JP = JsonParser(SETTING_FILE)
-    self.data = JP.data
-
 class Programs:
-  def __init__(self):
-    settings = Settings()
+  def __init__(self, program_list_file_name):
 
-    with open(os.path.realpath(os.path.dirname(__file__))+"/"+settings.data["program-list"],"r", encoding='utf-8') as json_file:
+    with open(os.path.realpath(os.path.dirname(__file__))+"/"+program_list_file_name,"r", encoding='utf-8') as json_file:
       self.data = json.load(json_file)
 
