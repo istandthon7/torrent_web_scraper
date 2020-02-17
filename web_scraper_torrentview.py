@@ -57,23 +57,13 @@ class site_scraper:
     def getmagnetDataFromPageUrl(self, url):
         #print("info, getmagnetDataFromPageUrl url = %s" % url)
         bsObj = web_scraper_lib.getBsObj(url)
+        # a 태그 중에 href가 magnet으로 시작하는 태그.
         tag = bsObj.findAll('a', href=re.compile('^magnet'))
-# > fieldset > ul ')
-#> li:nth-child(3)')
-#.find('div', attrs={'id' : "f_list"}).next_sibling()
-#.next_sibling()
-# > table > tr > td > a")
-#.find('div', attrs={'id' : 'main_body'}).find('table')
-#\
-#                        .find('tr').find('td')
-#.find('a', recursive=False)
-        #print("info, getmagnetDataFromPageUrl a tags %s" % a_tags)
 
         if len(tag)>0:
-
           magnet = tag[0].get('href')
           #print("info, getmagnetDataFromPageUrl magnet = %s" % magnet)
-
-#        sys.exit()
+        else:
+          magnet = ""
 
         return magnet

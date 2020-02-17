@@ -123,6 +123,8 @@ if __name__ == '__main__':
                     #        (scraper.sitename, cateIdx, boardIdNum, count, title))
 
                     magnet = site.getmagnetDataFromPageUrl(href)
+                    if magnet =="":
+                      continue
                     time.sleep(3)
                     #print("\t%s" % magnet)
 

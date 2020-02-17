@@ -110,3 +110,5 @@ venv.bak/
 /web_scraper_program_list.json
 /movie_list.txt
 /.vs
+/program_list.json
+/settings.json
