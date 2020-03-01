@@ -12,7 +12,7 @@ __version__ = 'v1.00'
 if __name__ == '__main__':
 
     SETTING_PATH = os.path.realpath(os.path.dirname(__file__))+"/"
-    SETTING_FILE = SETTING_PATH+"web_scraper_settings.json"
+    SETTING_FILE = SETTING_PATH+"settings.json"
     HISTORY_FILE = SETTING_PATH+"web_scraper_history.csv"
     #MOVIE_TITLES = SETTING_PATH+"movie_titles.txt"
     runTime = dtime.now().strftime("%Y-%m-%d %H:%M:%S")
