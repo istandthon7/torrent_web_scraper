@@ -16,7 +16,7 @@ if __name__ == '__main__':
     PROGRAM_FILE = SETTING_PATH+progarm_file_name
     default_download="/home/pi"
     default_movie_list= "movie_list.txt"
-    mainUrl = "https://tofiles8.net"
+    mainUrl = "https://jujutorrent10.com/"
     runTime = dtime.now().strftime("%Y-%m-%d %H:%M:%S")
     #print("%s %s is going to work at %s. %s" % (os.path.basename(__file__),
     #    __version__, runTime,sys.getdefaultencoding()) )
