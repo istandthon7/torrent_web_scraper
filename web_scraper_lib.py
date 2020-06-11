@@ -9,12 +9,14 @@ import re
 import json
 import os.path
 from pathlib import Path
+import ssl
 
 #categoryList = [ "kortv_ent", "kortv_social", "kortv_dra", "movie" ]
 
 def getBsObj(addr):
     req = Request(addr, headers={'User-Agent': 'Mozilla/5.0'})
-    html = urlopen(req).read().decode('utf-8','replace')
+    c = ssl._create_unverified_context()
+    html = urlopen(req, context=c).read().decode('utf-8','replace')
     data = BeautifulSoup(html, "html.parser")
     return data
 

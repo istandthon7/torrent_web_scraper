@@ -15,7 +15,7 @@ __version__ = 'v1.00'
 if __name__ == '__main__':
 
     SETTING_PATH = os.path.realpath(os.path.dirname(__file__))+"/"
-    
+
     SETTING_FILE = SETTING_PATH+"settings.json"
     HISTORY_FILE = SETTING_PATH+"web_scraper_history.csv"
     runTime = dtime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -28,8 +28,8 @@ if __name__ == '__main__':
 
     # This list is to scrap websites.
     siteList = []
-    #이걸 하드코딩하지 않을 방법: 
-    
+    #이걸 하드코딩하지 않을 방법:
+
     for index, torrent_site in enumerate(JD.get("sites")):
       if torrent_site.get("enable") == "True":
         siteName = torrent_site.get("name")

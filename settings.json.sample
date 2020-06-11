@@ -24,29 +24,29 @@
                     "history": 0,
                     "idx": "torrent_kortv_ent",
                     "name": "예능",
-                    "url": "https://torrentview3.net/bbs/board.php?bo_table=enter"
+                    "url": "https://torrentview13.net/bbs/board.php?bo_table=enter"
                 },
                 {
                     "history": 0,
                     "idx": "torrent_kortv_social",
                     "name": "다큐",
-                    "url": "https://torrentview3.net/bbs/board.php?bo_table=tv"
+                    "url": "https://torrentview13.net/bbs/board.php?bo_table=tv"
                 },
                 {
                     "history": 0,
                     "idx": "torrent_kortv_drama",
                     "name": "드라마",
-                    "url": "https://torrentview3.net/bbs/board.php?bo_table=drama"
+                    "url": "https://torrentview13.net/bbs/board.php?bo_table=drama"
                 },
                 {
                     "history": 0,
                     "idx": "torrent_movie",
                     "name": "영화",
-                    "url": "https://torrentview3.net/bbs/board.php?bo_table=mov"
+                    "url": "https://torrentview13.net/bbs/board.php?bo_table=mov"
                 }
             ],
             "enable": "True",
-            "mainUrl": "https://torrentview3.net/",
+            "mainUrl": "https://torrentview13.net/",
             "name": "torrentview"
         },
         {

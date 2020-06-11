@@ -50,7 +50,6 @@ class site_scraper:
                 else:
                     endp = endp-1
                     break
-        
             endp = endp+1
         return int((url[startp:endp]))
 
