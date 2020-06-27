@@ -6,6 +6,7 @@ import web_scraper_tofiles
 import web_scraper_torrentwal
 import web_scraper_torrentview
 import web_scraper_jujutorrent
+import web_scraper_torrentsir
 import web_scraper_lib
 import subprocess
 import time
@@ -39,6 +40,8 @@ if __name__ == '__main__':
           siteList.append(web_scraper_torrentwal.site_scraper(siteName, torrent_site))
         elif siteName == 'jujutorrent':
           siteList.append(web_scraper_jujutorrent.site_scraper(siteName, torrent_site))
+        elif siteName == "torrentsir":
+          siteList.append(web_scraper_torrentsir.site_scraper(siteName, torrent_site))
 
     if len(siteList) == 0:
         print("Wrong, we should choice at least one analyzer.")
