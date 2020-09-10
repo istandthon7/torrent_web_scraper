@@ -38,7 +38,7 @@ def set_season_torrent_file(JD, torrent_title, season):
 if __name__ == '__main__':
 
     SETTING_PATH = os.path.realpath(os.path.dirname(__file__))+"/"
-    SETTING_FILE = SETTING_PATH+"web_scraper_settings.json"
+    SETTING_FILE = SETTING_PATH+"settings.json"
     HISTORY_FILE = SETTING_PATH+"web_scraper_history.csv"
     runTime = dtime.now().strftime("%Y-%m-%d %H:%M:%S")
 
