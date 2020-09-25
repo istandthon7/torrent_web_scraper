@@ -24,29 +24,29 @@
                     "history": 0,
                     "idx": "torrent_kortv_ent",
                     "name": "예능",
-                    "url": "https://torrentsir17.com/bbs/board.php?bo_table=entertain"
+                    "url": "https://torrentsir18.com/bbs/board.php?bo_table=entertain"
                 },
                 {
                     "history": 0,
                     "idx": "torrent_kortv_social",
                     "name": "다큐",
-                    "url": "https://torrentsir17.com/bbs/board.php?bo_table=tv"
+                    "url": "https://torrentsir18.com/bbs/board.php?bo_table=tv"
                 },
                 {
                     "history": 0,
                     "idx": "torrent_kortv_drama",
                     "name": "드라마",
-                    "url": "https://torrentsir17.com/bbs/board.php?bo_table=drama"
+                    "url": "https://torrentsir18.com/bbs/board.php?bo_table=drama"
                 },
                 {
                     "history": 0,
                     "idx": "torrent_movie",
                     "name": "영화",
-                    "url": "https://torrentsir17.com/bbs/board.php?bo_table=movie"
+                    "url": "https://torrentsir18.com/bbs/board.php?bo_table=movie"
                 }
             ],
             "enable": "True",
-            "mainUrl": "https://torrentsir17.com/",
+            "mainUrl": "https://torrentsir18.com/",
             "name": "torrentsir"
         }
     ],
