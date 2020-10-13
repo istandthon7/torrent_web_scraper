@@ -10,12 +10,13 @@ import json
 import os.path
 from pathlib import Path
 import ssl
+import time
 
-#categoryList = [ "kortv_ent", "kortv_social", "kortv_dra", "movie" ]
 
 def getBsObj(addr):
-    req = Request(addr, headers={'User-Agent': 'Mozilla/5.0'})
+    req = Request(addr, headers={"user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36"})
     c = ssl._create_unverified_context()
+    time.sleep(1)
     html = urlopen(req, context=c).read().decode('utf-8','replace')
     data = BeautifulSoup(html, "html.parser")
     return data
@@ -25,7 +26,7 @@ def checkUrl(addr):
         getBsObj(addr)
     except Exception as e:
         print("Exception access url : %s" % e)
-        print("We can not scrap %s, something wrong.\n" % addr)
+        print("We can not scrap %s , something wrong.\n" % addr)
         return False
 
     return True

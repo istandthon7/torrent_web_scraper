@@ -48,10 +48,10 @@ if __name__ == '__main__':
         sys.exit()
 
     for site_index, site in enumerate(siteList):
-        #scraper = site.site_scraper(JD)
 
         #Step 1. test for access with main url
-        #print("====================================\n=> Try to access site : ", scraper.getMainUrl())
+        #print("====================================\n=> Try to access site : ", site.getMainUrl())
+
         if not site.checkMainUrl():
             continue
 
