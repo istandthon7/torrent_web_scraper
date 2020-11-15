@@ -28,9 +28,10 @@ class site_scraper:
 
     def getParseData(self, url):
         bsObj = web_scraper_lib.getBsObj(url)
-        nameList = bsObj.find('div', attrs={'class' : 'list-board'}).find_all('a', href=re.compile(".*wr_id.*"))
-        #nameList = bsObj.find('table', attrs={'class' : 'table table-hover'}).find_all('a',href=True)
-        return nameList
+        list_board_div = bsObj.find('div', attrs={'class' : 'list-board'})
+
+        if  not list_board_div is None:
+            return list_board_div.find_all('a', href=re.compile(".*wr_id.*"))
 
     #게시판 아이디 파싱, url을 기반으로 wr_id text를 뒤의 id parsing
     def get_wr_id(self, url):
