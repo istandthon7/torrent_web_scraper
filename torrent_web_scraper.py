@@ -72,6 +72,8 @@ if __name__ == '__main__':
 
                 #print("info: url=%s" % url)
 
+                if boardList is None:
+                    continue
                 #for board in boardList:
                 for num, board in enumerate(boardList, start=1):
                     #print("info: board=%s" % board)
