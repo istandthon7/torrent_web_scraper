@@ -145,6 +145,27 @@ def add_magnet_info_to_file(csv_file, runtime, sitename, title, magnet, keyword)
     f.close()
     return
 
+def check_mail_noti_history(csv_file, title):
+    if not os.path.isfile(csv_file):
+        return False
+
+    with open(csv_file, 'r', encoding="utf-8") as f:
+        ff = csv.reader(f)
+        for row in ff:
+            if title == row[2]:
+                #print("\t\t-> magnet was already downloaded at web_scraper_history.csv")
+                return True
+    return False
+
+def add_mail_noti_to_file(csv_file, runtime, sitename, title, keyword):
+
+    new = [runtime, sitename, title, keyword]
+    with open(csv_file, 'a', newline = '\n', encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow(new)
+    f.close()
+    return
+
 #X-Transmission-Session-Id
 def get_session_id_torrent_rpc(JD):
 

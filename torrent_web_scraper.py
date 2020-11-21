@@ -19,6 +19,7 @@ if __name__ == '__main__':
 
     SETTING_FILE = SETTING_PATH+"settings.json"
     HISTORY_FILE = SETTING_PATH+"web_scraper_history.csv"
+    MAIL_NOTI_HISTORY = SETTING_PATH+"mail_noti_history.csv"
     runTime = dtime.now().strftime("%Y-%m-%d %H:%M:%S")
     #print("%s %s is going to work at %s. %s" % (os.path.basename(__file__),
     #    __version__, runTime,sys.getdefaultencoding()) )
@@ -114,12 +115,16 @@ if __name__ == '__main__':
                           continue;
                         for keyword in JD.get("mail-noti").get("keywords"):
                           #print("noti keyword: "+keyword)
+
+                          if web_scraper_lib.check_mail_noti_history(MAIL_NOTI_HISTORY, title):
+                            continue
                           if keyword in title:
                             #print("mail noti: "+email)
                             cmd = JD.get("mail-noti").get("cmd")
                             cmd = cmd.replace("$board_title", title)
                             cmd = cmd.replace("$address",email)
                             subprocess.call(cmd, shell=True)
+                            web_scraper_lib.add_mail_noti_to_file(MAIL_NOTI_HISTORY, runTime, site.name, title, keyword)
                         continue
 
                     if (category['history']> boardIdNum):
