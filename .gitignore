@@ -112,3 +112,5 @@ venv.bak/
 /.vs
 /program_list.json
 /settings.json
+
+mail_noti_history.csv

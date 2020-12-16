@@ -14,7 +14,6 @@ webpage_addr = ["https://movie.daum.net/boxoffice/monthly?yyyymm="]
 
 class site_scraper:
     def __init__(self):
-#, JD):
 
         today = datetime.date.today()
         first = today.replace(day=1)
@@ -43,8 +42,9 @@ class site_scraper:
     def getParseData(self):
         bsObj = web_scraper_lib.getBsObj(self.getScrapUrl())
         #print("info, getParseData bsObj = ", bsObj)
-        nameList = bsObj.find_all('strong', attrs={'class' : 'tit_join'})
-#.find_all('a',href=True)
+        nameList = bsObj.find_all('a', attrs={'class' : 'name_movie'})
         #print("info, getParseData nameList = ", nameList)
+        if len(nameList) == 0:
+            print("web_scraper_daum_movie.py getParseData 제목 클래스가 없어요. a tag's class: name_movie")
         return nameList
 
