@@ -39,7 +39,7 @@ category와 mainUrl을 변경해 주어야 한다.
 
     "url": "https://torrentsir29.com/bbs/board.php?bo_table=entertain"
     "mainUrl": "https://torrentsir29.com/",
-사이트 자체가 폐쇄된 경우에는 [Issue](https://github.com/istandthon7/torrent_web_scraper/issues)에 등록  
+사이트 자체가 폐쇄된 경우에는 [Issue](https://github.com/istandthon7/torrent_web_scraper/issues)에 등록하여 개발자에게   
 ### 1.3 다운로드 받을 프로그램 추가(program_list.json)
 프로그램의 제목과 해상도 등은 옵션으로 추가로 지정할 수 있다. 시즌이 있는 경우 해당 숫자를 넣어주면 되고 없으면 생략해도 된다.
 
