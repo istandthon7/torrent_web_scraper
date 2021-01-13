@@ -33,6 +33,13 @@ torrent_web_scraper의 동작 개념도는 아래와 같습니다.
     "trans-id": "",
     "trans-pw": "",
     "trans-port": "9091"
+#### 1.2.3 다운받을 사이트 지정(site url) 
+일반적으로 변경하지 않아도 되지만, 도메인에 숫자가 변경되는 경우가 있을 때에는 수정해 주어야 한다. 
+category와 mainUrl을 변경해 주어야 한다.
+
+    "url": "https://torrentsir29.com/bbs/board.php?bo_table=entertain"
+    "mainUrl": "https://torrentsir29.com/",
+사이트 자체가 폐쇄된 경우에는 [Issue](https://github.com/istandthon7/torrent_web_scraper/issues)에 등록  
 ### 1.3 다운로드 받을 프로그램 추가(program_list.json)
 프로그램의 제목과 해상도 등은 옵션으로 추가로 지정할 수 있다. 시즌이 있는 경우 해당 숫자를 넣어주면 되고 없으면 생략해도 된다.
 
@@ -47,19 +54,14 @@ torrent_web_scraper.py를 실행시키면 게시판을 읽어와서 program_list
 
     $ ./torrent_web_scraper.py
 
+torrent_web_scraper를 주기적으로 실행하게 설정해두면, 토렌트 사이트를 방문하여 새로 등록된 마그넷 파일이 있는지 확인하고, 자동으로 다운로드를 해줍니다.  
+따라서 토렌트 파일이 업로드 되었는지 토렌트 사이트를 확인할 필요가 없어집니다.  
 
-torrent_web_scraper를 주기적으로 실행하게 설정해두면, 토렌트 사이트를 방문하여 새로 등록된 마그넷 파일이 있는지 확인하고,
-자동으로 다운로드를 해줍니다. 따라서 토렌트 파일이 업로드 되었는지 토렌트 사이트를 확인할 필요가 없어집니다.
+torrent_web_scraper는 파이썬3 기반으로 작성되었으며, 리눅스 기반인 우분투,데비안과 라즈베리파이(라즈비안)에서 동작을 확인하였습니다.  
 
-torrent_web_scraper는 파이썬3 기반으로 작성되었으며, 리눅스 기반인 우분투,데비안과 라즈베리파이(라즈비안)에서 동작을
-확인하였습니다.
-
-**주의** 토렌트 사이트를 웹 스크래핑하는 것은 불법이 아닙니다. 하지만, 토렌트를 사용하여 TV 프로그램 동영상을
-다운로드하는 것은 저작권을 침해하는 불법 행위입니다. 이점을 이해하고 torrent_web_scraper 스크립트를 실행 여부를 결정하세요.
-
-[https://github.com/geekdifferent/torrent_web_scraper]를 수정한 것입니다. 
+**주의** 토렌트 사이트를 웹 스크래핑하는 것은 불법이 아닙니다. 하지만, 토렌트를 사용하여 TV 프로그램 동영상을 다운로드하는 것은 저작권을 침해하는 불법 행위입니다.  
+이점을 이해하고 torrent_web_scraper 스크립트를 실행 여부를 결정하세요.  
 
 web_scraper_daum_movie.py: 다음영화 관련 파싱 라이브러리  
 movie_title_scraper.py: 다음 인기영화 스크래퍼  
 "movie_list.txt": 다운받을 영화들, settings.json파일의 movie->list에서 설정     
-
