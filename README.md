@@ -49,7 +49,7 @@ category와 mainUrl을 변경해 주어야 한다.
         "option2": "NEXT"
         "season": 1
      }
-### 1.4 다운로드 받기
+### 1.4 tv프로그램 다운로드 받기
 torrent_web_scraper.py를 실행시키면 게시판을 읽어와서 program_list.json에 등록한 tvshow를 transmission서버에 자동으로 추가되어 다운로드 받게 됩니다.
 
     $ ./torrent_web_scraper.py
