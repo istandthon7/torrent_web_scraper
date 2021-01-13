@@ -8,8 +8,8 @@ torrent_web_scraper의 자세한 소개와 사용법을 확인해보세요.
 실행 OS : 리눅스 - 우분투,데비안, 라즈베리파이(라즈비안) 등   
 실행 언어 : Python3
 
-## 1. torrent_web_scraper 소개하기
-
+## 1. torrent_web_scraper
+### 1.0 소개
 torrent_web_scraper는 매일 새로 업로드되는 예능 프로그램을 다운로드하기 위해 토렌트 사이트를 돌아다니기 귀찮아서 제작을 구상하게 되었습니다.  
 torrent_web_scraper의 동작 개념도는 아래와 같습니다.  
 
