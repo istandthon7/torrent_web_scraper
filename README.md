@@ -13,7 +13,7 @@ torrent_web_scraper의 자세한 소개와 사용법을 확인해보세요.
 torrent_web_scraper는 매일 새로 업로드되는 예능 프로그램을 다운로드하기 위해 토렌트 사이트를 돌아다니기 귀찮아서 제작을 구상하게 되었습니다.  
 torrent_web_scraper의 동작 개념도는 아래와 같습니다.  
 
-![토렌트 자동 다운로드 torrent_web_scraper 개념도](https://geeksvoyage.com/assets/images/2018-09-16-torrent-web-scraper-2-concept.jpg       )  
+![토렌트 자동 다운로드 torrent_web_scraper 개념도](https://geeksvoyage.com/assets/images/2018-09-16-torrent-web-scraper-2-concept.jpg)  
 
 ### 1.1 설치
 다음 명령을 실행하면 설치됩니다.    
@@ -34,7 +34,7 @@ torrent_web_scraper의 동작 개념도는 아래와 같습니다.
     "trans-pw": "",
     "trans-port": "9091"
 #### 1.2.3 다운받을 사이트 지정(site url) 
-일반적으로 변경하지 않아도 되지만, 도메인에 숫자가 변경되는 경우가 있을 때에는 수정해 주어야 한다. 
+일반적으로 변경하지 않아도 되지만, 도메인에 숫자가 변경되는 경우가 있을 때에는 수정해 주어야 한다.  
 category와 mainUrl을 변경해 주어야 한다.
 
     "url": "https://torrentsir29.com/bbs/board.php?bo_table=entertain"
