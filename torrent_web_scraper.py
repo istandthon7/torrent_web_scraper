@@ -148,10 +148,11 @@ if __name__ == '__main__':
                     if cateIdx.find("movie")>-1:
                       download_dir=JD.get("movie").get("download")
                     else:
-                      download_dir=JD.get("download-base")+"/"+matched_name
-                    #print(download_dir)
-                    if not os.path.exists(download_dir):
-                      os.makedirs(download_dir)
+                      download_dir=JD.get("download-base")
+                      if len(download_dir)>0:
+                        download_dir = "/"+matched_name
+                        if not os.path.exists(download_dir):
+                          os.makedirs(download_dir)
 
                     session_id = web_scraper_lib.get_session_id_torrent_rpc(JD)
                     web_scraper_lib.add_magnet_transmission_remote(magnet, JD, download_dir, session_id)
