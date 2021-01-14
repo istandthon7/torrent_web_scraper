@@ -5,6 +5,7 @@ import sys
 import web_scraper_lib
 import json
 import shutil
+from pathlib import Path
 
 __version__ = 'v1.00'
 
@@ -12,11 +13,10 @@ if __name__ == '__main__':
 
     SETTING_PATH = os.path.realpath(os.path.dirname(__file__))+"/"
     SETTING_FILE = SETTING_PATH+"settings.json"
-    progarm_file_name="program_list.json"
+    progarm_file_name = "program_list.json"
     PROGRAM_FILE = SETTING_PATH+progarm_file_name
-    default_download="~/Downloads"
-    default_movie_list= "movie_list.txt"
-    mainUrl = "https://jujutorrent10.com/"
+    default_download = str(Path.home())+"/Downloads"
+    default_movie_list = "movie_list.txt"
     runTime = dtime.now().strftime("%Y-%m-%d %H:%M:%S")
     #print("%s %s is going to work at %s. %s" % (os.path.basename(__file__),
     #    __version__, runTime,sys.getdefaultencoding()) )
@@ -36,6 +36,11 @@ if __name__ == '__main__':
       print(SETTING_FILE+"에서 변경할 수 있습니다.\n")
 
       shutil.copyfile("./settings.json.sample", SETTING_FILE)
+
+      JD = web_scraper_lib.JsonParser(SETTING_FILE)
+      JD.set("download-base", default_download)
+      JD.get("movie")["download"] = default_download
+      JD.write()
 
     # 프로그램 파일
     isNotExist = web_scraper_lib.create(PROGRAM_FILE)
