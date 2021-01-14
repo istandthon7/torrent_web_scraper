@@ -54,6 +54,7 @@ if __name__ == '__main__':
         #print("====================================\n=> Try to access site : ", site.getMainUrl())
 
         if not site.checkMainUrl():
+            print("====================================\n=> Failed to access site : ", site.getMainUrl())
             continue
 
         #Step 2. Iterate category for this site
@@ -155,6 +156,8 @@ if __name__ == '__main__':
                           os.makedirs(download_dir)
 
                     session_id = web_scraper_lib.get_session_id_torrent_rpc(JD)
+                    if session_id == None:
+                        continue
                     web_scraper_lib.add_magnet_transmission_remote(magnet, JD, download_dir, session_id)
 
                     if cateIdx.find("movie")>-1:
