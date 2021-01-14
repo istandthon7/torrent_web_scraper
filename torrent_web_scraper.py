@@ -151,7 +151,7 @@ if __name__ == '__main__':
                     else:
                       download_dir=JD.get("download-base")
                       if len(download_dir)>0:
-                        download_dir = "/"+matched_name
+                        download_dir = download_dir+"/"+matched_name
                         if not os.path.exists(download_dir):
                           os.makedirs(download_dir)
 

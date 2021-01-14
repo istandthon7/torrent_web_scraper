@@ -17,7 +17,7 @@ class site_scraper:
         return self.mainUrl
 
     def getScrapUrl(self, category, count):
-      return category.get("url") + "&page="+str(count)
+      return self.mainUrl + category.get("url") + "&page="+str(count)
 
     def checkMainUrl(self):
         ret = web_scraper_lib.checkUrl(self.mainUrl)
