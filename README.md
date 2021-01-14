@@ -12,7 +12,7 @@ tv 프로그램 제목을 추가한 후에 토렌트사이트에 새로운 에�
 
 ### 1.1 설치
 #### 1.1.1 transmission설치
-[https://transmissionbt.com](https://transmissionbt.com)에서 운영체제에 맞는 프로그램을 다운받아 설치합니다.  
+[https://transmissionbt.com](https://transmissionbt.com)에서 운영체제에 맞는 프로그램을 다운받아 설치합니다.(우분투, 데비안은 sudo apt install transmission-daemon 설정파일은  /etc/transmission-daemon/settings.json)  
 시놀로지의 경우 패키지 센터를 통해 추가할 수 있습니다.  
 
 #### 1.1.2 소스파일 다운로드
@@ -26,7 +26,7 @@ tv 프로그램 제목을 추가한 후에 토렌트사이트에 새로운 에�
 설치가 완료되면 settings.json 파일을 자신의 환경에 맞게 수정해주어야 합니다.  
 일반적으로 수정할 항목은 다음과 같습니다.  
 #### 1.2.1 다운로드 경로(tv)를 지정  
-"/home/pi"를 다운받고자 하는 경로로 변경합니다.
+다운받고자 하는 경로로 변경합니다.
 
     "download-base": "~/Downloads"
 #### 1.2.2 transmission관련 설정  
