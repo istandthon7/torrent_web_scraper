@@ -170,18 +170,23 @@ def add_mail_noti_to_file(csv_file, runtime, sitename, title, keyword):
 def get_session_id_torrent_rpc(JD):
 
     url = "http://%s:%s@%s:%s/transmission/rpc" % (JD.get('trans-id'), JD.get('trans-pw'), JD.get('trans-host'), JD.get('trans-port'))
-    res = requests.get(url)
+    try:
+        res = requests.get(url)
+        bs = BeautifulSoup(res.text, "html.parser")
+        #print("info, get_session_id_torrent_rpc bs = %s" % bs)
+        code_text = bs.find('code').text
+        #print("info, get_session_id_torrent_rpc code_text =" , code_text)
+        #X-Transmission-Session-Id: YeUFW7rotzuLHrx4TfmWCRUF6qVlPd9DcPCEUHzlBcFMXZUd
+        array = code_text.split()
+        if len(array) == 2 and array[0] == "X-Transmission-Session-Id:":
+          session_id ={ array[0].replace(":", "") : array[1]}
+          return session_id
+
+    except requests.exceptions.ConnectionError:
+        print("transmission이 실행중인 아닌 것으로 보입니다. "+url)
     #print("info, get_session_id_torrent_rpc response = ", res)
 
-    bs = BeautifulSoup(res.text, "html.parser")
-    #print("info, get_session_id_torrent_rpc bs = %s" % bs)
-    code_text = bs.find('code').text
-    #print("info, get_session_id_torrent_rpc code_text =" , code_text)
-    #X-Transmission-Session-Id: YeUFW7rotzuLHrx4TfmWCRUF6qVlPd9DcPCEUHzlBcFMXZUd
-    array = code_text.split()
-    if len(array) == 2 and array[0] == "X-Transmission-Session-Id:":
-      session_id ={ array[0].replace(":", "") : array[1]}
-      return session_id
+    
     return
 
 def add_magnet_transmission_remote(magnet_addr, JD, download_dir, session_id):
