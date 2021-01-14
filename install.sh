@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# debian
-#sudo apt update
-#sudo apt install -y python3-pip
+# ubuntu or debian
+sudo apt update
+sudo apt install -y python3-pip
 
 #alpine
 #apk add python3
