@@ -14,7 +14,7 @@ if __name__ == '__main__':
     SETTING_FILE = SETTING_PATH+"settings.json"
     progarm_file_name="program_list.json"
     PROGRAM_FILE = SETTING_PATH+progarm_file_name
-    default_download="/home/pi"
+    default_download="~/Downloads"
     default_movie_list= "movie_list.txt"
     mainUrl = "https://jujutorrent10.com/"
     runTime = dtime.now().strftime("%Y-%m-%d %H:%M:%S")
