@@ -1,5 +1,5 @@
 {
-    "download-base": "~/Downloads",
+    "download-base": "",
     "mail-noti": {
         "address": "email@sample.com",
         "cmd": "email_sender.sh '$board_title' '등록한 키워드가 포함된 프로그램이 토렌트사이트에 등록되었습니다..' $address",
@@ -9,7 +9,7 @@
         ]
     },
     "movie": {
-        "download": "~/Downloads",
+        "download": "",
         "list": "movie_list.txt",
         "ranking": 8,
         "resolution": "1080",

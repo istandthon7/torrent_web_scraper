@@ -15,7 +15,6 @@ if __name__ == '__main__':
     SETTING_FILE = SETTING_PATH+"settings.json"
     progarm_file_name = "program_list.json"
     PROGRAM_FILE = SETTING_PATH+progarm_file_name
-    default_download = str(Path.home())+"/Downloads"
     default_movie_list = "movie_list.txt"
     runTime = dtime.now().strftime("%Y-%m-%d %H:%M:%S")
     #print("%s %s is going to work at %s. %s" % (os.path.basename(__file__),
@@ -28,7 +27,7 @@ if __name__ == '__main__':
 
     # 설정파일
     if isNotExist:
-      
+
       print("기본 다운로드 경로는 "+default_download+ "입니다.")
       print(SETTING_FILE+"에서 변경할 수 있습니다.\n")
 
@@ -36,11 +35,6 @@ if __name__ == '__main__':
       print(SETTING_FILE+"에서 변경할 수 있습니다.\n")
 
       shutil.copyfile("./settings.json.sample", SETTING_FILE)
-
-      JD = web_scraper_lib.JsonParser(SETTING_FILE)
-      JD.set("download-base", default_download)
-      JD.get("movie")["download"] = default_download
-      JD.write()
 
     # 프로그램 파일
     isNotExist = web_scraper_lib.create(PROGRAM_FILE)
