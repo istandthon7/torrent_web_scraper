@@ -25,24 +25,21 @@ tv 프로그램 제목을 추가한 후에 토렌트사이트에 새로운 에�
 ### 1.2 설정파일 수정
 설치가 완료되면 settings.json 파일을 자신의 환경에 맞게 수정해주어야 합니다.  
 일반적으로 수정할 항목은 다음과 같습니다.  
-#### 1.2.1 다운로드 경로(tv)를 지정  
-다운받고자 하는 경로로 변경합니다.
-
-    "download-base": "~/Downloads"
-#### 1.2.2 transmission관련 설정  
+#### 1.2.1 transmission관련 설정  
 트랜스미션 서버의 호스트(아이피), 아이디와 패스워드, 포트를 지정합니다. (우분투의 경우 기본값이므로 변경하지 않아도 된다. 시놀로지의 경우 기본값을 변경하지 않은 경우 아이디와 비밀번호가 admin/admin으로 변경해주면 된다.)
 
     "trans-host": "127.0.0.1",
     "trans-id": "transmission",
     "trans-pw": "transmission",
     "trans-port": "9091"
-#### 1.2.3 다운받을 사이트 지정(site url) 
+#### 1.2.2 다운받을 사이트 지정(site url) 
 일반적으로 변경하지 않아도 되지만, 도메인에 숫자가 변경되는 경우가 있을 때에는 수정해 주어야 한다.  
 category와 mainUrl을 변경해 주어야 한다.
 
     "url": "https://torrentsir29.com/bbs/board.php?bo_table=entertain"
     "mainUrl": "https://torrentsir29.com/",
-사이트 자체가 폐쇄된 경우에는 [Issue](https://github.com/istandthon7/torrent_web_scraper/issues)에 등록하여 수정요청한다.     
+사이트 자체가 폐쇄된 경우에는 [Issue](https://github.com/istandthon7/torrent_web_scraper/issues)에 등록하여 수정요청한다.   
+
 ### 1.3 다운로드 받을 프로그램 추가(program_list.json)
 프로그램의 제목과 해상도 등은 옵션으로 추가로 지정할 수 있다. 시즌이 있는 경우 해당 숫자를 넣어주면 되고 없으면 생략해도 된다.
 
