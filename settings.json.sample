@@ -50,8 +50,8 @@
             "name": "torrentsir"
         }
     ],
-    "trans-host": "",
-    "trans-id": "",
+    "trans-host": "127.0.0.1",
+    "trans-id": "transmission",
     "trans-port": "9091",
-    "trans-pw": ""
+    "trans-pw": "transmission"
 }
