@@ -1,22 +1,25 @@
-TV 프로그램을 다운로드 받기 위해 매번 토렌트 사이트를 접속하며 토렌트 시드 파일 다운로드 받기가 귀찮으셨지요?  
-원하는 TV 프로그램을 토렌트 사이트에 업로드 될때마다 자동으로 다운로드해주면 얼마나 편리할까요?  
 토렌트(마그넷) 자동 다운로드 프로젝트 - torrent_web_scraper는 원하는 토렌트 파일을 자동으로 다운로드 해주는 웹스크랩퍼(웹크롤러)입니다.  
 torrent_web_scraper를 사용하면 토렌트(마그넷) 다운로드를 위해 토렌트 사이트를 방문할 필요가 없어집니다.  
-torrent_web_scraper의 자세한 소개와 사용법을 확인해보세요.  
 
 **토렌트 자동 다운로드 프로젝트 - torrent_web_scraper 실행 환경**  
-실행 OS : 리눅스 - 우분투,데비안, 라즈베리파이(라즈비안) 등   
+테스트 OS : 리눅스 - 우분투, 데비안, 라즈베리파이(라즈비안)   
 실행 언어 : Python3
 
 ## 1. torrent_web_scraper
 ### 1.0 소개
-torrent_web_scraper는 매일 새로 업로드되는 예능 프로그램을 다운로드하기 위해 토렌트 사이트를 돌아다니기 귀찮아서 제작을 구상하게 되었습니다.  
-torrent_web_scraper의 동작 개념도는 아래와 같습니다.  
-
-![토렌트 자동 다운로드 torrent_web_scraper 개념도](https://geeksvoyage.com/assets/images/2018-09-16-torrent-web-scraper-2-concept.jpg)  
+torrent_web_scraper는 매일 새로 업로드되는 tv 프로그램을 다운로드하기 위해 토렌트 사이트를 돌아다니기 귀찮아서 제작을 구상하게 되었습니다.  
+tv 프로그램 제목을 추가한 후에 토렌트사이트에 새로운 에피소드가 등록되면 [Transmission](https://transmissionbt.com)에 추가해줍니다.  
 
 ### 1.1 설치
-다음 명령을 실행하면 설치됩니다.    
+#### 1.1.1 transmission설치
+[https://transmissionbt.com](https://transmissionbt.com)에서 운영체제에 맞는 프로그램을 다운받아 설치합니다.  
+시놀로지의 경우 패키지 센터를 통해 추가할 수 있습니다.  
+
+#### 1.1.2 소스파일 다운로드
+    $ git clone https://github.com/istandthon7/torrent_web_scraper.git
+    $ cd torrent_web_scraper
+#### 1.1.3 설치 
+다음 명령을 실행하면 설치됩니다.  
 
     $ ./install.sh
 ### 1.2 설정파일 수정
@@ -25,7 +28,7 @@ torrent_web_scraper의 동작 개념도는 아래와 같습니다.
 #### 1.2.1 다운로드 경로(tv)를 지정  
 "/home/pi"를 다운받고자 하는 경로로 변경합니다.
 
-    "download-base": "/home/pi"
+    "download-base": "~/Downloads"
 #### 1.2.2 transmission관련 설정  
 트랜스미션 서버의 호스트(아이피), 아이디와 패스워드, 포트를 지정합니다.
 
