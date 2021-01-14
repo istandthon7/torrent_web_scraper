@@ -1,0 +1,54 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>eb674a8b-9884-433a-be4e-f3285747aa7d</ProjectGuid>
+    <ProjectHome>
+    </ProjectHome>
+    <StartupFile>torrent_web_scraper.py</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <Name>torrent_web_scraper</Name>
+    <RootNamespace>PythonApplication1</RootNamespace>
+    <IsWindowsApplication>False</IsWindowsApplication>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="movie_title_scraper.py" />
+    <Compile Include="rename_season_transmission.py" />
+    <Compile Include="torrent_web_scraper.py" />
+    <Compile Include="torrent_web_scraper_install.py" />
+    <Compile Include="web_scraper_daum_movie.py" />
+    <Compile Include="web_scraper_jujutorrent.py" />
+    <Compile Include="web_scraper_lib.py" />
+    <Compile Include="web_scraper_tofiles.py" />
+    <Compile Include="web_scraper_torrentsir.py" />
+    <Compile Include="web_scraper_torrentview.py" />
+    <Compile Include="web_scraper_torrentwal.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="movie_list.txt" />
+    <Content Include="program_list.json" />
+    <Content Include="requirements.txt" />
+    <Content Include="settings.json" />
+    <Content Include="settings.json.sample" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
+  <!-- Uncomment the CoreCompile target to enable the Build command in
+       Visual Studio and specify your pre- and post-build commands in
+       the BeforeBuild and AfterBuild targets below. -->
+  <!--<Target Name="CoreCompile" />-->
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+</Project>
