@@ -2,7 +2,7 @@
 torrent_web_scraper를 사용하면 토렌트(마그넷) 다운로드를 위해 토렌트 사이트를 방문할 필요가 없어집니다.  
 
 **토렌트 자동 다운로드 프로젝트 - torrent_web_scraper 실행 환경**  
-테스트 OS : 리눅스 - 우분투, 데비안, 라즈베리파이(라즈비안)   
+테스트 OS : 리눅스(우분투, 데비안, 라즈베리파이OS), 윈도우10   
 실행 언어 : Python3
 
 ## 1. torrent_web_scraper
@@ -14,6 +14,7 @@ tv 프로그램 제목을 추가한 후에 토렌트사이트에 새로운 에�
 #### 1.1.1 transmission설치
 [https://transmissionbt.com](https://transmissionbt.com)에서 운영체제에 맞는 프로그램을 다운받아 설치합니다.(우분투, 데비안은 sudo apt install transmission-daemon 설정파일은  /etc/transmission-daemon/settings.json)  
 시놀로지의 경우 패키지 센터를 통해 추가할 수 있습니다.  
+윈도우의 경우 transmission-daemon이 설치되도록 설치옵션을 변경해 줘야 한다.
 
 #### 1.1.2 소스파일 다운로드
     $ git clone https://github.com/istandthon7/torrent_web_scraper.git
