@@ -28,9 +28,6 @@ if __name__ == '__main__':
     # 설정파일
     if isNotExist:
 
-      print("기본 다운로드 경로는 "+default_download+ "입니다.")
-      print(SETTING_FILE+"에서 변경할 수 있습니다.\n")
-
       print("transmission을 설치하고 연결정보를 설정해주세요")
       print(SETTING_FILE+"에서 변경할 수 있습니다.\n")
 
