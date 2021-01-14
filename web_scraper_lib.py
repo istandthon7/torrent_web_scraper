@@ -279,7 +279,8 @@ def rpc(JD, payload, session_id):
     #print("info, rpc resonse =", response.text)
 
     #print("info, rpc response = \n", json.dumps(response, indent=4))
-    assert response["result"] == "success"
+    if response["result"] != "success":
+        print("error입니다. rpc response = \n", json.dumps(response, indent=4))
     #assert response["jsonrpc"]
     #assert response["id"] == 0
 
