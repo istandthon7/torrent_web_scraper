@@ -43,7 +43,7 @@ if __name__ == '__main__':
     if isNotExist:
       shutil.copyfile("./program_list.json.sample", PROGRAM_FILE)
 
-      print("다운로드할 프로그램을 설정하세요.")
+      print("다운로드할 tv프로그램을 설정하세요.")
       print(PROGRAM_FILE+"에서 변경할 수 있습니다.\n")
 
 
