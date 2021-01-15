@@ -11,7 +11,7 @@ import os.path
 from pathlib import Path
 import ssl
 import time
-
+import subprocess
 
 def getBsObj(addr):
     req = Request(addr, headers={"user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36"})
@@ -25,8 +25,8 @@ def checkUrl(addr):
     try:
         getBsObj(addr)
     except Exception as e:
-        print("Exception access url : %s" % e)
-        print("We can not scrap %s , something wrong.\n" % addr)
+        print(f"Exception access url : {e}")
+        print(f"We can not scrap {addr} , something wrong.\n")
         return False
 
     return True
@@ -53,12 +53,14 @@ def checkResolutionWithTitle(resolution, targetString):
   return False
 
 def checkVersionWithTitle(release, targetString):
-  if release=="":
+  if release == "":
     return True
   if release.lower() in targetString:
-    #print("checkVersionWithTitle, return True, release: "+release+", targetString: "+targetString)
+    #print("checkVersionWithTitle, return True, release: "+release+",
+    #targetString: "+targetString)
     return True
-  #print("checkVersionWithTitle, return False, release: "+release+", targetString: "+targetString)
+  #print("checkVersionWithTitle, return False, release: "+release+",
+  #targetString: "+targetString)
   return False
 
 def checkTitleWithProgramList(targetString, program_list_file_name):
@@ -84,45 +86,7 @@ def checkTitleWithProgramList(targetString, program_list_file_name):
         return title
     return False
 
-# targetString: 게시판 제목
-def checkTitleWithMovieList(targetString, movie_list_file, video_codec, resolution, year):
-    targetString = targetString.lower()
-    f = open(movie_list_file, "r", encoding="utf-8")
-    lines = f.readlines()
 
-    #print("info, checkTitleWithMovieList targetString = %s, video_codec= %s, resolution = %s, year = %s" % (targetString, video_codec, resolution, year) )
-    #sys.exit()
-
-    for line in lines:
-        title = line.replace("\n", "")
-        title_array = title.split(":")
-        #print(titles)
-
-        if not checkTitleWithTitle(title_array[0], targetString):
-            #print("checkTitleWithTitle")
-            continue
-        if len(title_array)>1 and not checkTitleWithTitle(title_array[1], targetString):
-            #print("checkTitleWithTitle2")
-            continue
-
-        # json에서 불러와서 배열이 아니라서 checkTitleWithTitle 사용
-        if not checkTitleWithTitle(resolution, targetString):
-            #print("checkResolutionWithTitle")
-            continue
-        # 위의 이유가 같음.
-        if not checkTitleWithTitle(video_codec, targetString):
-            #print("checkVersionWithTitle")
-            continue
-        if not year in targetString:
-            continue
-
-        #print("info, checkTitleWithMovieList title = ", title)
-        #sys.exit()
-        f.close()
-        return title
-
-    f.close()
-    return False
 
 def check_magnet_history(csv_file, magnet):
     if not os.path.isfile(csv_file):
@@ -132,7 +96,8 @@ def check_magnet_history(csv_file, magnet):
         ff = csv.reader(f)
         for row in ff:
             if magnet == row[3]:
-                #print("\t\t-> magnet was already downloaded at web_scraper_history.csv")
+                #print("\t\t-> magnet was already downloaded at
+                #web_scraper_history.csv")
                 return True
     return False
 
@@ -153,7 +118,8 @@ def check_mail_noti_history(csv_file, title):
         ff = csv.reader(f)
         for row in ff:
             if title == row[2]:
-                #print("\t\t-> magnet was already downloaded at web_scraper_history.csv")
+                #print("\t\t-> magnet was already downloaded at
+                #web_scraper_history.csv")
                 return True
     return False
 
@@ -176,14 +142,15 @@ def get_session_id_torrent_rpc(JD):
         #print("info, get_session_id_torrent_rpc bs = %s" % bs)
         code_text = bs.find('code').text
         #print("info, get_session_id_torrent_rpc code_text =" , code_text)
-        #X-Transmission-Session-Id: YeUFW7rotzuLHrx4TfmWCRUF6qVlPd9DcPCEUHzlBcFMXZUd
+        #X-Transmission-Session-Id:
+        #YeUFW7rotzuLHrx4TfmWCRUF6qVlPd9DcPCEUHzlBcFMXZUd
         array = code_text.split()
         if len(array) == 2 and array[0] == "X-Transmission-Session-Id:":
-          session_id ={ array[0].replace(":", "") : array[1]}
+          session_id = { array[0].replace(":", "") : array[1]}
           return session_id
 
     except requests.exceptions.ConnectionError:
-        print("transmission이 실행중인 아닌 것으로 보입니다. "+url)
+        print("transmission이 실행중인 아닌 것으로 보입니다. " + url)
     #print("info, get_session_id_torrent_rpc response = ", res)
 
     
@@ -198,7 +165,7 @@ def add_magnet_transmission_remote(magnet_addr, JD, download_dir, session_id):
 		"method": "torrent-add"
     }
 
-    if len(download_dir)>0:
+    if len(download_dir) > 0:
         payload["arguments"]["download-dir"] = download_dir
 
     res = rpc(JD, payload, session_id)
@@ -243,13 +210,14 @@ def rename_file_torrent_prc(JD, torrent_id, session_id, src_file, dest_file):
     json_input = {
         "method": "torrent-rename-path"
     }
-    json_input["arguments"] ={"ids": [int(torrent_id)], "path": src_file, "name": dest_file}
+    json_input["arguments"] = {"ids": [int(torrent_id)], "path": src_file, "name": dest_file}
 
     res = rpc(JD, json_input, session_id)
 
     return
 
-# 상태가 Finished 이고  contain_name 인 토렌트 id를 구해서 삭제 (리스트에 남아있지 않도록 자동삭제되도록 하는 기능이다.)
+# 상태가 Finished 이고 contain_name 인 토렌트 id를 구해서 삭제 (리스트에 남아있지 않도록 자동삭제되도록 하는
+# 기능이다.)
 def remove_transmission_remote(JD, session_id, contain_name):
 
     payload = {
@@ -278,8 +246,7 @@ def rpc(JD, payload, session_id):
     #print("info, rpc header = ", headers)
 
     #print("info, rpc payload = \n", json.dumps(payload, indent=4))
-    response = requests.post(
-        url, data=json.dumps(payload), headers=headers).json()
+    response = requests.post(url, data=json.dumps(payload), headers=headers).json()
 
     #print("info, rpc resonse =", response.text)
 
@@ -299,38 +266,117 @@ def create(path):
       return True
     return False
 
+def notiEmail(mailNotiSetting, mailNotiHistoryFileName, siteName, boardTitle, runTime):
+
+    if mailNotiSetting == "":
+        return
+
+    email = mailNotiSetting["address"]
+
+    if email == "":
+        return
+
+    for keyword in mailNotiSetting["keywords"]:
+
+        if check_mail_noti_history(mailNotiHistoryFileName, boardTitle):
+            return
+
+        if keyword in boardTitle:
+            cmd = mailNotiSetting["cmd"]
+            cmd = cmd.replace("$board_title", boardTitle)
+            cmd = cmd.replace("$address",email)
+            subprocess.call(cmd, shell=True)
+            add_mail_noti_to_file(mailNotiHistoryFileName, runTime
+                                  , siteName, boardTitle, keyword)
+
+class MoiveScraper:
+    def __init__(self, movieSetting):
+        self.movieSetting = movieSetting
+
+    def checkTitleWithMovieList(self, boardTitle, year):
+
+        movieListFile = open(self.movieSetting['list'], "r", encoding="utf-8")
+        boardTitle = boardTitle.lower()
+        lines = movieListFile.readlines()
+
+        #print("info, checkTitleWithMovieList targetString = %s, video_codec=
+        #%s, resolution = %s, year = %s" % (targetString, video_codec,
+        #resolution, year) )
+        #sys.exit()
+
+        for line in lines:
+            title = line.replace("\n", "")
+            title_array = title.split(":")
+            #print(titles)
+
+            if not checkTitleWithTitle(title_array[0], boardTitle):
+                #print("checkTitleWithTitle")
+                continue
+
+            if len(title_array) > 1 and not checkTitleWithTitle(title_array[1], boardTitle):
+                #print("checkTitleWithTitle2")
+                continue
+
+            # json에서 불러와서 배열이 아니라서 checkTitleWithTitle 사용
+            if not checkTitleWithTitle(self.movieSetting['resolution'], boardTitle):
+                #print("checkResolutionWithTitle")
+                continue
+
+            # 위의 이유가 같음.
+            if not checkTitleWithTitle(self.movieSetting['video_codec'], boardTitle):
+                #print("checkVersionWithTitle")
+                continue
+
+            if not year in boardTitle:
+                continue
+
+            #print("info, checkTitleWithMovieList title = ", title)
+            #sys.exit()
+            movieListFile.close()
+            return title
+
+        movieListFile.close()
+        return False
+
+    #movie_list에서 삭제하기
+    def removeLineFromMovieListFile(self, matchedName):
+        movieListFile = open(self.movieSetting['list'], "r", encoding="utf-8")
+        buffer = ""
+
+        for line in movieListFile.readlines():
+
+            if not matchedName in line:
+                buffer += line
+            else:
+                # 영화리스트 파일에 매치되어 파일에 기록하지 않으니 다운받았다는 메시지다.
+                # 영화는 자주 다운로드 하지 않으니 일단 로그 놔두고, 메일 받는 것으로 하자.
+                print(f"info, remove in movie_list, matchedName = {matchedName}, line = {line}")
+        movieListFile.close()
+
+        movieListFile = open(self.movieSetting['list'], "w", encoding="utf-8")
+        movieListFile.write(buffer)
+        movieListFile.close()
 
 
+def loadJson(settingfileName):
+    
+    try:
+        dataFile = open(settingfileName, 'r', encoding='utf-8')
+    except FileNotFoundError as e:
+        print(str(e))
+        print(f"Please, set your file path.{settingfileName}")
+        sys.exit()
+    else:
+        return json.load(dataFile)
+        dataFile.close()
 
-class JsonParser:
-    def __init__(self, setfileName):
-        self.JsonFile = setfileName
-        try:
-            dataFile = open(self.JsonFile, 'r', encoding='utf-8')
-        except FileNotFoundError as e:
-            print(str(e))
-            print("Please, set your file path.")
-            sys.exit()
-        else:
-            self.data = json.load(dataFile)
-            dataFile.close()
-
-    def get(self, key):
-      if key not in self.data:
-        return ""
-      return (self.data[key])
-
-    def set(self, key, value):
-        with open(self.JsonFile, 'w', encoding='utf-8') as dataFile:
-            self.data[key] = value
-            json.dump(self.data, dataFile, sort_keys = True, ensure_ascii=False, indent = 4)
-    def write(self):
-        with open(self.JsonFile, 'w', encoding='utf-8') as dataFile:
-            json.dump(self.data, dataFile, sort_keys = True, ensure_ascii=False, indent = 4)
+def SaveJson(settingfileName, data):
+    with open(settingfileName, 'w', encoding='utf-8') as dataFile:
+        json.dump(data, dataFile, sort_keys = True, ensure_ascii=False, indent = 4)
 
 class Programs:
   def __init__(self, program_list_file_name):
 
-    with open(os.path.realpath(os.path.dirname(__file__))+"/"+program_list_file_name,"r", encoding='utf-8') as json_file:
+    with open(os.path.realpath(os.path.dirname(__file__)) + "/" + program_list_file_name,"r", encoding='utf-8') as json_file:
       self.data = json.load(json_file)
 

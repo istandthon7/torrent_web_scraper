@@ -31,7 +31,7 @@
     <Compile Include="web_scraper_jujutorrent.py" />
     <Compile Include="web_scraper_lib.py" />
     <Compile Include="web_scraper_tofiles.py" />
-    <Compile Include="web_scraper_torrentsir.py" />
+    <Compile Include="BoardTorrentScraper.py" />
     <Compile Include="web_scraper_torrentview.py" />
     <Compile Include="web_scraper_torrentwal.py" />
   </ItemGroup>
