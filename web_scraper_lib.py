@@ -249,7 +249,7 @@ def rename_file_torrent_prc(JD, torrent_id, session_id, src_file, dest_file):
 
     return
 
-# 상태가 Finished 이고  contain_name 인 토렌트 id를 구해서 삭제
+# 상태가 Finished 이고  contain_name 인 토렌트 id를 구해서 삭제 (리스트에 남아있지 않도록 자동삭제되도록 하는 기능이다.)
 def remove_transmission_remote(JD, session_id, contain_name):
 
     payload = {
