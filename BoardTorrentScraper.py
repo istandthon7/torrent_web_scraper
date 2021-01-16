@@ -4,8 +4,8 @@ from bs4 import BeautifulSoup
 import subprocess
 import re
 import json
-import web_scraper_lib
 import sys
+import webScraperLib
 
 #그누보드 BASIC스킨
 class GnBoardBasicSkin:
@@ -15,16 +15,16 @@ class GnBoardBasicSkin:
 
     def getParseData(self, mainUrl, categoryUrl, count):
         url = self.getScrapUrl(mainUrl, categoryUrl, count)
-        bsObj = web_scraper_lib.getBsObj(url)
-        list_board_div = bsObj.find('div', attrs={'class' : 'list-board'})
+        bsObj = webScraperLib.getBsObj(url)
+        listBoardDiv = bsObj.find('div', attrs={'class' : 'list-board'})
 
-        if list_board_div is None:
+        if listBoardDiv is None:
             print(f"게시판 리스트 얻기에 실패하였습니다. {url}")
         else:
-            return list_board_div.find_all('a', href=re.compile(".*wr_id.*"))
+            return listBoardDiv.find_all('a', href=re.compile(".*wr_id.*"))
 
     #게시판 아이디 파싱, url을 기반으로 wr_id text를 뒤의 id parsing
-    def get_wr_id(self, url):
+    def getWrId(self, url):
 
         tmp = url.rfind('wr_id=')
         if (tmp < 0): # 둘다 검색 못하면 포기
@@ -44,15 +44,13 @@ class GnBoardBasicSkin:
             endp = endp+1
         return int((url[startp:endp]))
 
-    def getmagnetDataFromPageUrl(self, url):
-        #print("info, getmagnetDataFromPageUrl url = %s" % url)
-        bsObj = web_scraper_lib.getBsObj(url)
+    def getMagnetDataFromPageUrl(self, url):
+        bsObj = webScraperLib.getBsObj(url)
         # a 태그 중에 href가 magnet으로 시작하는 태그.
         tag = bsObj.findAll('a', href=re.compile('^magnet'))
 
         if len(tag)>0:
           magnet = tag[0].get('href')
-          #print("info, getmagnetDataFromPageUrl magnet = %s" % magnet)
         else:
           magnet = ""
 

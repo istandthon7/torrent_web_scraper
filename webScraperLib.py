@@ -31,90 +31,81 @@ def checkUrl(addr):
 
     return True
 
-def getCateList():
-    return categoryList
-
-def getCateIdxFromStr(string):
-    return categoryList.index(string)
-
-# targetString: 게시판 제목
-def checkTitleWithTitle(title, targetString):
+def checkTitleWithTitle(title, boardTitle):
+    
     keyArray = title.lower().split()
     for tmp in keyArray:
-        if not tmp in targetString:
+        if not tmp in boardTitle:
             return False
     return True
 
-def checkResolutionWithTitle(resolution, targetString):
-  if resolution == "":
-    return True
-  if resolution.lower() in targetString:
-    return True
-  return False
+def checkResolutionWithTitle(resolution, boardTitle):
+  
+    if resolution == "":
+        return True
+    if resolution.lower() in boardTitle:
+        return True
+    return False
 
-def checkVersionWithTitle(release, targetString):
-  if release == "":
-    return True
-  if release.lower() in targetString:
-    #print("checkVersionWithTitle, return True, release: "+release+",
-    #targetString: "+targetString)
-    return True
-  #print("checkVersionWithTitle, return False, release: "+release+",
-  #targetString: "+targetString)
-  return False
+def checkVersionWithTitle(release, boardTitle):
+  
+    if release == "":
+        return True
+    
+    if release.lower() in boardTitle:
+        return True
+    return False
 
-def checkTitleWithProgramList(targetString, program_list_file_name):
-    targetString = targetString.lower()
+def checkTitleWithProgramList(boardTitle, programListFileName):
+    
+    boardTitle = boardTitle.lower()
 
-    programs = Programs(program_list_file_name)
+    programs = Programs(programListFileName)
 
     for prog in programs.data['title_list']:
         title = prog['name']
         resolution = prog['option']
         release = prog['option2']
-        #print(title, resolution, release, targetString)
 
-        if not checkTitleWithTitle(title, targetString):
-            #print("checkTitleWithTitle")
+        if not checkTitleWithTitle(title, boardTitle):
             continue
-        if not checkResolutionWithTitle(resolution, targetString):
-            #print("checkResolutionWithTitle")
+
+        if not checkResolutionWithTitle(resolution, boardTitle):
             continue
-        if not checkVersionWithTitle(release, targetString):
-            #print("checkVersionWithTitle")
+
+        if not checkVersionWithTitle(release, boardTitle):
             continue
+
         return title
+
     return False
 
+def checkMagnetHistory(csvFile, magnet):
 
-
-def check_magnet_history(csv_file, magnet):
-    if not os.path.isfile(csv_file):
+    if not os.path.isfile(csvFile):
         return False
 
-    with open(csv_file, 'r', encoding="utf-8") as f:
+    with open(csvFile, 'r', encoding="utf-8") as f:
         ff = csv.reader(f)
         for row in ff:
             if magnet == row[3]:
-                #print("\t\t-> magnet was already downloaded at
-                #web_scraper_history.csv")
                 return True
     return False
 
-def add_magnet_info_to_file(csv_file, runtime, sitename, title, magnet, keyword):
+def addMagnetInfoToFile(csvFile, runtime, sitename, title, magnet, keyword):
 
     new = [runtime, sitename, title, magnet, keyword]
-    with open(csv_file, 'a', newline = '\n', encoding="utf-8") as f:
+    with open(csvFile, 'a', newline = '\n', encoding="utf-8") as f:
         writer = csv.writer(f)
         writer.writerow(new)
     f.close()
     return
 
-def check_mail_noti_history(csv_file, title):
-    if not os.path.isfile(csv_file):
+def checkMailNotiHistory(csvFile, title):
+    if not os.path.isfile(csvFile):
         return False
 
-    with open(csv_file, 'r', encoding="utf-8") as f:
+    with open(csvFile, 'r', encoding="utf-8") as f:
         ff = csv.reader(f)
         for row in ff:
             if title == row[2]:
@@ -123,25 +114,24 @@ def check_mail_noti_history(csv_file, title):
                 return True
     return False
 
-def add_mail_noti_to_file(csv_file, runtime, sitename, title, keyword):
+def addMailNotiToFile(csvFile, runtime, sitename, title, keyword):
 
     new = [runtime, sitename, title, keyword]
-    with open(csv_file, 'a', newline = '\n', encoding="utf-8") as f:
+    with open(csvFile, 'a', newline = '\n', encoding="utf-8") as f:
         writer = csv.writer(f)
         writer.writerow(new)
     f.close()
     return
 
 #X-Transmission-Session-Id
-def get_session_id_torrent_rpc(JD):
+def getSessionIdTorrentRpc(setttings):
 
-    url = "http://%s:%s@%s:%s/transmission/rpc" % (JD.get('trans-id'), JD.get('trans-pw'), JD.get('trans-host'), JD.get('trans-port'))
+    url = "http://%s:%s@%s:%s/transmission/rpc" % (setttings['trans-id'], setttings['trans-pw']
+                                                   , setttings['trans-host'], setttings['trans-port'])
     try:
         res = requests.get(url)
         bs = BeautifulSoup(res.text, "html.parser")
-        #print("info, get_session_id_torrent_rpc bs = %s" % bs)
         code_text = bs.find('code').text
-        #print("info, get_session_id_torrent_rpc code_text =" , code_text)
         #X-Transmission-Session-Id:
         #YeUFW7rotzuLHrx4TfmWCRUF6qVlPd9DcPCEUHzlBcFMXZUd
         array = code_text.split()
@@ -151,28 +141,26 @@ def get_session_id_torrent_rpc(JD):
 
     except requests.exceptions.ConnectionError:
         print("transmission이 실행중인 아닌 것으로 보입니다. " + url)
-    #print("info, get_session_id_torrent_rpc response = ", res)
-
     
     return
 
-def add_magnet_transmission_remote(magnet_addr, JD, download_dir, session_id):
+def addMagnetTransmissionRemote(magnetAddr, settings, downloadDir, sessionId):
 
     payload = {
 		"arguments":{
-			"filename": magnet_addr
+			"filename": magnetAddr
 		},
 		"method": "torrent-add"
     }
 
-    if len(download_dir) > 0:
-        payload["arguments"]["download-dir"] = download_dir
+    if len(downloadDir) > 0:
+        payload["arguments"]["download-dir"] = downloadDir
 
-    res = rpc(JD, payload, session_id)
+    res = rpc(settings, payload, sessionId)
 
     return
 
-def get_id_transmission_remote(JD, session_id, torrent_title):
+def getIdTransmissionRemote(settings, sessionId, torrentTitle):
     payload = {
 		"arguments":{
 			"fields": ["id", "name"]
@@ -180,15 +168,15 @@ def get_id_transmission_remote(JD, session_id, torrent_title):
 		"method": "torrent-get"
     }
 
-    res = rpc(JD, payload, session_id)
+    res = rpc(settings, payload, sessionId)
     #print("info, get_id_transmission_remote res\n", res)
     for torrent in res["arguments"]["torrents"]:
-        if torrent["name"] == torrent_title:
+        if torrent["name"] == torrentTitle:
             return torrent["id"]
 
     return
 
-def get_files_torrent_remote(JD, session_id, torrent_id):
+def getFilesTorrentRemote(settings, sessionId, torrentId):
 
     payload = {
 		"arguments":{
@@ -197,28 +185,28 @@ def get_files_torrent_remote(JD, session_id, torrent_id):
 		"method": "torrent-get"
     }
 
-    res = rpc(JD, payload, session_id)
+    res = rpc(settings, payload, sessionId)
 
     for torrent in res["arguments"]["torrents"]:
-        if torrent["id"] == torrent_id:
+        if torrent["id"] == torrentId:
             return torrent["files"]
 
     return
 
-def rename_file_torrent_prc(JD, torrent_id, session_id, src_file, dest_file):
+def renameFileTorrentRpc(settings, torrentId, sessionId, srcFile, destFile):
 
     json_input = {
         "method": "torrent-rename-path"
     }
-    json_input["arguments"] = {"ids": [int(torrent_id)], "path": src_file, "name": dest_file}
+    json_input["arguments"] = {"ids": [int(torrentId)], "path": srcFile, "name": destFile}
 
-    res = rpc(JD, json_input, session_id)
+    res = rpc(settings, json_input, sessionId)
 
     return
 
 # 상태가 Finished 이고 contain_name 인 토렌트 id를 구해서 삭제 (리스트에 남아있지 않도록 자동삭제되도록 하는
 # 기능이다.)
-def remove_transmission_remote(JD, session_id, contain_name):
+def removeTransmissionRemote(settings, sessionId, containName):
 
     payload = {
         "arguments":{
@@ -227,22 +215,23 @@ def remove_transmission_remote(JD, session_id, contain_name):
         "method": "torrent-get"
     }
 
-    res = rpc(JD, payload, session_id)
+    res = rpc(settings, payload, sessionId)
 
     for torrent in res["arguments"]["torrents"]:
-        if contain_name in torrent["name"] and torrent["isFinished"]:
+        if containName in torrent["name"] and torrent["isFinished"]:
             payload = {
                 "method": "torrent-remove",
                 "arguments":{"ids":[torrent["id"]]}
                 }
-            res = rpc(JD, payload, session_id)
+            res = rpc(settings, payload, sessionId)
 
     return
 
-def rpc(JD, payload, session_id):
-    url = "http://%s:%s@%s:%s/transmission/rpc" % (JD.get('trans-id'), JD.get('trans-pw'), JD.get('trans-host'), JD.get('trans-port'))
+def rpc(settings, payload, sessionId):
+    url = "http://%s:%s@%s:%s/transmission/rpc" % (settings['trans-id'], settings['trans-pw']
+                                                   , settings['trans-host'], settings['trans-port'])
     headers = {'content-type': 'application/json'}
-    headers.update(session_id)
+    headers.update(sessionId)
     #print("info, rpc header = ", headers)
 
     #print("info, rpc payload = \n", json.dumps(payload, indent=4))
@@ -278,7 +267,7 @@ def notiEmail(mailNotiSetting, mailNotiHistoryFileName, siteName, boardTitle, ru
 
     for keyword in mailNotiSetting["keywords"]:
 
-        if check_mail_noti_history(mailNotiHistoryFileName, boardTitle):
+        if checkMailNotiHistory(mailNotiHistoryFileName, boardTitle):
             return
 
         if keyword in boardTitle:
@@ -286,7 +275,7 @@ def notiEmail(mailNotiSetting, mailNotiHistoryFileName, siteName, boardTitle, ru
             cmd = cmd.replace("$board_title", boardTitle)
             cmd = cmd.replace("$address",email)
             subprocess.call(cmd, shell=True)
-            add_mail_noti_to_file(mailNotiHistoryFileName, runTime
+            addMailNotiToFile(mailNotiHistoryFileName, runTime
                                   , siteName, boardTitle, keyword)
 
 class MoiveScraper:
@@ -299,39 +288,27 @@ class MoiveScraper:
         boardTitle = boardTitle.lower()
         lines = movieListFile.readlines()
 
-        #print("info, checkTitleWithMovieList targetString = %s, video_codec=
-        #%s, resolution = %s, year = %s" % (targetString, video_codec,
-        #resolution, year) )
-        #sys.exit()
-
         for line in lines:
             title = line.replace("\n", "")
             title_array = title.split(":")
-            #print(titles)
 
             if not checkTitleWithTitle(title_array[0], boardTitle):
-                #print("checkTitleWithTitle")
                 continue
 
             if len(title_array) > 1 and not checkTitleWithTitle(title_array[1], boardTitle):
-                #print("checkTitleWithTitle2")
                 continue
 
             # json에서 불러와서 배열이 아니라서 checkTitleWithTitle 사용
             if not checkTitleWithTitle(self.movieSetting['resolution'], boardTitle):
-                #print("checkResolutionWithTitle")
                 continue
 
             # 위의 이유가 같음.
             if not checkTitleWithTitle(self.movieSetting['video_codec'], boardTitle):
-                #print("checkVersionWithTitle")
                 continue
 
             if not year in boardTitle:
                 continue
 
-            #print("info, checkTitleWithMovieList title = ", title)
-            #sys.exit()
             movieListFile.close()
             return title
 
@@ -375,8 +352,8 @@ def SaveJson(settingfileName, data):
         json.dump(data, dataFile, sort_keys = True, ensure_ascii=False, indent = 4)
 
 class Programs:
-  def __init__(self, program_list_file_name):
+  def __init__(self, programListFileName):
 
-    with open(os.path.realpath(os.path.dirname(__file__)) + "/" + program_list_file_name,"r", encoding='utf-8') as json_file:
+    with open(os.path.realpath(os.path.dirname(__file__)) + "/" + programListFileName,"r", encoding='utf-8') as json_file:
       self.data = json.load(json_file)
 

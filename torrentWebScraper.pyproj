@@ -10,7 +10,7 @@
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>torrent_web_scraper</Name>
+    <Name>torrentWebScraper</Name>
     <RootNamespace>PythonApplication1</RootNamespace>
     <IsWindowsApplication>False</IsWindowsApplication>
   </PropertyGroup>
@@ -27,13 +27,9 @@
     <Compile Include="rename_season_transmission.py" />
     <Compile Include="torrent_web_scraper.py" />
     <Compile Include="torrent_web_scraper_install.py" />
-    <Compile Include="web_scraper_daum_movie.py" />
-    <Compile Include="web_scraper_jujutorrent.py" />
-    <Compile Include="web_scraper_lib.py" />
-    <Compile Include="web_scraper_tofiles.py" />
-    <Compile Include="BoardTorrentScraper.py" />
-    <Compile Include="web_scraper_torrentview.py" />
-    <Compile Include="web_scraper_torrentwal.py" />
+    <Compile Include="webScraperDaumMovie.py" />
+    <Compile Include="webScraperLib.py" />
+    <Compile Include="boardTorrentScraper.py" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="movie_list.txt" />
