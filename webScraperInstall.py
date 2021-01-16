@@ -2,7 +2,7 @@
 from datetime import datetime as dtime
 import os
 import sys
-import web_scraper_lib
+import webScraperLib
 import json
 import shutil
 from pathlib import Path
@@ -21,9 +21,9 @@ if __name__ == '__main__':
     #    __version__, runTime,sys.getdefaultencoding()) )
 
     # 영화목록
-    web_scraper_lib.create(SETTING_PATH+default_movie_list)
+    webScraperLib.create(SETTING_PATH+default_movie_list)
     # 설정파일 생성
-    isNotExist = web_scraper_lib.create(SETTING_FILE)
+    isNotExist = webScraperLib.create(SETTING_FILE)
 
     # 설정파일
     if isNotExist:
@@ -34,7 +34,7 @@ if __name__ == '__main__':
       shutil.copyfile("./settings.json.sample", SETTING_FILE)
 
     # 프로그램 파일
-    isNotExist = web_scraper_lib.create(PROGRAM_FILE)
+    isNotExist = webScraperLib.create(PROGRAM_FILE)
 
     if isNotExist:
       shutil.copyfile("./program_list.json.sample", PROGRAM_FILE)
