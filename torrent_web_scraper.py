@@ -21,7 +21,7 @@ if __name__ == '__main__':
     movieScraper = webScraperLib.MoiveScraper(settings['movie'])
 
     for siteIndex, site in enumerate(settings["sites"]):
-        
+
         #Step 1.  test for access with main url
         if site['enable'] == False:
             continue;
@@ -31,10 +31,9 @@ if __name__ == '__main__':
             continue
 
         try:
-            if "board" not in site: 
+            if "board" not in site:
                 print(f"https://github.com/istandthon7/torrent_web_scraper/issues 에 도움을 요청할 수 있습니다.{site['mainUrl']}")
                 continue;
-            
             elif site['board'] == "GNBoardBasicSkin":
                 boardScraper = boardTorrentScraper.GNBoardBasicSkin()
             else:
@@ -49,7 +48,7 @@ if __name__ == '__main__':
 
             #Step 4.  iterate page (up to 10) for this site/this category
             for pageCount in range(settings['page_scrap_max'],0,-1):
-                
+
                 boardList = boardScraper.getParseDataReverse(site["mainUrl"], category["url"], pageCount)
 
                 if boardList is None:
@@ -58,7 +57,7 @@ if __name__ == '__main__':
 
                 #for board in boardList:
                 for boardItemIndex, boardItem in enumerate(boardList, start=1):
-                    
+
                     #게시판 제목
                     boardItemTitle = boardItem.get_text().replace('\t', '').replace('\n', '')
                     boardItemUrl = boardItem.get('href').replace('..', site['mainUrl'])
@@ -85,7 +84,7 @@ if __name__ == '__main__':
 
                     if magnet == "":
                       continue
-                    
+
                     #magnet was already downloaded.
                     if webScraperLib.checkMagnetHistory(HISTORY_FILE, magnet):
                         continue
@@ -114,6 +113,5 @@ if __name__ == '__main__':
                     webScraperLib.addMagnetInfoToFile(HISTORY_FILE,runTime, site['name'], boardItemTitle, magnet, programTitle)
 
 
-            #Step 5.  save scrap ID
-            
+        #Step 5.  save scrap ID
         webScraperLib.saveJson(SETTING_FILE, settings)

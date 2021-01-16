@@ -9,19 +9,19 @@ import webScraperLib
 
 #그누보드 BASIC스킨
 class GNBoardBasicSkin:
-    
+
     def getScrapUrl(self, mainUrl, categoryUrl, count):
         if count > 1:
             return mainUrl + categoryUrl + "&page="+str(count)
         else:
-            return mainUrl + categoryUrl 
+            return mainUrl + categoryUrl
 
     def getParseDataReverse(self, mainUrl, categoryUrl, count):
         url = self.getScrapUrl(mainUrl, categoryUrl, count)
         bsObj = webScraperLib.getBsObj(url)
-        
+
         if bsObj is None:
-            print(f"게시판 접속에 실패하였습니다. {url}")
+            print(f"게시판 접속에 실패하였습니다. {url} 브라우저에서 접속여부를 확인할 수 있습니다.")
             return
 
         listBoardDiv = bsObj.find('div', attrs={'class' : 'list-board'})
@@ -29,7 +29,7 @@ class GNBoardBasicSkin:
         if listBoardDiv is None:
             print(f"게시판 리스트 얻기에 실패하였습니다. {url}")
             return;
-        
+
         items = listBoardDiv.find_all('a', href= lambda x: "wr_id" in x)
 
         items = list(filter(lambda x: len(x.text.strip())>0, items))
