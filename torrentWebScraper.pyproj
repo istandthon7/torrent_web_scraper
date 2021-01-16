@@ -26,12 +26,13 @@
     <Compile Include="movie_title_scraper.py" />
     <Compile Include="rename_season_transmission.py" />
     <Compile Include="torrent_web_scraper.py" />
-    <Compile Include="torrent_web_scraper_install.py" />
+    <Compile Include="webScraperInstall.py" />
     <Compile Include="webScraperDaumMovie.py" />
     <Compile Include="webScraperLib.py" />
     <Compile Include="boardTorrentScraper.py" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="install.sh" />
     <Content Include="movie_list.txt" />
     <Content Include="program_list.json" />
     <Content Include="requirements.txt" />

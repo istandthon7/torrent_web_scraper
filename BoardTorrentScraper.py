@@ -8,20 +8,33 @@ import sys
 import webScraperLib
 
 #그누보드 BASIC스킨
-class GnBoardBasicSkin:
+class GNBoardBasicSkin:
     
     def getScrapUrl(self, mainUrl, categoryUrl, count):
-      return mainUrl + categoryUrl + "&page="+str(count)
+        if count > 1:
+            return mainUrl + categoryUrl + "&page="+str(count)
+        else:
+            return mainUrl + categoryUrl 
 
-    def getParseData(self, mainUrl, categoryUrl, count):
+    def getParseDataReverse(self, mainUrl, categoryUrl, count):
         url = self.getScrapUrl(mainUrl, categoryUrl, count)
         bsObj = webScraperLib.getBsObj(url)
+        
+        if bsObj is None:
+            print(f"게시판 접속에 실패하였습니다. {url}")
+            return
+
         listBoardDiv = bsObj.find('div', attrs={'class' : 'list-board'})
 
         if listBoardDiv is None:
             print(f"게시판 리스트 얻기에 실패하였습니다. {url}")
-        else:
-            return listBoardDiv.find_all('a', href=re.compile(".*wr_id.*"))
+            return;
+        
+        items = listBoardDiv.find_all('a', href= lambda x: "wr_id" in x)
+
+        items = list(filter(lambda x: len(x.text.strip())>0, items))
+        items.reverse()
+        return items
 
     #게시판 아이디 파싱, url을 기반으로 wr_id text를 뒤의 id parsing
     def getWrId(self, url):

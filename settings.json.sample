@@ -19,35 +19,31 @@
   "program-list": "program_list.json",
   "sites": [
     {
-      "board": "GnBoardBasicSkin",
+      "board": "GNBoardBasicSkin",
       "category": [
         {
           "history": 0,
-          "idx": "torrent_kortv_ent",
           "name": "예능",
-          "url": "/bbs/board.php?bo_table=entertain"
+          "url": "bbs/board.php?bo_table=entertain"
         },
         {
           "history": 0,
-          "idx": "torrent_kortv_social",
           "name": "다큐",
-          "url": "/bbs/board.php?bo_table=tv"
+          "url": "bbs/board.php?bo_table=tv"
         },
         {
           "history": 0,
-          "idx": "torrent_kortv_drama",
           "name": "드라마",
-          "url": "/bbs/board.php?bo_table=drama"
+          "url": "bbs/board.php?bo_table=drama"
         },
         {
           "history": 0,
-          "idx": "torrent_movie",
           "name": "영화",
-          "url": "/bbs/board.php?bo_table=movie"
+          "url": "bbs/board.php?bo_table=movie"
         }
       ],
       "enable": true,
-      "mainUrl": "https://torrentsir29.com",
+      "mainUrl": "https://www.ktxtorrent17.com/",
       "name": "torrentsir"
     }
   ],

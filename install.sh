@@ -13,4 +13,4 @@ pip3 install requests
 pip3 install beautifulsoup4
 pip3 install -r requirements.txt
 
-./torrent_web_scraper_install.py
+./webScraperInstall.py

@@ -13,24 +13,30 @@ import ssl
 import time
 import subprocess
 
-def getBsObj(addr):
-    req = Request(addr, headers={"user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36"})
+def getBsObj(url):
+    req = Request(url, headers={"user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36"})
     c = ssl._create_unverified_context()
-    time.sleep(1)
-    html = urlopen(req, context=c).read().decode('utf-8','replace')
-    data = BeautifulSoup(html, "html.parser")
-    return data
-
-def checkUrl(addr):
+    time.sleep(2)
     try:
-        getBsObj(addr)
+        html = urlopen(req, context=c).read().decode('utf-8','replace')
+        data = BeautifulSoup(html, "html.parser")
+        return data
+    except Exception as e:
+        print(f"Exception getBsObj url : {e}")
+
+def checkUrl(url):
+    try:
+        getBsObj(url)
     except Exception as e:
         print(f"Exception access url : {e}")
-        print(f"We can not scrap {addr} , something wrong.\n")
+        print(f"We can not scrap {url} , something wrong.\n")
         return False
 
     return True
 
+def updateUrl(url):
+    return re.sub("([\d]+)[\.]", lambda m: str(int(m.group(1))+1), url)
+    
 def checkTitleWithTitle(title, boardTitle):
     
     keyArray = title.lower().split()
@@ -347,7 +353,7 @@ def loadJson(settingfileName):
         return json.load(dataFile)
         dataFile.close()
 
-def SaveJson(settingfileName, data):
+def saveJson(settingfileName, data):
     with open(settingfileName, 'w', encoding='utf-8') as dataFile:
         json.dump(data, dataFile, sort_keys = True, ensure_ascii=False, indent = 4)
 

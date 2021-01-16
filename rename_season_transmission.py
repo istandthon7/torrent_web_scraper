@@ -22,10 +22,11 @@ def setSeasonTorrentFile(settings, torrentTitle, season):
 
     for torrent in torrents:
       if "mp4" in torrent['name']:
-        print(f"info set_season_torrent_file mp4_file {torrent['name']}")
+        print(f"info setSeasonTorrentFile mp4_file {torrent['name']}")
         dir = os.path.dirname(torrent['name'])
         fileName = os.path.basename(torrent['name'])
-        replaceString = 's%s\g<epi>' % (season)
+        replaceString = f's{season}\g<epi>'
+        #re.sub('패턴', '바꿀문자열', '문자열', 바꿀횟수)
         newFileName = re.sub('(?P<epi>E\d+.)', replaceString, fileName)
         print(f"info setSeasonTorrentFile newFileName = {newFileName}")
 
