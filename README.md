@@ -43,7 +43,7 @@ mainUrl을 변경해 주어야 한다.
     "mainUrl": "https://torrentsir29.com/",
 사이트 자체가 폐쇄된 경우에는 [Issue](https://github.com/istandthon7/torrent_web_scraper/issues)에 등록하여 수정요청한다.   
 
-### 1.3 다운로드 받을 프로그램 추가(program_list.json)
+### 1.3 다운로드 받을 tv프로그램 추가(program_list.json)
 프로그램의 제목과 해상도 등은 옵션으로 추가로 지정할 수 있다. 시즌이 있는 경우 해당 숫자를 넣어주면 되고 없으면 생략해도 된다.
 
     {
@@ -58,6 +58,9 @@ torrent_web_scraper.py를 실행시키면 게시판을 읽어와서 program_list
 
     $ ./torrent_web_scraper.py
 
+영화파일은 1080p만 받도록 설정되어 있습니다.  
+720p로 변경하려면 settings.json파일의 "movie"의 "resolution"을 변경해야 합니다.  
+
 torrent_web_scraper를 주기적으로 실행하게 설정해두면, 토렌트 사이트를 방문하여 새로 등록된 마그넷 파일이 있는지 확인하고, 자동으로 다운로드를 해줍니다.  
 따라서 토렌트 파일이 업로드 되었는지 토렌트 사이트를 확인할 필요가 없어집니다.  
 
@@ -66,5 +69,3 @@ torrent_web_scraper를 주기적으로 실행하게 설정해두면, 토렌트 �
 이점을 이해하고 torrent_web_scraper 스크립트를 실행 여부를 결정하세요.  
 
 movie_title_scraper.py: 다음 인기영화 스크래퍼 (지난 달 인기영화 제목을 스크랩하여 "movie_list.txt"에 저장해준다.)  
-다음 인기영화 스크래퍼를 매월 1일 실행되도록 설정하여 사용하면 된다.  
-기다리고 있는 영화가 있다면 movie_list.txt파일에 추가해서 다운로드를 예약할 수 있다.  
