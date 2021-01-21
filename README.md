@@ -13,7 +13,6 @@ tv 프로그램 제목을 추가한 후에 토렌트사이트에 새로운 에�
 ### 1.1 설치
 #### 1.1.1 transmission설치
 [https://transmissionbt.com](https://transmissionbt.com)에서 운영체제에 맞는 프로그램을 다운받아 설치합니다.(우분투, 데비안은 sudo apt install transmission-daemon 설정파일은  /etc/transmission-daemon/settings.json)  
-시놀로지의 경우 패키지 센터를 통해 추가할 수 있습니다.  
 윈도우의 경우 transmission-daemon이 설치되도록 설치옵션을 변경해 줘야 한다.
 
 #### 1.1.2 소스파일 다운로드
@@ -30,7 +29,6 @@ tv 프로그램 제목을 추가한 후에 토렌트사이트에 새로운 에�
 트랜스미션 데몬의 호스트(아이피), 아이디와 패스워드, 포트를 지정합니다.  
 호스트는 동일한 컴퓨터가 아닌 경우 웹브라우저에서 http://[데몬이 실행중인 아이피]:9091로 접속을 확인해 보는 것이 좋다.  
 우분투, 데비안의 경우 트랜스미션 데몬의 기본값을 변경하지 않은 경우에는 아래 설정을 변경하지 않아도 된다.  
-시놀로지의 경우 기본값을 변경하지 않은 경우 기본값인 admin/admin으로 변경해주면 된다.  
 
     "trans-host": "127.0.0.1",
     "trans-id": "transmission",
