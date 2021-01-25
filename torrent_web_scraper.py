@@ -64,9 +64,8 @@ if __name__ == '__main__':
                     boardItemNum = boardScraper.getWrId(boardItemUrl)
 
                     #boardList의 첫 게시물의 id를 확인
-                    if boardItemIndex == 1:
-                        if (category['history'] > boardItemNum):
-                            break
+                    if (category['history'] >= boardItemNum):
+                        continue;
 
                     if "영화" in category['name']:
                         programTitle = movieScraper.checkTitleWithMovieList(boardItemTitle, dtime.now().strftime("%Y"))
