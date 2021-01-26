@@ -36,6 +36,8 @@ if __name__ == '__main__':
                 continue;
             elif site['board'] == "GNBoardBasicSkin":
                 boardScraper = boardTorrentScraper.GNBoardBasicSkin()
+            elif site['board'] == "GNBoardBasicSkin2":
+                boardScraper = boardTorrentScraper.GNBoardBasicSkin2()
             else:
                 print(f"https://github.com/istandthon7/torrent_web_scraper/issues 에 도움을 요청할 수 있습니다.({site['board']})")
                 continue;
