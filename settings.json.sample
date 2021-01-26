@@ -19,7 +19,7 @@
   "program-list": "program_list.json",
   "sites": [
     {
-      "board": "GNBoardBasicSkin2",
+      "board": "GNBoardBasicSkin",
       "category": [
         {
           "history": 0,

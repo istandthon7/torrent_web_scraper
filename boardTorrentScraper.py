@@ -8,7 +8,7 @@ import sys
 import webScraperLib
 
 #그누보드 BASIC스킨
-class GNBoardBasicSkin:
+class GNBoardBasicSkin2:
 
     def getScrapUrl(self, mainUrl, categoryUrl, count):
         if count > 1:
@@ -69,7 +69,7 @@ class GNBoardBasicSkin:
 
         return magnet
 #그누보드 BASIC스킨
-class GNBoardBasicSkin2:
+class GNBoardBasicSkin:
 
     def getScrapUrl(self, mainUrl, categoryUrl, count):
         if count > 1:
