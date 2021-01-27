@@ -45,14 +45,18 @@ if __name__ == '__main__':
 
         #Step 2.  Iterate category for this site
         for categoryIndex, category in enumerate(site["category"]):
-
+            isNextPageScrap = True
+            toSaveBoardItemNum = None
             #Step 4.  iterate page (up to 10) for this site/this category
-            for pageCount in range(settings['page_scrap_max'],0,-1):
+            for pageCount in range(1, settings['page_scrap_max']+1):
+
+                if isNextPageScrap == False:
+                    break;
 
                 boardList = boardScraper.getParseDataReverse(site["mainUrl"], category["url"], pageCount)
 
                 if boardList is None:
-                    #site['mainUrl'] = webScraperLib.updateUrl(site['mainUrl'])
+                    #에러메시지는 getParseDataReverse에서 출력
                     continue
 
                 #for board in boardList:
@@ -63,16 +67,19 @@ if __name__ == '__main__':
                     boardItemUrl = boardItem.get('href').replace('..', site['mainUrl'])
                     boardItemNum = boardScraper.getWrId(boardItemUrl)
 
+                    #print(f"탐색중... 제목: {boardItemTitle}")
                     #boardList의 첫 게시물의 id를 확인
                     if (category['history'] >= boardItemNum):
-                        continue;
-
+                        isNextPageScrap = False
+                        break;
+                    
                     if "영화" in category['name']:
                         programTitle = movieScraper.checkTitleWithMovieList(boardItemTitle, dtime.now().strftime("%Y"))
                     else:
                         programTitle = webScraperLib.checkTitleWithProgramList(boardItemTitle, settings["program-list"])
-
-                    settings["sites"][siteIndex]["category"][categoryIndex]["history"] = boardItemNum
+                    
+                    if boardItemIndex == 1 and pageCount == 1:
+                        toSaveBoardItemNum = boardItemNum
 
                     if not programTitle:
 
@@ -110,7 +117,9 @@ if __name__ == '__main__':
                         webScraperLib.removeTransmissionRemote(settings, sessionId, programTitle)
 
                     webScraperLib.addMagnetInfoToFile(HISTORY_FILE,runTime, site['name'], boardItemTitle, magnet, programTitle)
-
-
+            #값이 있는 경우만 갱신
+            if toSaveBoardItemNum is not None:
+                settings["sites"][siteIndex]["category"][categoryIndex]["history"] = toSaveBoardItemNum
+                
         #Step 5.  save scrap ID
         webScraperLib.saveJson(SETTING_FILE, settings)

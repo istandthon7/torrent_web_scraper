@@ -34,7 +34,7 @@ class GNBoardBasicSkin:
         items = listBoardDiv.find_all('a', href= lambda x: "wr_id" in x)
 
         items = list(filter(lambda x: len(x.text.strip())>0, items))
-        items.reverse()
+        #items.reverse()
         return items
 
     #게시판 아이디 파싱, url을 기반으로 wr_id text를 뒤의 id parsing
