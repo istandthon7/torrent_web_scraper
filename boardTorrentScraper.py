@@ -24,9 +24,9 @@ class GNBoardBasicSkin:
         if bsObj is None:
             print(f"게시판 접속에 실패하였습니다. {url} 브라우저에서 접속여부를 확인할 수 있습니다.")
             return
-        
+
         listBoardDiv = bsObj.find('div', attrs={'class' : 'list-board'})
-        
+
         if listBoardDiv is None:
             print(f"게시판 리스트 얻기에 실패하였습니다. {url}")
             return;

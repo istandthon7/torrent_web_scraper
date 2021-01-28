@@ -36,9 +36,9 @@ def checkUrl(url):
 
 def updateUrl(url):
     return re.sub("([\d]+)[\.]", lambda m: str(int(m.group(1))+1), url)
-    
+
 def checkTitleWithTitle(title, boardTitle):
-    
+
     keyArray = title.lower().split()
     for tmp in keyArray:
         if not tmp in boardTitle:
@@ -46,7 +46,7 @@ def checkTitleWithTitle(title, boardTitle):
     return True
 
 def checkResolutionWithTitle(resolution, boardTitle):
-  
+
     if resolution == "":
         return True
     if resolution.lower() in boardTitle:
@@ -54,16 +54,16 @@ def checkResolutionWithTitle(resolution, boardTitle):
     return False
 
 def checkVersionWithTitle(release, boardTitle):
-  
+
     if release == "":
         return True
-    
+
     if release.lower() in boardTitle:
         return True
     return False
 
 def checkTitleWithProgramList(boardTitle, programListFileName):
-    
+
     boardTitle = boardTitle.lower()
 
     programs = Programs(programListFileName)
@@ -147,7 +147,7 @@ def getSessionIdTorrentRpc(setttings):
 
     except requests.exceptions.ConnectionError:
         print("transmission이 실행중인 아닌 것으로 보입니다. " + url)
-    
+
     return
 
 def addMagnetTransmissionRemote(magnetAddr, settings, downloadDir, sessionId):
@@ -278,7 +278,7 @@ def notiEmail(mailNotiSetting, mailNotiHistoryFileName, siteName, boardTitle, ru
 
         if keyword in boardTitle:
             cmd = mailNotiSetting["cmd"]
-            cmd = cmd.replace("$board_title", boardTitle)
+            cmd = cmd.replace("$board_title", "["+siteName+"]" + boardTitle)
             cmd = cmd.replace("$address",email)
             subprocess.call(cmd, shell=True)
             addMailNotiToFile(mailNotiHistoryFileName, runTime
@@ -342,7 +342,7 @@ class MoiveScraper:
 
 
 def loadJson(settingfileName):
-    
+
     try:
         dataFile = open(settingfileName, 'r', encoding='utf-8')
     except FileNotFoundError as e:

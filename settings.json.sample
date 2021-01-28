@@ -2,7 +2,7 @@
   "download-base": "",
   "mail-noti": {
     "address": "email@sample.com",
-    "cmd": "email_sender.sh '$board_title' '등록한 키워드가 포함된 프로그램이 토렌트사이트에 등록되었습니다..' $address",
+    "cmd": "email_sender.sh 'torrent_web_scraper keyword notification mail' '$board_title' $address",
     "keywords": [
       "키워드",
       "키워드2"

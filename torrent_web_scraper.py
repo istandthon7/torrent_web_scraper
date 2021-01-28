@@ -72,12 +72,12 @@ if __name__ == '__main__':
                     if (category['history'] >= boardItemNum):
                         isNextPageScrap = False
                         break;
-                    
+
                     if "영화" in category['name']:
                         programTitle = movieScraper.checkTitleWithMovieList(boardItemTitle, dtime.now().strftime("%Y"))
                     else:
                         programTitle = webScraperLib.checkTitleWithProgramList(boardItemTitle, settings["program-list"])
-                    
+
                     if boardItemIndex == 1 and pageCount == 1:
                         toSaveBoardItemNum = boardItemNum
 
