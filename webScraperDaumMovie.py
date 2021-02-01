@@ -22,7 +22,7 @@ class SiteScraper:
         webpage_addr[RANKING] += lastMonth.strftime("%Y%m")
 
     def checkUrl(self):
-        ret = web_scraper_lib.checkUrl(self.getScrapUrl())
+        ret = webScraperLib.checkUrl(self.getScrapUrl())
         return ret
 
     def getScrapUrl(self):
@@ -30,9 +30,9 @@ class SiteScraper:
 
     # 리스트의 url링크 리스트
     def getParseData(self):
-        bsObj = web_scraper_lib.getBsObj(self.getScrapUrl())
+        bsObj = webScraperLib.getBsObj(self.getScrapUrl())
         nameList = bsObj.find_all('a', attrs={'class' : 'name_movie'})
         if len(nameList) == 0:
-            print("web_scraper_daum_movie.py getParseData 제목 클래스가 없어요. a tag's class: name_movie")
+            print("webScraperDaumMovie.py getParseData 제목 클래스가 없어요. a tag's class: name_movie")
         return nameList
 
