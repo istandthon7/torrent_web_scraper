@@ -16,7 +16,7 @@ import subprocess
 def getBsObj(url):
     req = Request(url, headers={"user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36"})
     c = ssl._create_unverified_context()
-    time.sleep(2)
+    time.sleep(3)
     try:
         html = urlopen(req, context=c).read().decode('utf-8','replace')
         data = BeautifulSoup(html, "html.parser")
