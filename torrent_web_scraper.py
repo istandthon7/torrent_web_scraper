@@ -107,7 +107,7 @@ if __name__ == '__main__':
                     sessionId = webScraperLib.getSessionIdTorrentRpc(settings)
 
                     if sessionId == None:
-                        continue
+                        sys.exit()
 
                     webScraperLib.addMagnetTransmissionRemote(magnet, settings, downloadPath, sessionId)
 
