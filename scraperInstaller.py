@@ -20,8 +20,8 @@ if __name__ == '__main__':
 
     setting = config.setting()
 
-
-    os.mkdir(setting.CONFIG_PATH)
+    if os.path.isdir(setting.CONFIG_PATH) == False:
+        os.mkdir(setting.CONFIG_PATH)
     # 설정파일 생성
     isNotExist = create(setting.SETTING_FILE_NAME)
 
