@@ -29,7 +29,7 @@ if __name__ == '__main__':
                 print(f"https://github.com/istandthon7/torrent_web_scraper/issues 에 도움을 요청할 수 있습니다.{site['mainUrl']}")
                 continue;
             elif site['board'] == "GNBoardBasicSkin":
-                boardScraper = boardScraper.GNBoardBasicSkin()
+                bdScraper = boardScraper.GNBoardBasicSkin()
             else:
                 print(f"https://github.com/istandthon7/torrent_web_scraper/issues 에 도움을 요청할 수 있습니다.({site['board']})")
                 continue;
@@ -47,7 +47,7 @@ if __name__ == '__main__':
                 if isNextPageScrap == False:
                     break;
 
-                boardList = boardScraper.getParseDataReverse(site["mainUrl"], category["url"], pageCount)
+                boardList = bdScraper.getParseDataReverse(site["mainUrl"], category["url"], pageCount)
 
                 if boardList is None:
                     #에러메시지는 getParseDataReverse에서 출력
@@ -59,7 +59,7 @@ if __name__ == '__main__':
                     #게시판 제목
                     boardItemTitle = boardItem.get_text().replace('\t', '').replace('\n', '')
                     boardItemUrl = boardItem.get('href').replace('..', site['mainUrl'])
-                    boardItemNum = boardScraper.getWrId(boardItemUrl)
+                    boardItemNum = bdScraper.getWrId(boardItemUrl)
 
                     #print(f"탐색중... 제목: {boardItemTitle}")
                     #boardList의 첫 게시물의 id를 확인
@@ -80,7 +80,7 @@ if __name__ == '__main__':
                         scraperLibrary.notiEmail(setting , site['name'], boardItemTitle )
                         continue
 
-                    magnet = boardScraper.getMagnetDataFromPageUrl(boardItemUrl)
+                    magnet = bdScraper.getMagnetDataFromPageUrl(boardItemUrl)
 
                     if magnet == "":
                       continue

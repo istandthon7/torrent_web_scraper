@@ -5,7 +5,7 @@
     <ProjectGuid>eb674a8b-9884-433a-be4e-f3285747aa7d</ProjectGuid>
     <ProjectHome>
     </ProjectHome>
-    <StartupFile>movie_title_scraper.py</StartupFile>
+    <StartupFile>torrent_web_scraper.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -38,6 +38,7 @@
     <Content Include="install.sh" />
     <Content Include="config\Movie.txt" />
     <Content Include="config\TVShow.json" />
+    <Content Include="README.md" />
     <Content Include="requirements.txt" />
     <Content Include="config\setting.json" />
     <Content Include="setting.json.sample" />

@@ -114,3 +114,4 @@ venv.bak/
 /settings.json
 
 mail_noti_history.csv
+/config

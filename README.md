@@ -67,3 +67,12 @@ torrent_web_scraper를 주기적으로 실행하게 설정해두면, 토렌트 �
 이점을 이해하고 torrent_web_scraper 스크립트를 실행 여부를 결정하세요.  
 
 movie_title_scraper.py: 다음 인기영화 스크래퍼 (지난 달 인기영화 제목을 스크랩하여 "movie_list.txt"에 저장해준다.)  
+
+
+변경이력
+v1.1
+파일명 변경
+settings.json -> config/setting.json (setting.json파일은 내용 변경이 있으니 trans- 부분의 연결정보를 갱신하세요.)
+program_list.json -> config/TVShow.json
+movie_list.txt -> config/Movie.txt
+
