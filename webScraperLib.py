@@ -14,22 +14,23 @@ import time
 import subprocess
 
 def getBsObj(url):
-    req = Request(url, headers={"user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36"})
-    c = ssl._create_unverified_context()
+    req = Request(url, headers={"User-Agent": "Mozilla/5.0"})
+    #c = ssl._create_unverified_context()
     time.sleep(3)
     try:
-        html = urlopen(req, context=c).read().decode('utf-8','replace')
+        html = urlopen(req).read().decode('utf-8','replace')
         data = BeautifulSoup(html, "html.parser")
         return data
     except Exception as e:
-        print(f"Exception getBsObj url : {e}")
+        print(f"Exception getBsObj url: {url}, error: {e}")
 
 def checkUrl(url):
     try:
-        getBsObj(url)
+        if getBsObj(url) == None:
+            return False
     except Exception as e:
-        print(f"Exception access url : {e}")
-        print(f"We can not scrap {url} , something wrong.\n")
+        #print(f"Exception access url : {e}")
+        #print(f"We can not scrap {url} , something wrong.\n")
         return False
 
     return True

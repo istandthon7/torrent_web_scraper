@@ -22,7 +22,7 @@ class GNBoardBasicSkin:
         bsObj = webScraperLib.getBsObj(url)
 
         if bsObj is None:
-            print(f"게시판 접속에 실패하였습니다. {url} 브라우저에서 접속여부를 확인할 수 있습니다.")
+            print(f"게시판 접속에 실패하였습니다. {url} ")
             return
 
         listBoardDiv = bsObj.find('div', attrs={'class' : 'list-board'})
@@ -60,6 +60,8 @@ class GNBoardBasicSkin:
 
     def getMagnetDataFromPageUrl(self, url):
         bsObj = webScraperLib.getBsObj(url)
+        if bsObj is None:
+            print(f'{url}에서 magnet분리가 실패하였습니다. 잠시 후 다시 시도해주세요')
         # a 태그 중에 href가 magnet으로 시작하는 태그.
         tag = bsObj.findAll('a', href=re.compile('^magnet'))
 
