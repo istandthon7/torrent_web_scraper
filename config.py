@@ -23,8 +23,8 @@ class setting(object):
         try:
             dataFile = open(self.SETTING_FILE_NAME, 'r', encoding='utf-8')
         except FileNotFoundError as e:
+            print(f"설정파일({self.SETTING_FILE})이 없습니다. ./install.sh 를 실행한 후 변경사항을 적용하세요.")
             print(str(e))
-            print(f"Please, set your file path.{self.SETTING_FILE}")
             sys.exit()
         else:
             self.json = json.load(dataFile)

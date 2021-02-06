@@ -20,13 +20,15 @@ if __name__ == '__main__':
 
     setting = config.setting()
 
+
+    os.mkdir(setting.CONFIG_PATH)
     # 설정파일 생성
     isNotExist = create(setting.SETTING_FILE_NAME)
 
         # 설정파일
     if isNotExist:
 
-      print(f"transmission 연결정보를 {setting.SETTING_FILE_NAME}에 설정해주세요\n")
+      print(f"\n\ntransmission 연결정보를 {setting.SETTING_FILE_NAME}에 설정해주세요\n")
 
       shutil.copyfile(f"./{setting.SETTING_FILE_NAME_ONLY}.sample", f"{setting.SETTING_FILE_NAME}")
 
