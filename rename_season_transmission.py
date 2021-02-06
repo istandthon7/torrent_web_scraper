@@ -3,7 +3,7 @@
 from datetime import datetime as dtime
 import os
 import sys
-import webScraperDaumMovie
+import daumMovieTitleScraper
 import re
 import json
 
@@ -11,13 +11,13 @@ __version__ = 'v1.00'
 
 def setSeasonTorrentFile(settings, torrentTitle, season):
 
-    sessionId = webScraperDaumMovie.getSessionIdTorrentRpc(settings)
+    sessionId = daumMovieTitleScraper.getSessionIdTorrentRpc(settings)
     print(f"info, setSeasonTorrentFile session_id = {sessionId}")
 
-    torrentId = webScraperDaumMovie.getIdTransmissionRemote(settings, sessionId, torrentTitle)
+    torrentId = daumMovieTitleScraper.getIdTransmissionRemote(settings, sessionId, torrentTitle)
     print(f"info, setSeasonTorrentFile id = {torrentId}")
 
-    torrents = webScraperDaumMovie.getFilesTorrentRemote(settings, sessionId, torrentId)
+    torrents = daumMovieTitleScraper.getFilesTorrentRemote(settings, sessionId, torrentId)
     print(f"info setSeasonTorrentFile files = {files}")
 
     for torrent in torrents:
@@ -30,7 +30,7 @@ def setSeasonTorrentFile(settings, torrentTitle, season):
         newFileName = re.sub('(?P<epi>E\d+.)', replaceString, fileName)
         print(f"info setSeasonTorrentFile newFileName = {newFileName}")
 
-        webScraperDaumMovie.renameFileTorrentRpc(settings, torrentId, sessionId, torrent['name'], newFileName)
+        daumMovieTitleScraper.renameFileTorrentRpc(settings, torrentId, sessionId, torrent['name'], newFileName)
 
     return
 
@@ -42,7 +42,7 @@ if __name__ == '__main__':
     runTime = dtime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     print( f"{os.path.basename(__file__)} {__version__} is going to work at {runTime}. { sys.getdefaultencoding()}")
-    settings = webScraperDaumMovie.loadJson(SETTING_FILE)
+    settings = daumMovieTitleScraper.loadJson(SETTING_FILE)
 
     torrentTitle = sys.argv[1]
     print(f"info, main torrent_title = {torrentTitle}")

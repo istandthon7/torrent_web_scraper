@@ -10,13 +10,13 @@
   },
   "movie": {
     "download": "",
-    "list": "movie_list.txt",
+    "list": "Movie.txt",
     "ranking": 8,
     "resolution": "1080",
     "video_codec": "264"
   },
   "page_scrap_max": 1,
-  "program-list": "program_list.json",
+  "program-list": "TVShow.json",
   "sites": [
     {
       "board": "GNBoardBasicSkin",

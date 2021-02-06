@@ -10,7 +10,7 @@
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>torrentWebScraper</Name>
+    <Name>torrentScraper</Name>
     <RootNamespace>PythonApplication1</RootNamespace>
     <IsWindowsApplication>False</IsWindowsApplication>
   </PropertyGroup>
@@ -23,21 +23,28 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="config.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="daumMovieTitleScraper.py" />
     <Compile Include="movie_title_scraper.py" />
     <Compile Include="rename_season_transmission.py" />
+    <Compile Include="scraperLibrary.py" />
     <Compile Include="torrent_web_scraper.py" />
-    <Compile Include="webScraperInstall.py" />
-    <Compile Include="webScraperDaumMovie.py" />
-    <Compile Include="webScraperLib.py" />
-    <Compile Include="boardTorrentScraper.py" />
+    <Compile Include="scraperInstaller.py" />
+    <Compile Include="boardScraper.py" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="install.sh" />
-    <Content Include="movie_list.txt" />
-    <Content Include="program_list.json" />
+    <Content Include="config\Movie.txt" />
+    <Content Include="config\TVShow.json" />
     <Content Include="requirements.txt" />
-    <Content Include="settings.json" />
-    <Content Include="settings.json.sample" />
+    <Content Include="config\setting.json" />
+    <Content Include="setting.json.sample" />
+    <Content Include="TVShow.json.sample" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="config\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

@@ -12,4 +12,4 @@ sudo apt install -y python3-pip python3-testresources
 pip3 install requests
 pip3 install -r requirements.txt
 
-./webScraperInstall.py
+./scraperInstaller.py

@@ -1,33 +1,27 @@
 #!/usr/bin/env python3
-from datetime import datetime as dtime
-import os
-import sys
-import boardTorrentScraper
-import webScraperLib
-import time
 
-__version__ = 'v1.00'
+import sys
+import boardScraper
+import scraperLibrary
+import time
+import config
+import os
 
 if __name__ == '__main__':
 
-    SETTING_PATH = os.path.realpath(os.path.dirname(__file__)) + "/"
+    setting = config.setting()
+    setting.loadJson()
+    movie = config.Moive(setting)
+    tvshow = config.TVShow(setting)
 
-    SETTING_FILE = SETTING_PATH + "settings.json"
-    HISTORY_FILE = SETTING_PATH + "web_scraper_history.csv"
-    MAIL_NOTI_HISTORY = SETTING_PATH + "mail_noti_history.csv"
-    runTime = dtime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-    settings = webScraperLib.loadJson(SETTING_FILE)
-    movieScraper = webScraperLib.MoiveScraper(settings['movie'])
-
-    for siteIndex, site in enumerate(settings["sites"]):
+    for siteIndex, site in enumerate(setting.json["sites"]):
 
         #Step 1.  test for access with main url
         if site['enable'] == False:
             continue;
 
-        if not webScraperLib.checkUrl(site["mainUrl"]):
-            #site['mainUrl'] = webScraperLib.updateUrl(site['mainUrl'])
+        if not scraperLibrary.checkUrl(site["mainUrl"]):
+            #site['mainUrl'] = scraperLibrary.updateUrl(site['mainUrl'])
             continue
 
         try:
@@ -35,7 +29,7 @@ if __name__ == '__main__':
                 print(f"https://github.com/istandthon7/torrent_web_scraper/issues 에 도움을 요청할 수 있습니다.{site['mainUrl']}")
                 continue;
             elif site['board'] == "GNBoardBasicSkin":
-                boardScraper = boardTorrentScraper.GNBoardBasicSkin()
+                boardScraper = boardScraper.GNBoardBasicSkin()
             else:
                 print(f"https://github.com/istandthon7/torrent_web_scraper/issues 에 도움을 요청할 수 있습니다.({site['board']})")
                 continue;
@@ -48,7 +42,7 @@ if __name__ == '__main__':
             isNextPageScrap = True
             toSaveBoardItemNum = None
             #Step 4.  iterate page (up to 10) for this site/this category
-            for pageCount in range(1, settings['page_scrap_max']+1):
+            for pageCount in range(1, setting.json['page_scrap_max']+1):
 
                 if isNextPageScrap == False:
                     break;
@@ -74,16 +68,16 @@ if __name__ == '__main__':
                         break;
 
                     if "영화" in category['name']:
-                        programTitle = movieScraper.checkTitleWithMovieList(boardItemTitle, dtime.now().strftime("%Y"))
+                        programTitle = movie.checkTitleWithMovieFile(boardItemTitle)
                     else:
-                        programTitle = webScraperLib.checkTitleWithProgramList(boardItemTitle, settings["program-list"])
+                        programTitle = tvshow.checkTitleInTVShow(boardItemTitle)
 
                     if boardItemIndex == 1 and pageCount == 1:
                         toSaveBoardItemNum = boardItemNum
 
                     if not programTitle:
 
-                        webScraperLib.notiEmail(settings["mail-noti"], MAIL_NOTI_HISTORY, site['name'], boardItemTitle, runTime)
+                        scraperLibrary.notiEmail(setting , site['name'], boardItemTitle )
                         continue
 
                     magnet = boardScraper.getMagnetDataFromPageUrl(boardItemUrl)
@@ -92,34 +86,34 @@ if __name__ == '__main__':
                       continue
 
                     #magnet was already downloaded.
-                    if webScraperLib.checkMagnetHistory(HISTORY_FILE, magnet):
+                    if config.checkMagnetHistory(setting.TORRENT_HISTORY_FILE_NAME, magnet):
                         continue
 
                     if "영화" in category['name']:
-                      downloadPath = settings["movie"]["download"]
+                      downloadPath = setting.json["movie"]["download"]
                     else:
-                      downloadPath = settings["download-base"]
+                      downloadPath = setting.json["download-base"]
                       if len(downloadPath) > 0:
                         downloadPath = downloadPath + "/" + programTitle
                         if not os.path.exists(downloadPath):
                           os.makedirs(downloadPath)
 
-                    sessionId = webScraperLib.getSessionIdTorrentRpc(settings)
+                    sessionId = scraperLibrary.getSessionIdTorrentRpc(setting.json)
 
                     if sessionId == None:
                         sys.exit()
 
-                    webScraperLib.addMagnetTransmissionRemote(magnet, settings, downloadPath, sessionId)
+                    scraperLibrary.addMagnetTransmissionRemote(magnet, setting.json, downloadPath, sessionId)
 
                     if "영화" in category['name']:
-                        movieScraper.removeLineFromMovieListFile(programTitle)
+                        movie.removeLineInMovie(programTitle)
                     else:
-                        webScraperLib.removeTransmissionRemote(settings, sessionId, programTitle)
+                        scraperLibrary.removeTransmissionRemote(setting.json, sessionId, programTitle)
 
-                    webScraperLib.addMagnetInfoToFile(HISTORY_FILE,runTime, site['name'], boardItemTitle, magnet, programTitle)
+                    config.addMagnetInfoToFile(setting, site['name'], boardItemTitle, magnet, programTitle)
             #값이 있는 경우만 갱신
             if toSaveBoardItemNum is not None:
-                settings["sites"][siteIndex]["category"][categoryIndex]["history"] = toSaveBoardItemNum
+                setting.json["sites"][siteIndex]["category"][categoryIndex]["history"] = toSaveBoardItemNum
                 
         #Step 5.  save scrap ID
-        webScraperLib.saveJson(SETTING_FILE, settings)
+        setting.saveJson()

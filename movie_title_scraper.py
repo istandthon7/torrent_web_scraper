@@ -3,32 +3,29 @@
 from datetime import datetime as dtime
 import os
 import sys
-import webScraperLib
-import webScraperDaumMovie
+import scraperLibrary
+import daumMovieTitleScraper
+import config
 
-__version__ = 'v1.00'
 
 
 if __name__ == '__main__':
 
-    SETTING_PATH = os.path.realpath(os.path.dirname(__file__))+"/"
-    SETTING_FILE = SETTING_PATH+"settings.json"
-    HISTORY_FILE = SETTING_PATH+"web_scraper_history.csv"
-    runTime = dtime.now().strftime("%Y-%m-%d %H:%M:%S")
+    setting = config.setting()
+    setting.loadJson()
+    movie = config.Moive(setting)
 
-    settings = webScraperLib.loadJson(SETTING_FILE)
-    daumMovieScraper = webScraperDaumMovie.SiteScraper()
+    movieTitleScraper = daumMovieTitleScraper.SiteScraper()
 
-    if not daumMovieScraper.checkUrl():
+    if not movieTitleScraper.checkUrl():
       print("info, main scraper.checkUrl = false")
       sys.exit()
 
-    movieTitles = daumMovieScraper.getParseData()
+    movieTitles = movieTitleScraper.getParseData()
     # <strong class="tit_join"><a class="link_g #list #monthly @1" href="/moviedb/main?movieId=111292">기생충</a></strong>, ...
     #print("info, main titles_tag = ", titles_tag)
 
-    movieListFileName = SETTING_PATH+settings.get("movie").get("list")
-    f = open(movieListFileName, 'a', encoding="utf-8")
+    f = open(movie.fileName, 'a', encoding="utf-8")
 
     for index, movieTitle in enumerate(movieTitles, start=1):
 
@@ -37,7 +34,7 @@ if __name__ == '__main__':
 
       f.write(title+"\n")
 
-      if index == settings.get("movie").get("ranking"):
+      if index == setting.json["movie"]["ranking"]:
         break;
 
     f.close()

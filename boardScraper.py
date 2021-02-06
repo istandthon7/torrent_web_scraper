@@ -5,7 +5,7 @@ import subprocess
 import re
 import json
 import sys
-import webScraperLib
+import scraperLibrary
 
 
 #그누보드 BASIC스킨
@@ -19,7 +19,7 @@ class GNBoardBasicSkin:
 
     def getParseDataReverse(self, mainUrl, categoryUrl, page):
         url = self.getScrapUrl(mainUrl, categoryUrl, page)
-        bsObj = webScraperLib.getBsObj(url)
+        bsObj = scraperLibrary.getBsObj(url)
 
         if bsObj is None:
             print(f"게시판 접속에 실패하였습니다. {url} ")
@@ -59,9 +59,7 @@ class GNBoardBasicSkin:
         return int((url[startp:endp]))
 
     def getMagnetDataFromPageUrl(self, url):
-        bsObj = webScraperLib.getBsObj(url)
-        if bsObj is None:
-            print(f'{url}에서 magnet분리가 실패하였습니다. 잠시 후 다시 시도해주세요')
+        bsObj = scraperLibrary.getBsObj(url)
         # a 태그 중에 href가 magnet으로 시작하는 태그.
         tag = bsObj.findAll('a', href=re.compile('^magnet'))
 
