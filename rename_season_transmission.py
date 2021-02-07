@@ -3,21 +3,20 @@
 from datetime import datetime as dtime
 import os
 import sys
-import daumMovieTitleScraper
+import scraperLibrary
 import re
 import json
 
-__version__ = 'v1.00'
 
-def setSeasonTorrentFile(settings, torrentTitle, season):
+def setSeasonTorrentFile(setting, torrentTitle, season):
 
-    sessionId = daumMovieTitleScraper.getSessionIdTorrentRpc(settings)
+    sessionId = scraperLibrary.getSessionIdTorrentRpc(setting)
     print(f"info, setSeasonTorrentFile session_id = {sessionId}")
 
-    torrentId = daumMovieTitleScraper.getIdTransmissionRemote(settings, sessionId, torrentTitle)
+    torrentId = scraperLibrary.getIdTransmissionRemote(setting, sessionId, torrentTitle)
     print(f"info, setSeasonTorrentFile id = {torrentId}")
 
-    torrents = daumMovieTitleScraper.getFilesTorrentRemote(settings, sessionId, torrentId)
+    torrents = scraperLibrary.getFilesTorrentRemote(setting, sessionId, torrentId)
     print(f"info setSeasonTorrentFile files = {files}")
 
     for torrent in torrents:
@@ -30,36 +29,31 @@ def setSeasonTorrentFile(settings, torrentTitle, season):
         newFileName = re.sub('(?P<epi>E\d+.)', replaceString, fileName)
         print(f"info setSeasonTorrentFile newFileName = {newFileName}")
 
-        daumMovieTitleScraper.renameFileTorrentRpc(settings, torrentId, sessionId, torrent['name'], newFileName)
+        scraperLibrary.renameFileTorrentRpc(setting, torrentId, sessionId, torrent['name'], newFileName)
 
     return
 
 if __name__ == '__main__':
 
-    SETTING_PATH = os.path.realpath(os.path.dirname(__file__))+"/"
-    SETTING_FILE = SETTING_PATH+"settings.json"
-    HISTORY_FILE = SETTING_PATH+"web_scraper_history.csv"
-    runTime = dtime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-    print( f"{os.path.basename(__file__)} {__version__} is going to work at {runTime}. { sys.getdefaultencoding()}")
-    settings = daumMovieTitleScraper.loadJson(SETTING_FILE)
+    setting = config.setting()
+    setting.loadJson()
 
     torrentTitle = sys.argv[1]
     print(f"info, main torrent_title = {torrentTitle}")
 
     # 시즌이 설정된 토렌트인가
-    with open(settings["program-list"]) as programListFile:
+    with open(setting["program-list"]) as TVShow:
       
-        programList = json.load(programListFile)
+        tvshowJson = json.load(TVShow)
       
-        for programTitle in programList['title_list']:
+        for tvshowTitle in tvshowJson['title_list']:
 
-            programTitleName = programTitle['name']
+            tvshowTitleName = tvshowTitle['name']
 
-            if programTitleName in torrentTitle and len(programTitle) >= 4:
+            if tvshowTitleName in torrentTitle and len(tvshowTitle) >= 4:
 
-              print("info, main program name = %s, season = %d" % (torrentTitle, programTitle['season']))
-              setSeasonTorrentFile(settings, torrentTitle, programTitle['season'])
+              print(f"info, main program name = {torrentTitle}, season = {tvshowTitle['season']}")
+              setSeasonTorrentFile(setting, torrentTitle, tvshowTitle['season'])
             #else:
             #  print("not equal")
     sys.exit()
