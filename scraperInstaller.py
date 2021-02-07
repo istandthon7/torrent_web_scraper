@@ -30,7 +30,8 @@ if __name__ == '__main__':
     # 영화목록
     Movie = setting.CONFIG_PATH + setting.json['movie']['list']
     if os.path.isfile(Movie) == False:
-        open(Movie, 'w+').close()
+      shutil.copyfile(f"./{setting.json['movie']['list']}.sample", Movie)
+      print(f"다운로드할 영화를 {Movie}에 추가하세요.\n")
 
     # 프로그램 파일
     TVShow = setting.CONFIG_PATH + setting.json["program-list"]

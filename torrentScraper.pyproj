@@ -38,6 +38,7 @@
     <Content Include="install.sh" />
     <Content Include="config\Movie.txt" />
     <Content Include="config\TVShow.json" />
+    <Content Include="Movie.txt.sample" />
     <Content Include="README.md" />
     <Content Include="requirements.txt" />
     <Content Include="config\setting.json" />
