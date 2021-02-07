@@ -41,12 +41,17 @@ if __name__ == '__main__':
     # 트랜스미션 스크립트
     if os.path.isdir(setting.TRANSMISSION_SCRIPT_PATH) == False:
         os.mkdir(setting.TRANSMISSION_SCRIPT_PATH)
+    
+    if os.path.isfile(f"{setting.TRANSMISSION_SCRIPT_PATH}{setting.TORRENT_DONE_SH}") == False:
         shutil.copyfile(f"./{setting.TORRENT_DONE_SH}.sample", f"{setting.TRANSMISSION_SCRIPT_PATH}{setting.TORRENT_DONE_SH}")
-        shutil.copyfile(f"./{setting.RENAME_SEASON_TRANSMISSION_PY}", f"{setting.TRANSMISSION_SCRIPT_PATH}{setting.RENAME_SEASON_TRANSMISSION_PY}")
-        shutil.copyfile(f"./{setting.SCRAPERLIBRARY_PY}", f"{setting.TRANSMISSION_SCRIPT_PATH}{setting.SCRAPERLIBRARY_PY}")
-
         addUserX(f"{setting.TRANSMISSION_SCRIPT_PATH}{setting.TORRENT_DONE_SH}")
+
+    if os.path.isfile(f"{setting.TRANSMISSION_SCRIPT_PATH}{setting.RENAME_SEASON_TRANSMISSION_PY}") == False:
+        shutil.copyfile(f"./{setting.RENAME_SEASON_TRANSMISSION_PY}", f"{setting.TRANSMISSION_SCRIPT_PATH}{setting.RENAME_SEASON_TRANSMISSION_PY}")
         addUserX(f"{setting.TRANSMISSION_SCRIPT_PATH}{setting.RENAME_SEASON_TRANSMISSION_PY}")
+
+    if os.path.isfile(f"{setting.TRANSMISSION_SCRIPT_PATH}{setting.SCRAPERLIBRARY_PY}") == False:
+        shutil.copyfile(f"./{setting.SCRAPERLIBRARY_PY}", f"{setting.TRANSMISSION_SCRIPT_PATH}{setting.SCRAPERLIBRARY_PY}")
         addUserX(f"{setting.TRANSMISSION_SCRIPT_PATH}{setting.SCRAPERLIBRARY_PY}")
 
 
