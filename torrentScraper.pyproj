@@ -42,6 +42,7 @@
     <Content Include="requirements.txt" />
     <Content Include="config\setting.json" />
     <Content Include="setting.json.sample" />
+    <Content Include="torrent_done.sh.sample" />
     <Content Include="TVShow.json.sample" />
   </ItemGroup>
   <ItemGroup>
