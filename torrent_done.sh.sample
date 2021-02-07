@@ -18,7 +18,7 @@ echo "download dir: $TR_TORRENT_DIR" >> $log_file
 echo "download name: $TR_TORRENT_NAME" >> $log_file
 echo "$0"
 
-if [ "$TR_TORRENT_DIR" == *"" ]; then
+if [ "$TR_TORRENT_DIR" == *"skip_dir" ]; then
 
 	echo 'skipped notification' >> $log_file
 else
