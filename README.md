@@ -1,5 +1,5 @@
-토렌트(마그넷) 신규 에피소드 자동 다운로드 프로젝트 - torrent_web_scraper는 원하는 토렌트 파일을 자동으로 다운로드 해주는 웹스크랩퍼(웹크롤러)입니다.  
-torrent_web_scraper를 사용하면 토렌트(마그넷) 다운로드를 위해 토렌트 사이트를 방문할 필요가 없어집니다.  
+토렌트(마그넷) 신규 에피소드 자동 다운로드 프로젝트 
+torrent_web_scraper는 원하는 토렌트 파일을 자동으로 다운로드 해주는 웹스크랩퍼(웹크롤러)입니다.  torrent_web_scraper를 사용하면 토렌트(마그넷) 다운로드를 위해 토렌트 사이트를 방문할 필요가 없어집니다.  
 
 **토렌트 자동 다운로드 프로젝트 - torrent_web_scraper 실행 환경**  
 테스트 OS : 리눅스(우분투, 데비안, 라즈베리파이OS), 윈도우10   
@@ -7,13 +7,14 @@ torrent_web_scraper를 사용하면 토렌트(마그넷) 다운로드를 위해 
 
 ## 1. torrent_web_scraper
 ### 1.0 소개
-torrent_web_scraper는 매일 새로 업로드되는 tv 프로그램을 다운로드하기 위해 토렌트 사이트를 돌아다니기 귀찮아서 제작을 구상하게 되었습니다. tv 프로그램 제목을 추가한 후에 토렌트사이트에 새로운 에피소드가 등록되면 [Transmission](https://transmissionbt.com)에 추가해줍니다.  
+torrent_web_scraper는 매일 새로 업로드되는 tv 프로그램을 다운로드하기 위해 토렌트 사이트를 돌아다니기 귀찮아서 제작을 구상하게 되었습니다. tv 프로그램 제목이나 영화 제목을 등록해 놓으면 토렌트사이트에 새로운 에피소드와 영화가 등록되면 [Transmission](https://transmissionbt.com)에 추가됩니다.  
 
 ### 1.1 설치
 #### 1.1.1 transmission설치
 [https://transmissionbt.com](https://transmissionbt.com)에서 운영체제에 맞는 프로그램을 다운받아 설치합니다.(우분투, 데비안은 sudo apt install transmission-daemon 설정파일은  /etc/transmission-daemon/settings.json)  윈도우의 경우 transmission-daemon이 설치되도록 설치옵션을 변경해 줘야 합니다.
 
 #### 1.1.2 소스파일 다운로드
+
     $ git clone https://github.com/istandthon7/torrent_web_scraper.git
     $ cd torrent_web_scraper
 
@@ -67,7 +68,8 @@ torrent_web_scraper.py를 실행시키면 게시판을 읽어와서 TVShow.json�
 ### 1.6 스케줄러 등록
 torrent_web_scraper를 주기적으로 실행하게 설정해두면, 토렌트 사이트를 방문하여 새로 등록된 마그넷 파일이 있는지 확인하고, 자동으로 다운로드를 해줍니다.  
 
-**주의** 토렌트 사이트를 웹 스크래핑하는 것은 불법이 아닙니다.  하지만, 토렌트를 사용하여 TV 프로그램 동영상을 다운로드하는 것은 저작권을 침해하는 불법 행위입니다.  이점을 이해하고 torrent_web_scraper 스크립트를 실행 여부를 결정하세요.  
+**주의** 
+토렌트 사이트를 웹 스크래핑하는 것은 불법이 아닙니다.  하지만, 토렌트를 사용하여 TV 프로그램 동영상을 다운로드하는 것은 저작권을 침해하는 불법 행위입니다.  이점을 이해하고 torrent_web_scraper 스크립트를 실행 여부를 결정하세요.  
 
 movie_title_scraper.py: 다음 인기영화 스크래퍼 (지난 달 인기영화 제목을 스크랩하여 "Movie.txt"에 저장해준다.)  
 
