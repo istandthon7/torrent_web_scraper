@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# transmission setttings.json다음 설정을 변경한다.
+# 전체경로를 사용해야 한다.
+# "script-torrent-done-enabled": true,
+# "script-torrent-done-filename": "/transmission_script/torrent_done.sh",
+
+export PYTHONIOENCODING="utf8"
+export LANG="ko_KR.UTF-8"
+export LANGUAGE="ko_KR.UTF-8"
+export LC_ALL="ko_KR.UTF-8"
+
+log_file="/tmp/transmission.log"
+#다음 변수가 넘어온다.
+#TR_TORRENT_DIR="/media/tvshows/TV 동물농장"
+#TR_TORRENT_NAME="TV 동물농장.E912.190407.720p-NEXT.mp4"
+echo "download dir: $TR_TORRENT_DIR" >> $log_file
+echo "download name: $TR_TORRENT_NAME" >> $log_file
+echo "$0"
+
+if [ "$TR_TORRENT_DIR" == *"" ]; then
+
+	echo 'skipped notification' >> $log_file
+else
+    #외부 스크립트 알림
+	#/path/email_sender.sh "transmission completed" "$TR_TORRENT_NAME" "email@sample.com"
+	#/path/twit.sh "transmission completed $TR_TORRENT_NAME"
+	echo "notification step 1" >> $log_file
+
+	if [[ "$TR_TORRENT_DIR" == *"tvshow"* ]]; then
+		cd /transmission_script && ./rename_season_transmission.py "$TR_TORRENT_NAME" >> $log_file
+
+		#su - debian-transmission -c "
+		#/path/nfo_maker.py "$TR_TORRENT_DIR" "$TR_TORRENT_NAME" >> $log_file
+		#/path/kodi_video_update.sh >> $log_file
+
+		echo "notification step 2" >> $log_file
+
+	elif [[ "$TR_TORRENT_DIR" == *"music"* ]]; then
+		cd "$TR_TORRENT_DIR"
+	fi
+fi
+
