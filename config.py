@@ -10,13 +10,19 @@ class setting(object):
 
     def __init__(self):
         self.version = 'v1.10'
-        self.CONFIG_PATH = os.path.realpath(os.path.dirname(__file__)) + "/config/"
-
+        currentPath = os.path.realpath(os.path.dirname(__file__))
+        self.CONFIG_PATH = currentPath + "/config/"
+        
         self.SETTING_FILE_NAME_ONLY = "setting.json"
         self.SETTING_FILE_NAME = self.CONFIG_PATH + self.SETTING_FILE_NAME_ONLY
         self.TORRENT_HISTORY_FILE_NAME = self.CONFIG_PATH + "torrent_history.csv"
         self.MAIL_HISTORY_FILE_NAME = self.CONFIG_PATH + "mail_history.csv"
         self.runTime = dtime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        self.TRANSMISSION_SCRIPT_PATH = currentPath + "/transmission_script/"
+        self.TORRENT_DONE_SH = "torrent_done.sh"
+        self.RENAME_SEASON_TRANSMISSION_PY = "rename_season_transmission.py"
+        self.SCRAPERLIBRARY_PY = "scraperLibrary.py"
 
     def loadJson(self):
 
