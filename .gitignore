@@ -105,7 +105,6 @@ venv.bak/
 
 # edit backup
 *~
-/web_scraper_history.csv
 /web_scraper_settings.json
 /web_scraper_program_list.json
 /movie_list.txt
@@ -113,5 +112,6 @@ venv.bak/
 /program_list.json
 /settings.json
 
-mail_noti_history.csv
+*.csv
 /config
+/transmisson_script

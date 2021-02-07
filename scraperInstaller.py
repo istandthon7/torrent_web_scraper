@@ -27,7 +27,7 @@ if __name__ == '__main__':
 
     setting.loadJson()
 
-    # 영화목록    
+    # 영화목록
     Movie = setting.CONFIG_PATH + setting.json['movie']['list']
     if os.path.isfile(Movie) == False:
         open(Movie, 'w+').close()
@@ -43,12 +43,10 @@ if __name__ == '__main__':
         os.mkdir(setting.TRANSMISSION_SCRIPT_PATH)
         shutil.copyfile(f"./{setting.TORRENT_DONE_SH}.sample", f"{setting.TRANSMISSION_SCRIPT_PATH}{setting.TORRENT_DONE_SH}")
         shutil.copyfile(f"./{setting.RENAME_SEASON_TRANSMISSION_PY}", f"{setting.TRANSMISSION_SCRIPT_PATH}{setting.RENAME_SEASON_TRANSMISSION_PY}")
-        shutil.copyfile(f"./{setting.SCRAPERLIBRARY_PY}.sample", f"{setting.TRANSMISSION_SCRIPT_PATH}{setting.SCRAPERLIBRARY_PY}")
+        shutil.copyfile(f"./{setting.SCRAPERLIBRARY_PY}", f"{setting.TRANSMISSION_SCRIPT_PATH}{setting.SCRAPERLIBRARY_PY}")
 
         addUserX(f"{setting.TRANSMISSION_SCRIPT_PATH}{setting.TORRENT_DONE_SH}")
         addUserX(f"{setting.TRANSMISSION_SCRIPT_PATH}{setting.RENAME_SEASON_TRANSMISSION_PY}")
         addUserX(f"{setting.TRANSMISSION_SCRIPT_PATH}{setting.SCRAPERLIBRARY_PY}")
-    
-      
 
 
