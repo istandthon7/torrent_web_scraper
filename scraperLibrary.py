@@ -25,7 +25,7 @@ def getBsObj(url):
         data = BeautifulSoup(html, "html.parser")
         return data
     except Exception as e:
-        print(f"Exception getBsObj url: {url}, error: {e}")
+        print(f"Exception getBsObj url: {url} , error: {e}")
 
 def checkUrl(url):
     try:
