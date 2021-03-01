@@ -13,7 +13,10 @@
     "list": "Movie.txt",
     "ranking": 8,
     "resolution": "1080",
-    "video_codec": "264"
+    "video_codec": "264",
+    "titleScrap": {
+      "url": "https://movie.daum.net/ranking/boxoffice/monthly"
+    }
   },
   "page_scrap_max": 1,
   "program-list": "TVShow.json",
