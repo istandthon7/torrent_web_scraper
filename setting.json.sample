@@ -27,7 +27,7 @@
         {
           "history": 0,
           "name": "예능",
-          "url": "bbs/board.php?bo_table=enter&sca=%EB%B0%A9%EC%98%81%EC%A4%91"
+          "url": "bbs/board.php?bo_table=entertain"
         },
         {
           "history": 0,
@@ -37,17 +37,17 @@
         {
           "history": 0,
           "name": "드라마",
-          "url": "bbs/board.php?bo_table=drama&sca=%EB%B0%A9%EC%98%81%EC%A4%91"
+          "url": "bbs/board.php?bo_table=drama"
         },
         {
           "history": 0,
           "name": "영화",
-          "url": "bbs/board.php?bo_table=mov"
+          "url": "bbs/board.php?bo_table=movie"
         }
       ],
       "enable": true,
-      "mainUrl": "https://torrentview34.com/",
-      "name": "torrentview"
+      "mainUrl": "https://torrentsir31.com/",
+      "name": "torrentsir"
     }
   ],
   "trans-host": "127.0.0.1",
