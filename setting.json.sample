@@ -19,7 +19,7 @@
     }
   },
   "page_scrap_max": 1,
-  "program-list": "TVShow.json",
+  "program-list": "config/TVShow.json",
   "sites": [
     {
       "board": "GNBoardBasicSkin",
