@@ -42,7 +42,7 @@ if __name__ == '__main__':
     print(f"info, main torrent_title = {torrentTitle}")
 
     # 시즌이 설정된 토렌트인가
-    with open(setting.json["program-list"]) as TVShow:
+    with open(setting.CONFIG_PATH + setting.json["program-list"]) as TVShow:
       
         tvshowJson = json.load(TVShow)
       
