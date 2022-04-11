@@ -15,7 +15,7 @@ if __name__ == '__main__':
     setting.loadJson()
     movie = config.Moive(setting)
 
-    movieTitleScraper = daumMovieTitleScraper.SiteScraper()
+    movieTitleScraper = daumMovieTitleScraper.SiteScraper(setting)
 
     if not movieTitleScraper.checkUrl():
       print("info, main scraper.checkUrl = false")

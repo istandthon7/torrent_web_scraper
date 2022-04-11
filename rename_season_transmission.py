@@ -6,7 +6,7 @@ import sys
 import scraperLibrary
 import re
 import json
-
+import config 
 
 def setSeasonTorrentFile(setting, torrentTitle, season):
 
@@ -17,7 +17,7 @@ def setSeasonTorrentFile(setting, torrentTitle, season):
     print(f"info, setSeasonTorrentFile id = {torrentId}")
 
     torrents = scraperLibrary.getFilesTorrentRemote(setting, sessionId, torrentId)
-    print(f"info setSeasonTorrentFile files = {files}")
+    print(f"info setSeasonTorrentFile torrents = {torrents}")
 
     for torrent in torrents:
       if "mp4" in torrent['name']:
@@ -42,7 +42,7 @@ if __name__ == '__main__':
     print(f"info, main torrent_title = {torrentTitle}")
 
     # 시즌이 설정된 토렌트인가
-    with open(setting["program-list"]) as TVShow:
+    with open(setting.CONFIG_PATH + setting.json["program-list"]) as TVShow:
       
         tvshowJson = json.load(TVShow)
       
@@ -53,7 +53,7 @@ if __name__ == '__main__':
             if tvshowTitleName in torrentTitle and len(tvshowTitle) >= 4:
 
               print(f"info, main program name = {torrentTitle}, season = {tvshowTitle['season']}")
-              setSeasonTorrentFile(setting, torrentTitle, tvshowTitle['season'])
+              setSeasonTorrentFile(setting.json, torrentTitle, tvshowTitle['season'])
             #else:
             #  print("not equal")
     sys.exit()
