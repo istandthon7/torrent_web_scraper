@@ -23,7 +23,7 @@ else
 	echo "notification step 1" >> $log_file
 
 	if [[ "$TR_TORRENT_DIR" == *"tvshow"* ]]; then
-		cd /transmission_script && ./rename_season_transmission.py "$TR_TORRENT_NAME" >> $log_file
+		cd /torrent_web_scraper/transmission_script && ./rename_season_transmission.py "$TR_TORRENT_NAME" >> $log_file
 
 		echo "notification step 2" >> $log_file
 
