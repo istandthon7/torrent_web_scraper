@@ -1,12 +1,5 @@
 #!/usr/bin/env python3
-from urllib.request import Request, urlopen
-from bs4 import BeautifulSoup
-import subprocess
-import re
-import json
 import scraperLibrary
-import sys
-import datetime
 
 class SiteScraper:
     def __init__(self, setting):

@@ -3,11 +3,7 @@ from urllib.request import Request, urlopen
 import requests
 from bs4 import BeautifulSoup
 import subprocess
-
-import sys
 import re
-import os.path
-from pathlib import Path
 import ssl
 import time
 import subprocess
@@ -31,11 +27,10 @@ def checkUrl(url):
     try:
         if getBsObj(url) == None:
             return False
-    except Exception as e:
+    except Exception:# as e:
         #print(f"Exception access url : {e}")
         #print(f"We can not scrap {url} , something wrong.\n")
         return False
-
     return True
 
 def updateUrl(url):
@@ -56,12 +51,10 @@ def getSessionIdTorrentRpc(json):
         #YeUFW7rotzuLHrx4TfmWCRUF6qVlPd9DcPCEUHzlBcFMXZUd
         array = code_text.split()
         if len(array) == 2 and array[0] == "X-Transmission-Session-Id:":
-          session_id = { array[0].replace(":", "") : array[1]}
-          return session_id
-
+            session_id = { array[0].replace(":", "") : array[1]}
+            return session_id
     except requests.exceptions.ConnectionError:
         print("transmission이 실행중인 아닌 것으로 보입니다. " + url)
-
     return
 
 def addMagnetTransmissionRemote(magnetAddr, json, downloadDir, sessionId):
@@ -75,8 +68,7 @@ def addMagnetTransmissionRemote(magnetAddr, json, downloadDir, sessionId):
 
     if len(downloadDir) > 0:
         payload["arguments"]["download-dir"] = downloadDir
-
-    res = rpc(json, payload, sessionId)
+    rpc(json, payload, sessionId)
 
     return
 
@@ -93,7 +85,6 @@ def getIdTransmissionRemote(json, sessionId, torrentTitle):
     for torrent in res["arguments"]["torrents"]:
         if torrent["name"] == torrentTitle:
             return torrent["id"]
-
     return
 
 def getFilesTorrentRemote(json, sessionId, torrentId):
@@ -110,7 +101,6 @@ def getFilesTorrentRemote(json, sessionId, torrentId):
     for torrent in res["arguments"]["torrents"]:
         if torrent["id"] == torrentId:
             return torrent["files"]
-
     return
 
 def renameFileTorrentRpc(json, torrentId, sessionId, srcFile, destFile):
@@ -120,7 +110,7 @@ def renameFileTorrentRpc(json, torrentId, sessionId, srcFile, destFile):
     }
     json_input["arguments"] = {"ids": [int(torrentId)], "path": srcFile, "name": destFile}
 
-    res = rpc(json, json_input, sessionId)
+    rpc(json, json_input, sessionId)
 
     return
 
@@ -131,7 +121,7 @@ def removeTransmissionRemote(json, sessionId, containName):
     payload = {
         "arguments":{
             "fields": ["id", "name", "isFinished"]
-            },
+        },
         "method": "torrent-get"
     }
 
@@ -142,9 +132,8 @@ def removeTransmissionRemote(json, sessionId, containName):
             payload = {
                 "method": "torrent-remove",
                 "arguments":{"ids":[torrent["id"]]}
-                }
+            }
             res = rpc(json, payload, sessionId)
-
     return
 
 def rpc(js, payload, sessionId):
@@ -176,17 +165,14 @@ def notiEmail(cfg, siteName, boardTitle):
     runTime = cfg.runTime
     if mailNotiSetting == "":
         return
-
     email = mailNotiSetting["address"]
 
     if email == "":
         return
-
     for keyword in mailNotiSetting["keywords"]:
 
         if config.checkMailNotiHistory(mailNotiHistoryFileName, boardTitle):
             return
-
         if keyword in boardTitle:
             cmd = mailNotiSetting["cmd"]
             cmd = cmd.replace("$board_title", "["+siteName+"]" + boardTitle)

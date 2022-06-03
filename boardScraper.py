@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
-from urllib.request import Request, urlopen
-from bs4 import BeautifulSoup
-import subprocess
 import re
-import json
-import sys
 import scraperLibrary
 
 
@@ -24,13 +19,11 @@ class GNBoardBasicSkin:
         if bsObj is None:
             print(f"게시판 접속에 실패하였습니다. {url} ")
             return
-
         listBoardDiv = bsObj.find('div', attrs={'class' : 'list-board'})
 
         if listBoardDiv is None:
             print(f"게시판 리스트 얻기에 실패하였습니다. {url}")
             return;
-
         items = listBoardDiv.find_all('a', href= lambda x: "wr_id" in x)
 
         items = list(filter(lambda x: len(x.text.strip())>0, items))
@@ -67,5 +60,4 @@ class GNBoardBasicSkin:
           magnet = tag[0].get('href')
         else:
           magnet = ""
-
         return magnet

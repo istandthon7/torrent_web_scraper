@@ -1,9 +1,9 @@
 import os
-import time
 import json
 import os.path
 from datetime import datetime as dtime
 import csv
+import sys
 
 class setting(object):
     """description of class"""
@@ -41,32 +41,28 @@ class setting(object):
             json.dump(self.json, dataFile, sort_keys = True, ensure_ascii=False, indent = 4)
 
 class TVShow:
-  def __init__(self, setting ):
-    self.fileName = setting.CONFIG_PATH + setting.json["program-list"]
-    with open(self.fileName,"r", encoding='utf-8') as jsonFile:
-      self.json = json.load(jsonFile)
+    def __init__(self, setting ):
+        self.fileName = setting.CONFIG_PATH + setting.json["tvshow"]["list"]
+        with open(self.fileName,"r", encoding='utf-8') as jsonFile:
+            self.json = json.load(jsonFile)
 
-  def checkTitleInTVShow(self, boardTitle):
+    def checkTitleInTVShow(self, boardTitle):
 
-    boardTitle = boardTitle.lower()
+        boardTitle = boardTitle.lower()
 
-    for prog in self.json['title_list']:
-        title = prog['name']
-        resolution = prog['option']
-        release = prog['option2']
+        for prog in self.json['title_list']:
+            title = prog['name']
+            resolution = prog['option']
+            release = prog['option2']
 
-        if not checkTitleWithTitle(title, boardTitle):
-            continue
-
-        if not checkResolutionWithTitle(resolution, boardTitle):
-            continue
-
-        if not checkVersionWithTitle(release, boardTitle):
-            continue
-
-        return title
-
-    return False
+            if not checkTitleWithTitle(title, boardTitle):
+                continue
+            if not checkResolutionWithTitle(resolution, boardTitle):
+                continue
+            if not checkVersionWithTitle(release, boardTitle):
+                continue
+            return title
+        return False
 
 class Moive:
     def __init__(self, setting):
@@ -85,21 +81,16 @@ class Moive:
 
             if not checkTitleWithTitle(title_array[0], boardTitle):
                 continue
-
             if len(title_array) > 1 and not checkTitleWithTitle(title_array[1], boardTitle):
                 continue
-
             # json에서 불러와서 배열이 아니라서 checkTitleWithTitle 사용
             if not checkTitleWithTitle(self.movieSetting['resolution'], boardTitle):
                 continue
-
             # 위의 이유가 같음.
             if not checkTitleWithTitle(self.movieSetting['video_codec'], boardTitle):
                 continue
-
             if not year in boardTitle:
                 continue
-
             movieFile.close()
             return title
 

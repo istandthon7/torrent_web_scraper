@@ -4,10 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 import subprocess
 
-import sys
 import re
-import os.path
-from pathlib import Path
 import ssl
 import time
 import subprocess
@@ -31,7 +28,7 @@ def checkUrl(url):
     try:
         if getBsObj(url) == None:
             return False
-    except Exception as e:
+    except Exception: #as e:
         #print(f"Exception access url : {e}")
         #print(f"We can not scrap {url} , something wrong.\n")
         return False
@@ -76,7 +73,7 @@ def addMagnetTransmissionRemote(magnetAddr, json, downloadDir, sessionId):
     if len(downloadDir) > 0:
         payload["arguments"]["download-dir"] = downloadDir
 
-    res = rpc(json, payload, sessionId)
+    rpc(json, payload, sessionId)
 
     return
 
@@ -120,7 +117,7 @@ def renameFileTorrentRpc(json, torrentId, sessionId, srcFile, destFile):
     }
     json_input["arguments"] = {"ids": [int(torrentId)], "path": srcFile, "name": destFile}
 
-    res = rpc(json, json_input, sessionId)
+    rpc(json, json_input, sessionId)
 
     return
 

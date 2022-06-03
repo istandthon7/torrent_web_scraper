@@ -1,12 +1,7 @@
 {
-  "download-base": "",
-  "mail-noti": {
-    "address": "email@sample.com",
-    "cmd": "email_sender.sh 'torrent_web_scraper keyword notification mail' '$board_title' $address",
-    "keywords": [
-      "키워드",
-      "키워드2"
-    ]
+  "tvshow": {
+    "download": "/srv/dev-disk-by-label-multimedia/Videos/tvshows",
+    "list": "TVShow.json"
   },
   "movie": {
     "download": "",
@@ -18,8 +13,6 @@
       "url": "https://movie.daum.net/ranking/boxoffice/monthly"
     }
   },
-  "page_scrap_max": 1,
-  "program-list": "TVShow.json",
   "sites": [
     {
       "board": "GNBoardBasicSkin",
@@ -46,10 +39,19 @@
         }
       ],
       "enable": true,
-      "mainUrl": "https://torrentsir31.com/",
+      "mainUrl": "https://torrentsir58.com/",
       "name": "torrentsir"
     }
   ],
+  "page_scrap_max": 1,
+  "mail-noti": {
+    "address": "email@sample.com",
+    "cmd": "email_sender.sh 'torrent_web_scraper keyword notification mail' '$board_title' $address",
+    "keywords": [
+      "키워드",
+      "키워드2"
+    ]
+  },
   "trans-host": "127.0.0.1",
   "trans-id": "transmission",
   "trans-port": "9091",

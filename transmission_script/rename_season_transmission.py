@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-from datetime import datetime as dtime
 import os
 import sys
 import scraperLibrary
@@ -17,12 +16,12 @@ def setSeasonTorrentFile(setting, torrentTitle, season):
     print(f"info, setSeasonTorrentFile id = {torrentId}")
 
     torrents = scraperLibrary.getFilesTorrentRemote(setting, sessionId, torrentId)
-    print(f"info setSeasonTorrentFile files = {files}")
+    print(f"info setSeasonTorrentFile season = {season}")
 
     for torrent in torrents:
       if "mp4" in torrent['name']:
         print(f"info setSeasonTorrentFile mp4_file {torrent['name']}")
-        dir = os.path.dirname(torrent['name'])
+        #dir = os.path.dirname(torrent['name'])
         fileName = os.path.basename(torrent['name'])
         replaceString = f's{season}\g<epi>'
         #re.sub('패턴', '바꿀문자열', '문자열', 바꿀횟수)
@@ -42,7 +41,7 @@ if __name__ == '__main__':
     print(f"info, main torrent_title = {torrentTitle}")
 
     # 시즌이 설정된 토렌트인가
-    with open(setting["program-list"]) as TVShow:
+    with open(setting["tvshow"]["list"]) as TVShow:
 
         tvshowJson = json.load(TVShow)
 

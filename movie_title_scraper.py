@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 
-from datetime import datetime as dtime
-import os
 import sys
-import scraperLibrary
 import daumMovieTitleScraper
 import config
 
@@ -18,9 +15,8 @@ if __name__ == '__main__':
     movieTitleScraper = daumMovieTitleScraper.SiteScraper(setting)
 
     if not movieTitleScraper.checkUrl():
-      print("info, main scraper.checkUrl = false")
-      sys.exit()
-
+        print("info, main scraper.checkUrl = false")
+        sys.exit()
     movieTitles = movieTitleScraper.getParseData()
     # <strong class="tit_join"><a class="link_g #list #monthly @1" href="/moviedb/main?movieId=111292">기생충</a></strong>, ...
     #print("info, main titles_tag = ", titles_tag)
@@ -29,14 +25,13 @@ if __name__ == '__main__':
 
     for index, movieTitle in enumerate(movieTitles, start=1):
 
-      title = movieTitle.text
-      print(title)
+        title = movieTitle.text
+        print(title)
 
-      f.write(title+"\n")
+        f.write(title+"\n")
 
-      if index == setting.json["movie"]["ranking"]:
-        break;
-
+        if index == setting.json["movie"]["ranking"]:
+            break
     f.close()
 
     sys.exit()

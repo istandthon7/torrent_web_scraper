@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-from datetime import datetime as dtime
 import os
 import sys
 import scraperLibrary
@@ -20,17 +19,16 @@ def setSeasonTorrentFile(setting, torrentTitle, season):
     print(f"info setSeasonTorrentFile torrents = {torrents}")
 
     for torrent in torrents:
-      if "mp4" in torrent['name']:
-        print(f"info setSeasonTorrentFile mp4_file {torrent['name']}")
-        dir = os.path.dirname(torrent['name'])
-        fileName = os.path.basename(torrent['name'])
-        replaceString = f's{season}\g<epi>'
-        #re.sub('패턴', '바꿀문자열', '문자열', 바꿀횟수)
-        newFileName = re.sub('(?P<epi>E\d+.)', replaceString, fileName)
-        print(f"info setSeasonTorrentFile newFileName = {newFileName}")
+        if "mp4" in torrent['name']:
+            print(f"info setSeasonTorrentFile mp4_file {torrent['name']}")
+            #dir = os.path.dirname(torrent['name'])
+            fileName = os.path.basename(torrent['name'])
+            replaceString = f's{season}\g<epi>'
+            #re.sub('패턴', '바꿀문자열', '문자열', 바꿀횟수)
+            newFileName = re.sub('(?P<epi>E\d+.)', replaceString, fileName)
+            print(f"info setSeasonTorrentFile newFileName = {newFileName}")
 
-        scraperLibrary.renameFileTorrentRpc(setting, torrentId, sessionId, torrent['name'], newFileName)
-
+            scraperLibrary.renameFileTorrentRpc(setting, torrentId, sessionId, torrent['name'], newFileName)
     return
 
 if __name__ == '__main__':
@@ -42,7 +40,7 @@ if __name__ == '__main__':
     print(f"info, main torrent_title = {torrentTitle}")
 
     # 시즌이 설정된 토렌트인가
-    with open(setting.CONFIG_PATH + setting.json["program-list"]) as TVShow:
+    with open(setting.CONFIG_PATH + setting.json["tvshow"]["list"]) as TVShow:
       
         tvshowJson = json.load(TVShow)
       
