@@ -105,13 +105,12 @@ venv.bak/
 
 # edit backup
 *~
-/web_scraper_settings.json
-/web_scraper_program_list.json
-/movie_list.txt
 /.vs
-/program_list.json
-/settings.json
 
-*.csv
-/config
-/transmisson_script
+
+config
+transmission_script
+
+# for vscode
+.vscode
+env34

@@ -6,24 +6,24 @@ import scraperLibrary
 #그누보드 BASIC스킨
 class GNBoardBasicSkin:
 
-    def getScrapUrl(self, mainUrl, categoryUrl, page):
+    def getScrapUrl(self, mainUrl: str, categoryUrl: str, page: int)->str:
         if page > 1:
             return mainUrl + categoryUrl + "&page="+str(page)
         else:
             return mainUrl + categoryUrl
 
-    def getParseDataReverse(self, mainUrl, categoryUrl, page):
+    def getParseDataReverse(self, mainUrl: str, categoryUrl: str, page: int)->list:
         url = self.getScrapUrl(mainUrl, categoryUrl, page)
         bsObj = scraperLibrary.getBsObj(url)
 
         if bsObj is None:
-            print(f"게시판 접속에 실패하였습니다. {url} ")
-            return
+            print("게시판 접속에 실패하였습니다. "+url)
+            return []
         listBoardDiv = bsObj.find('div', attrs={'class' : 'list-board'})
 
         if listBoardDiv is None:
-            print(f"게시판 리스트 얻기에 실패하였습니다. {url}")
-            return;
+            print("게시판 리스트 얻기에 실패하였습니다. "+url)
+            return [];
         items = listBoardDiv.find_all('a', href= lambda x: "wr_id" in x)
 
         items = list(filter(lambda x: len(x.text.strip())>0, items))
@@ -31,14 +31,13 @@ class GNBoardBasicSkin:
         return items
 
     #게시판 아이디 파싱, url을 기반으로 wr_id text를 뒤의 id parsing
-    def getWrId(self, url):
+    def getWrId(self, url: str)->int:
 
         tmp = url.rfind('wr_id=')
         if (tmp < 0): # 둘다 검색 못하면 포기
             return 0
         else:
             checkStr = 'wr_id='
-
             startp = tmp+len(checkStr)
             endp = startp
 
@@ -51,7 +50,7 @@ class GNBoardBasicSkin:
             endp = endp+1
         return int((url[startp:endp]))
 
-    def getMagnetDataFromPageUrl(self, url):
+    def getMagnetDataFromPageUrl(self, url: str)->str:
         bsObj = scraperLibrary.getBsObj(url)
         # a 태그 중에 href가 magnet으로 시작하는 태그.
         tag = bsObj.findAll('a', href=re.compile('^magnet'))

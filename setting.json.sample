@@ -1,6 +1,6 @@
 {
   "tvshow": {
-    "download": "/srv/dev-disk-by-label-multimedia/Videos/tvshows",
+    "download": "",
     "list": "TVShow.json"
   },
   "movie": {

@@ -1,31 +1,33 @@
 #!/usr/bin/env python3
+# 스크래핑시 사용하는 함수들
 from urllib.request import Request, urlopen
 import requests
 from bs4 import BeautifulSoup
 import subprocess
 import re
-import ssl
 import time
 import subprocess
-import config 
+import csv 
 import random
 import json
+import os
+import setting
 
-def getBsObj(url):
-    
+def getBsObj(url: str):
     try:
         time.sleep(random.randrange(1,4))
         req = Request(url, headers={"User-Agent": "Mozilla/5.0"})
-        c = ssl._create_unverified_context()
-        html = urlopen(req, context=c).read().decode('utf-8','replace')
+        # python 3.6이상에서
+        #context = ssl._create_unverified_context()
+        html = urlopen(req).read().decode('utf-8','replace')
         data = BeautifulSoup(html, "html.parser")
         return data
     except Exception as e:
-        print(f"Exception getBsObj url: {url} , error: {e}")
+        print("Exception getBsObj url: "+url+" , error: " + str(e))
 
-def checkUrl(url):
+def checkUrl(url: str)->bool:
     try:
-        if getBsObj(url) == None:
+        if getBsObj(url) is None:
             return False
     except Exception:# as e:
         #print(f"Exception access url : {e}")
@@ -33,7 +35,7 @@ def checkUrl(url):
         return False
     return True
 
-def updateUrl(url):
+def updateUrl(url: str)->bytes:
     return re.sub("([\d]+)[\.]", lambda m: str(int(m.group(1))+1), url)
 
 
@@ -57,7 +59,7 @@ def getSessionIdTorrentRpc(json):
         print("transmission이 실행중인 아닌 것으로 보입니다. " + url)
     return
 
-def addMagnetTransmissionRemote(magnetAddr, json, downloadDir, sessionId):
+def addMagnetTransmissionRemote(magnetAddr: str, json, downloadDir: str, sessionId)->None:
 
     payload = {
 		"arguments":{
@@ -72,7 +74,7 @@ def addMagnetTransmissionRemote(magnetAddr, json, downloadDir, sessionId):
 
     return
 
-def getIdTransmissionRemote(json, sessionId, torrentTitle):
+def getIdTransmissionRemote(json, sessionId, torrentTitle: str):
     payload = {
 		"arguments":{
 			"fields": ["id", "name"]
@@ -103,7 +105,7 @@ def getFilesTorrentRemote(json, sessionId, torrentId):
             return torrent["files"]
     return
 
-def renameFileTorrentRpc(json, torrentId, sessionId, srcFile, destFile):
+def renameFileTorrentRpc(json, torrentId, sessionId, srcFile: str, destFile: str)->None:
 
     json_input = {
         "method": "torrent-rename-path"
@@ -116,7 +118,7 @@ def renameFileTorrentRpc(json, torrentId, sessionId, srcFile, destFile):
 
 # 상태가 Finished 이고 contain_name 인 토렌트 id를 구해서 삭제 (리스트에 남아있지 않도록 자동삭제되도록 하는
 # 기능이다.)
-def removeTransmissionRemote(json, sessionId, containName):
+def removeTransmissionRemote(json, sessionId, containName: str)->None:
 
     payload = {
         "arguments":{
@@ -158,11 +160,10 @@ def rpc(js, payload, sessionId):
 
 
 
-def notiEmail(cfg, siteName, boardTitle):
+def notiEmail(mySetting: setting.Setting, siteName: str, boardTitle: str)->None:
+    mailNotiSetting = mySetting.json["mail-noti"]
+    runTime = mySetting.runTime
 
-    mailNotiSetting = cfg.json["mail-noti"]
-    mailNotiHistoryFileName = cfg.MAIL_HISTORY_FILE_NAME
-    runTime = cfg.runTime
     if mailNotiSetting == "":
         return
     email = mailNotiSetting["address"]
@@ -170,14 +171,33 @@ def notiEmail(cfg, siteName, boardTitle):
     if email == "":
         return
     for keyword in mailNotiSetting["keywords"]:
-
-        if config.checkMailNotiHistory(mailNotiHistoryFileName, boardTitle):
+        if checkMailNotiHistory(mySetting.mailHistoryPath, boardTitle):
             return
         if keyword in boardTitle:
             cmd = mailNotiSetting["cmd"]
             cmd = cmd.replace("$board_title", "["+siteName+"]" + boardTitle)
             cmd = cmd.replace("$address",email)
             subprocess.call(cmd, shell=True)
-            config.addMailNotiToFile(mailNotiHistoryFileName, runTime
+            addMailNotiToFile(mySetting.mailHistoryPath, runTime
                                   , siteName, boardTitle, keyword)
 
+def checkMailNotiHistory(csvFile: str, title: str)->bool:
+        if os.path.isfile(csvFile) is False:
+            return False
+
+        with open(csvFile, 'r', encoding="utf-8") as f:
+            ff = csv.reader(f)
+            for row in ff:
+                if title == row[2]:
+                    #print("\t\t-> magnet was already downloaded at
+                    #web_scraper_history.csv")
+                    return True
+        return False
+
+def addMailNotiToFile(csvFile: str, runtime: str, sitename: str, title: str, keyword: str)->None:
+    new = [runtime, sitename, title, keyword]
+    with open(csvFile, 'a', newline = '\n', encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow(new)
+    f.close()
+    return
