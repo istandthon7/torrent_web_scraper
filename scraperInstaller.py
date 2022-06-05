@@ -56,8 +56,8 @@ if __name__ == '__main__':
         os.mkdir(mySetting.transmissionScriptDirPath)
     if installer.copyConfigIfNotExist(mySetting.torrentDoneSHPath):
         addUserX(mySetting.torrentDoneSHPath)
-    installer.copyConfigIfNotExist(mySetting.renameSeasonTransmissionPYPath)
-    installer.copyConfigIfNotExist(mySetting.scraperLibraryPYPath)
-    installer.copyConfigIfNotExist(mySetting.configHelperPYPath)
+    installer.copyPythonFileIfNotExist(mySetting.renameSeasonTransmissionPYPath)
+    installer.copyPythonFileIfNotExist(mySetting.scraperLibraryPYPath)
+    installer.copyPythonFileIfNotExist(mySetting.configHelperPYPath)
 
 
