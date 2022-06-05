@@ -59,5 +59,6 @@ if __name__ == '__main__':
     installer.copyPythonFileIfNotExist(mySetting.renameSeasonTransmissionPYPath)
     installer.copyPythonFileIfNotExist(mySetting.scraperLibraryPYPath)
     installer.copyPythonFileIfNotExist(mySetting.configHelperPYPath)
+    print("설치가 완료되었습니다.\n")
 
 
