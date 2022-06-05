@@ -1,16 +1,7 @@
 {
     "json parser": "http://json.parser.online.fr/",
     "title_list": [
-        {
-            "name": "사랑의 불시착",
-            "option": "720",
-            "option2": "NEXT",
-            "season": ""
-        },
-        {
-            "name": "백종원의 골목식당",
-            "option": "720",
-            "option2": "NEXT"
-        }
+        {"name": "어게인 마이 라이프", "option": "720","option2":"Next" }
+        ,{"name": "놀면 뭐하니", "option": "", "option2":""}
     ]
 }
