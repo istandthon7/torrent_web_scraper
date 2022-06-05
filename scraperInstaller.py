@@ -32,7 +32,7 @@ class ScraperInstaller:
             return True
         return False
 
-if __name__ is '__main__':
+if __name__ == '__main__':
 
     mySetting = setting.Setting()
     installer = ScraperInstaller()
@@ -41,7 +41,7 @@ if __name__ is '__main__':
     # setting.json
     if installer.copyConfigIfNotExist(mySetting.settingPath):
         print("\n\ntransmission 연결정보를 "+mySetting.settingPath+"에 설정해주세요\n")
-    setting.loadJson()
+    mySetting.loadJson()
 
     # Movie.txt
     movieListPath = mySetting.configDirPath + mySetting.json['movie']['list']

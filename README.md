@@ -1,6 +1,6 @@
 **실행 환경**  
 테스트 OS : 리눅스(우분투, 데비안, 라즈베리파이OS), 윈도우10, 윈도우11  
-실행 언어 : Python3
+실행 언어 : Python3.4이상  
 토렌트 클라이언트: [Transmission](https://transmissionbt.com)
 
 # 1. 소개
@@ -11,6 +11,7 @@ torrent_web_scraper는 등록된 키워드로 게시판을 검색하여 토렌�
 [https://transmissionbt.com](https://transmissionbt.com)에서 운영체제에 맞는 프로그램을 다운받아 설치합니다. 윈도우의 경우 transmission-daemon이 설치되도록 설치옵션을 변경해야 합니다.
 
 ## 1.1.2 torrent_web_scraper 설치
+소스를 다운로드 받은 후에 다음 스크립트를 실행합니다.
 
     $ ./install.sh
 
