@@ -16,8 +16,8 @@ class Movie(configHelper.ConfigHelper):
         """
 
         for keyword in self.keywords:
-            keyword = keyword.lower().rstrip("\r\n")
-            if keyword is "":
+            keyword = keyword.lower().rstrip("")
+            if keyword == "":
                 continue
             keyword = keyword.replace(":", " ")
             

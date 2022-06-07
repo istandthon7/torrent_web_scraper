@@ -1,5 +1,6 @@
-#!/usr/bin/env python3
+
 # 스크래핑시 사용하는 함수들
+
 from urllib.request import Request, urlopen
 import requests
 from bs4 import BeautifulSoup

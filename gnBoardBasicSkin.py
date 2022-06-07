@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+
 import re
 import bs4
 import scraperLibrary
