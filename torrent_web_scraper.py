@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 
 import sys
-import boardScraper
+import gnBoardBasicSkin
 import scraperLibrary
 import os
 import csv
 import setting
 import movie
 import tvshow
+
 
 def checkMagnetHistory(csvFileName: str, magnet: str)->bool:
     if not os.path.isfile(csvFileName):
@@ -22,18 +23,16 @@ def checkMagnetHistory(csvFileName: str, magnet: str)->bool:
 
 def addMagnetInfoToFile(mySetting: setting.Setting, siteName: str, title: str, magnet: str, keyword: str)->None:
     runtime = mySetting.runTime
-    new = [runtime, siteName, title, magnet, keyword]
+    magnetInfo = [runtime, siteName, title, magnet, keyword]
     with open(mySetting.torrentHistoryPath, 'a', newline = '\n', encoding="utf-8") as f:
         writer = csv.writer(f)
-        writer.writerow(new)
+        writer.writerow(magnetInfo)
     f.close()
-    return
 
 if __name__ == '__main__':
 
     mySetting = setting.Setting()
-    mySetting.loadJson()
-    myMovie = movie.Moive(mySetting)
+    myMovie = movie.Movie(mySetting)
     myTvShow = tvshow.TVShow(mySetting)
 
     for siteIndex, site in enumerate(mySetting.json["sites"]):
@@ -49,7 +48,7 @@ if __name__ == '__main__':
                 print("https://github.com/istandthon7/torrent_web_scraper/issues 에 도움을 요청할 수 있습니다." + site['mainUrl'])
                 continue;
             elif site['board'] == "GNBoardBasicSkin":
-                boardScraper = boardScraper.GNBoardBasicSkin()
+                myBoardScraper = gnBoardBasicSkin.GNBoardBasicSkin()
             else:
                 print("https://github.com/istandthon7/torrent_web_scraper/issues 에 도움을 요청할 수 있습니다."+site['board'])
                 continue;
@@ -61,11 +60,11 @@ if __name__ == '__main__':
             isNextPageScrap = True
             toSaveBoardItemNum = None
             #Step 4.  iterate page (up to 10) for this site/this category
-            for pageCount in range(1, mySetting.json['page_scrap_max']+1):
+            for pageNumber in range(1, mySetting.json['page_scrap_max']+1):
 
                 if isNextPageScrap == False:
                     break;
-                boardList = boardScraper.getParseDataReverse(site["mainUrl"], category["url"], pageCount)
+                boardList = myBoardScraper.getParseData(site["mainUrl"], category["url"], pageNumber)
 
                 if not boardList:
                     #에러메시지는 getParseDataReverse에서 출력
@@ -73,26 +72,21 @@ if __name__ == '__main__':
                 #for board in boardList:
                 for boardItemIndex, boardItem in enumerate(boardList, start=1):
 
-                    #게시판 제목
-                    boardItemTitle = boardItem.get_text().replace('\t', '').replace('\n', '')
-                    boardItemUrl = boardItem.get('href').replace('..', site['mainUrl'])
-                    boardItemNum = boardScraper.getWrId(boardItemUrl)
-
                     #print(f"탐색중... 제목: {boardItemTitle}")
                     #boardList의 첫 게시물의 id를 확인
-                    if (category['history'] >= boardItemNum):
+                    if (category['history'] >= boardItem.ID):
                         isNextPageScrap = False
                         break;
                     if "영화" in category['name']:
-                        regKeyword = myMovie.getRegKeyword(boardItemTitle)
+                        regKeyword = myMovie.getRegKeyword(boardItem.Title)
                     else:
-                        regKeyword = myTvShow.getRegKeyword(boardItemTitle)
-                    if boardItemIndex == 1 and pageCount == 1:
-                        toSaveBoardItemNum = boardItemNum
+                        regKeyword = myTvShow.getRegKeyword(boardItem.Title)
+                    if boardItemIndex == 1 and pageNumber == 1:
+                        toSaveBoardItemNum = boardItem.ID
                     if not regKeyword:
-                        scraperLibrary.notiEmail(mySetting , site['name'], boardItemTitle )
+                        scraperLibrary.executeNotiScript(mySetting , site['name'], boardItem.Title )
                         continue
-                    magnet = boardScraper.getMagnetDataFromPageUrl(boardItemUrl)
+                    magnet = myBoardScraper.getMagnetDataFromPageUrl(boardItem.Url)
 
                     if not magnet:
                       continue
@@ -117,7 +111,7 @@ if __name__ == '__main__':
                         myMovie.removeLineInMovie(regKeyword)
                     else:
                         scraperLibrary.removeTransmissionRemote(mySetting.json, sessionId, regKeyword)
-                    addMagnetInfoToFile(mySetting, site['name'], boardItemTitle, magnet, regKeyword)
+                    addMagnetInfoToFile(mySetting, site['name'], boardItem.Title, magnet, regKeyword)
             #값이 있는 경우만 갱신
             if toSaveBoardItemNum is not None:
                 mySetting.json["sites"][siteIndex]["category"][categoryIndex]["history"] = toSaveBoardItemNum

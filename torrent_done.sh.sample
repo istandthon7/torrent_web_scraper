@@ -23,21 +23,12 @@ if [ "$TR_TORRENT_DIR" == *"skip_dir" ]; then
 	echo 'skipped notification' >> $log_file
 else
     #외부 스크립트 알림
-	#/path/email_sender.sh "transmission completed" "$TR_TORRENT_NAME" "email@sample.com"
-	#/path/twit.sh "transmission completed $TR_TORRENT_NAME"
 	echo "notification step 1" >> $log_file
-
+	/telegram.sh "transmission completed $TR_TORRENT_NAME"
 	if [[ "$TR_TORRENT_DIR" == *"tvshow"* ]]; then
 		cd /transmission_script && ./rename_season_transmission.py "$TR_TORRENT_NAME" >> $log_file
 
-		#su - debian-transmission -c "
-		#/path/nfo_maker.py "$TR_TORRENT_DIR" "$TR_TORRENT_NAME" >> $log_file
-		#/path/kodi_video_update.sh >> $log_file
-
 		echo "notification step 2" >> $log_file
-
-	elif [[ "$TR_TORRENT_DIR" == *"music"* ]]; then
-		cd "$TR_TORRENT_DIR"
 	fi
 fi
 

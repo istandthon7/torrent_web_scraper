@@ -1,8 +1,7 @@
-import datetime 
 import configHelper 
 import setting
 
-class Moive(configHelper.ConfigHelper):
+class Movie(configHelper.ConfigHelper):
     def __init__(self, mySetting: setting.Setting):
         self.listFileName = mySetting.configDirPath + mySetting.json["movie"]['list']
         self.movieSetting = mySetting.json['movie']
@@ -15,22 +14,20 @@ class Moive(configHelper.ConfigHelper):
         게시판 제목에 등록된 키워드가 포함되어 있으면 키워드를 반환한다.
         등록되어 있지 않다면 빈문자열을 반환한다.
         """
-        boardTitle = boardTitle.lower()
 
-        for line in self.keywords:
-            title = line.replace("\n", "")
-            title_array = title.split(":")
-
-            if self.checkTitleInBoardTitle(title_array[0], boardTitle) is False:
+        for keyword in self.keywords:
+            keyword = keyword.lower().rstrip("\r\n")
+            if keyword is "":
                 continue
-            if len(title_array) > 1 and self.checkTitleInBoardTitle(title_array[1], boardTitle) is False:
+            keyword = keyword.replace(":", " ")
+            
+            if self.IsContainAllWordsInBoardTitle(keyword, boardTitle) is False:
                 continue
-            if self.checkTitleInBoardTitle(self.movieSetting['resolution'], boardTitle) is False:
+            if self.IsContainAllWordsInBoardTitle(self.movieSetting['resolution'], boardTitle) is False:
                 continue
-            if self.checkTitleInBoardTitle(self.movieSetting['video_codec'], boardTitle) is False:
+            if self.IsContainAllWordsInBoardTitle(self.movieSetting['video_codec'], boardTitle) is False:
                 continue
-
-            return title
+            return keyword
         return ""
 
     def removeLineInMovie(self, matchedName: str)->None:

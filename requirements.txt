@@ -1,7 +1,7 @@
-beautifulsoup4==4.9.3
-soupsieve==2.1
-certifi==2020.12.5
-chardet==4.0.0
-idna==2.10
-requests==2.25.1
-urllib3==1.26.2
+beautifulsoup4==4.11.1
+certifi==2022.5.18.1
+charset-normalizer==2.0.12
+idna==3.3
+requests==2.27.1
+soupsieve==2.3.2.post1
+urllib3==1.26.9

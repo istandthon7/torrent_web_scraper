@@ -1,8 +1,9 @@
 
 class ConfigHelper:
-    def checkTitleInBoardTitle(self, title: str, boardTitle: str)->bool:
-        keyArray = title.lower().split()
-        for tmp in keyArray:
+    def IsContainAllWordsInBoardTitle(self, allWords: str, boardTitle: str)->bool:
+        boardTitle = boardTitle.lower()
+        wordArray = allWords.lower().split()
+        for tmp in wordArray:
             if not tmp in boardTitle:
                 return False
         return True

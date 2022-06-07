@@ -4,7 +4,6 @@ from urllib.request import Request, urlopen
 import requests
 from bs4 import BeautifulSoup
 import subprocess
-import re
 import time
 import subprocess
 import csv 
@@ -12,13 +11,14 @@ import random
 import json
 import os
 import setting
+import ssl
 
 def getBsObj(url: str):
     try:
         time.sleep(random.randrange(1,4))
         req = Request(url, headers={"User-Agent": "Mozilla/5.0"})
         # python 3.6이상에서
-        #context = ssl._create_unverified_context()
+        context = ssl._create_unverified_context()
         html = urlopen(req).read().decode('utf-8','replace')
         data = BeautifulSoup(html, "html.parser")
         return data
@@ -35,14 +35,10 @@ def checkUrl(url: str)->bool:
         return False
     return True
 
-def updateUrl(url: str)->bytes:
-    return re.sub("([\d]+)[\.]", lambda m: str(int(m.group(1))+1), url)
-
 
 
 #X-Transmission-Session-Id
 def getSessionIdTorrentRpc(json):
-
     url = "http://%s:%s@%s:%s/transmission/rpc" % (json['trans-id'], json['trans-pw']
                                                    , json['trans-host'], json['trans-port'])
     try:
@@ -60,7 +56,6 @@ def getSessionIdTorrentRpc(json):
     return
 
 def addMagnetTransmissionRemote(magnetAddr: str, json, downloadDir: str, sessionId)->None:
-
     payload = {
 		"arguments":{
 			"filename": magnetAddr
@@ -71,8 +66,6 @@ def addMagnetTransmissionRemote(magnetAddr: str, json, downloadDir: str, session
     if len(downloadDir) > 0:
         payload["arguments"]["download-dir"] = downloadDir
     rpc(json, payload, sessionId)
-
-    return
 
 def getIdTransmissionRemote(json, sessionId, torrentTitle: str):
     payload = {
@@ -87,10 +80,8 @@ def getIdTransmissionRemote(json, sessionId, torrentTitle: str):
     for torrent in res["arguments"]["torrents"]:
         if torrent["name"] == torrentTitle:
             return torrent["id"]
-    return
 
 def getFilesTorrentRemote(json, sessionId, torrentId):
-
     payload = {
 		"arguments":{
 			"fields": ["id", "name", "files"]
@@ -103,10 +94,8 @@ def getFilesTorrentRemote(json, sessionId, torrentId):
     for torrent in res["arguments"]["torrents"]:
         if torrent["id"] == torrentId:
             return torrent["files"]
-    return
 
 def renameFileTorrentRpc(json, torrentId, sessionId, srcFile: str, destFile: str)->None:
-
     json_input = {
         "method": "torrent-rename-path"
     }
@@ -114,12 +103,9 @@ def renameFileTorrentRpc(json, torrentId, sessionId, srcFile: str, destFile: str
 
     rpc(json, json_input, sessionId)
 
-    return
-
 # 상태가 Finished 이고 contain_name 인 토렌트 id를 구해서 삭제 (리스트에 남아있지 않도록 자동삭제되도록 하는
 # 기능이다.)
 def removeTransmissionRemote(json, sessionId, containName: str)->None:
-
     payload = {
         "arguments":{
             "fields": ["id", "name", "isFinished"]
@@ -136,7 +122,6 @@ def removeTransmissionRemote(json, sessionId, containName: str)->None:
                 "arguments":{"ids":[torrent["id"]]}
             }
             res = rpc(json, payload, sessionId)
-    return
 
 def rpc(js, payload, sessionId):
     url = "http://%s:%s@%s:%s/transmission/rpc" % (js['trans-id'], js['trans-pw']
@@ -160,28 +145,34 @@ def rpc(js, payload, sessionId):
 
 
 
-def notiEmail(mySetting: setting.Setting, siteName: str, boardTitle: str)->None:
-    mailNotiSetting = mySetting.json["mail-noti"]
-    runTime = mySetting.runTime
+def executeNotiScript(mySetting: setting.Setting, siteName: str, boardTitle: str)->bool:
+    """
+    스크립트를 실행했으면 true를 리턴하고
+    이미 실행한 경우나 실행하지 못한 경우는 false를 리턴한다.
+    """
+    notiSetting = mySetting.json["notification"]
 
-    if mailNotiSetting == "":
-        return
-    email = mailNotiSetting["address"]
+    if notiSetting == "":
+        return False
 
-    if email == "":
-        return
-    for keyword in mailNotiSetting["keywords"]:
-        if checkMailNotiHistory(mySetting.mailHistoryPath, boardTitle):
-            return
+    for keyword in notiSetting["keywords"]:
+        if checkNotiHistory(mySetting.notiHistoryPath, boardTitle):
+            return False
         if keyword in boardTitle:
-            cmd = mailNotiSetting["cmd"]
+            cmd = notiSetting["cmd"]
             cmd = cmd.replace("$board_title", "["+siteName+"]" + boardTitle)
-            cmd = cmd.replace("$address",email)
-            subprocess.call(cmd, shell=True)
-            addMailNotiToFile(mySetting.mailHistoryPath, runTime
+            try:
+                subprocess.run(cmd, check=True)
+                
+            except Exception as e:
+                print("executeNotiScript error, message: "+str(e))
+                return False
+            else:
+                addNotiHistory(mySetting.notiHistoryPath, mySetting.runTime
                                   , siteName, boardTitle, keyword)
+                return True
 
-def checkMailNotiHistory(csvFile: str, title: str)->bool:
+def checkNotiHistory(csvFile: str, title: str)->bool:
         if os.path.isfile(csvFile) is False:
             return False
 
@@ -194,10 +185,9 @@ def checkMailNotiHistory(csvFile: str, title: str)->bool:
                     return True
         return False
 
-def addMailNotiToFile(csvFile: str, runtime: str, sitename: str, title: str, keyword: str)->None:
+def addNotiHistory(csvFile: str, runtime: str, sitename: str, title: str, keyword: str)->None:
     new = [runtime, sitename, title, keyword]
     with open(csvFile, 'a', newline = '\n', encoding="utf-8") as f:
         writer = csv.writer(f)
         writer.writerow(new)
     f.close()
-    return

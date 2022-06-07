@@ -1,6 +1,6 @@
 **실행 환경**  
 테스트 OS : 리눅스(우분투, 데비안, 라즈베리파이OS), 윈도우10, 윈도우11  
-실행 언어 : Python3.4이상  
+실행 언어 : Python3.6이상  
 토렌트 클라이언트: [Transmission](https://transmissionbt.com)
 
 # 1. 소개
@@ -32,20 +32,14 @@ torrent_web_scraper이 transmission과 통신할 호스트(아이피), 아이디
     "mainUrl": "https://torrentsir58.com/",
 
 # 1.3 키워드 추가
-TVShow.json 파일에 제목과 해상도 등은 옵션으로 추가로 지정할 수 있습니다. 시즌이 있는 경우 해당 숫자를 넣어주면 되고 없으면 생략합니다.
+TVShow.json 파일에 제목과 해상도 등은 옵션으로 추가로 지정할 수 있습니다. 
 
-    ,
-    {
-        "name": "놀면 뭐하니",
-        "option": "720",
-        "option2": "NEXT"
-        "season": 1
-     }
+    ,{"name": "놀면 뭐하니", "option": "720", "option2":"Next"}
 
-Movie.txt 파일에 추가할 수 있습니다.
+Movie.txt 파일에 추가할 수 있습니다. 코덱과 해상도는 config/setting.json에서 movie에서 변경할 수 있습니다.
 
-    제목1
-    제목2
+    아바타 2009
+    어벤져스: 엔드게임
 
 # 1.4 실행
 torrent_web_scraper.py를 실행시키면 게시판을 읽어와서 TVShow.json와 Movie.txt에 등록한 키워드를 검색하여 transmission에 추가됩니다. 웹사이트에서 데이터를 가지고 오는 것은 다소 시간이 걸릴 수 있습니다. 
@@ -60,8 +54,10 @@ torrent_web_scraper를 주기적으로 실행하게 설정해두면, 토렌트 �
 
 
 # 변경이력
+## 1.2.1
+1. 내부성능 일부개선, 패키지 버전업
 ## 1.2
-1. 설정파일 변경(setting.json파일에서 download-base, program-list 삭제, tvshow로 이동)
+1. 설정파일 변경(config/setting.json파일에서 download-base, program-list 삭제, tvshow로 이동)
 ## 1.1.2
 1. 기본 사이트 torrentsir로 변경
 ## 1.1.1

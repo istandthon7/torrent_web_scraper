@@ -1,5 +1,4 @@
 import json
-from math import fabs
 import configHelper
 import setting
 
@@ -11,30 +10,12 @@ class TVShow(configHelper.ConfigHelper):
         jsonFile.close()
 
     def getRegKeyword(self, boardTitle: str)->str:
-        boardTitle = boardTitle.lower()
-
-        for prog in self.json['title_list']:
-            title = prog['name']
-            option = prog['option']
-            option2 = prog['option2']
-
-            if self.checkTitleInBoardTitle(title, boardTitle) is False:
+        for tvShow in self.json['title_list']:
+            if self.IsContainAllWordsInBoardTitle(tvShow['name'], boardTitle) is False:
                 continue
-            if self.checkOptionInTitle(option, boardTitle) is False:
+            if self.IsContainAllWordsInBoardTitle(tvShow['option'], boardTitle) is False:
                 continue
-            if self.checkOptionInTitle(option2, boardTitle) is False:
+            if self.IsContainAllWordsInBoardTitle( tvShow['option2'], boardTitle) is False:
                 continue
-            return title
-        return ""
-
-    def checkOptionInTitle(self, option: str, boardTitle: str)->bool:
-        if option is False:
-            return True
-        if option.lower() in boardTitle:
-            return True
-        return False
-
-    
-    
-
-    
+            return tvShow['name']
+        return "" 

@@ -44,9 +44,8 @@
     }
   ],
   "page_scrap_max": 1,
-  "mail-noti": {
-    "address": "email@sample.com",
-    "cmd": "email_sender.sh 'torrent_web_scraper keyword notification mail' '$board_title' $address",
+  "notification": {
+    "cmd": "telegram.sh 'torrent_web_scraper keyword notification. title: $board_title' ",
     "keywords": [
       "키워드",
       "키워드2"

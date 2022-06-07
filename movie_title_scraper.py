@@ -9,7 +9,7 @@ if __name__ == '__main__':
 
     mySetting = setting.Setting()
     mySetting.loadJson()
-    myMovie = movie.Moive(mySetting)
+    myMovie = movie.Movie(mySetting)
 
     movieTitleScraper = daumMovieTitleScraper.SiteScraper(mySetting)
 

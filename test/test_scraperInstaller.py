@@ -1,4 +1,5 @@
 import unittest
+import shutil
 import os
 import scraperInstaller
 import setting
@@ -28,5 +29,26 @@ class ScraperInstallerTest(unittest.TestCase):
         # assert
         self.assertFalse(installer.copyConfigIfNotExist(mySetting.settingPath))
 
+    def test_installConfig_폴더가_없으면_생성되나(self):
+        # arrange
+        mySetting = setting.Setting()
+        installer = scraperInstaller.ScraperInstaller()
+        if os.path.isdir(mySetting.configDirPath):
+            shutil.rmtree(mySetting.configDirPath)
+        # action 
+        installer.installConfig()
+        #assert
+        self.assertTrue(os.path.isdir(mySetting.configDirPath))
+
+    def test_installTransmissionScript_폴더가_없으면_생성되나(self):
+        # arrange
+        mySetting = setting.Setting()
+        installer = scraperInstaller.ScraperInstaller()
+        if os.path.isdir(mySetting.transmissionScriptDirPath):
+            shutil.rmtree(mySetting.transmissionScriptDirPath)
+        # action 
+        installer.installTransmissionScript()
+        #assert
+        self.assertTrue(os.path.isdir(mySetting.transmissionScriptDirPath))
 if __name__ == '__main__':  
     unittest.main()

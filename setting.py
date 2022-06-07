@@ -14,7 +14,7 @@ class Setting:
     configDirPath = currentPath + "/config/"
     settingPath = configDirPath + "setting.json"
     torrentHistoryPath = configDirPath + "torrent_history.csv"
-    mailHistoryPath = configDirPath + "mail_history.csv"
+    notiHistoryPath = configDirPath + "noti_history.csv"
     runTime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     transmissionScriptDirPath = currentPath + "/transmission_script/"
     torrentDoneSHPath = transmissionScriptDirPath + "torrent_done.sh"
@@ -22,17 +22,21 @@ class Setting:
     scraperLibraryPYPath = transmissionScriptDirPath + "scraperLibrary.py"
     configHelperPYPath = transmissionScriptDirPath + "configHelper.py"
 
+    def __init__(self) -> None:
+        if os.path.isfile(self.settingPath):
+            self.loadJson()
+        
     def loadJson(self)->None:
         # try -> except -> else -> finally
         try:
-            dataFile = open(self.settingPath, 'r', encoding='utf-8')
+            settingText = open(self.settingPath, 'r', encoding='utf-8')
         except FileNotFoundError as e:
-            print("설정파일("+self.SETTING_FILE+")이 없습니다. ./install.sh 를 실행한 후 변경사항을 적용하세요.")
+            print("설정파일("+self.settingPath+")이 없습니다. ./install.sh 를 실행한 후 변경사항을 적용하세요.")
             print(str(e))
             sys.exit()
         else:
-            self.json = json.load(dataFile)
-            dataFile.close()
+            self.json = json.load(settingText)
+            settingText.close()
 
     def saveJson(self)->None:
         with open(self.settingPath, 'w', encoding='utf-8') as dataFile:
