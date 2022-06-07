@@ -51,8 +51,10 @@
       "키워드2"
     ]
   },
-  "trans-host": "127.0.0.1",
-  "trans-id": "transmission",
-  "trans-port": "9091",
-  "trans-pw": "transmission"
+  "transmission": {
+    "host": "127.0.0.1",
+    "port": 9091,
+    "id": "transmission",
+    "pw": "transmission"
+  }
 }

@@ -99,6 +99,7 @@ if __name__ == '__main__':
                         downloadPath = mySetting.json["tvshow"]["download"]
                         if len(downloadPath) > 0:
                             downloadPath = downloadPath + "/" + regKeyword
+                            # rpc로 하는 경우는 만들 필요가 없는 것 같은데...
                             if os.path.exists(downloadPath) is False:
                                 os.makedirs(downloadPath)
                     sessionId = scraperLibrary.getSessionIdTorrentRpc(mySetting.json)

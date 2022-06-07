@@ -40,8 +40,9 @@ def checkUrl(url: str)->bool:
 
 #X-Transmission-Session-Id
 def getSessionIdTorrentRpc(json):
-    url = "http://%s:%s@%s:%s/transmission/rpc" % (json['trans-id'], json['trans-pw']
-                                                   , json['trans-host'], json['trans-port'])
+    transmissionSetting = json['transmission']
+    url = "http://%s:%s@%s:%s/transmission/rpc" % (transmissionSetting['id'], transmissionSetting['pw']
+                                                   , transmissionSetting['host'], transmissionSetting['port'])
     try:
         res = requests.get(url)
         bs = BeautifulSoup(res.text, "html.parser")

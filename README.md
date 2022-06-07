@@ -19,12 +19,14 @@ torrent_web_scraper는 등록된 키워드로 게시판을 검색하여 토렌�
 설치가 완료되면 config디렉토리의 setting.json 파일을 자신의 환경에 맞게 수정해주어야 합니다.
 
 ## 1.2.1 transmission 접속정보 설정
-torrent_web_scraper이 transmission과 통신할 호스트(아이피), 아이디와 패스워드, 포트를 지정합니다. "trans-host"는 torrent_web_scraper와 transmission이 동일한 컴퓨터가 아닌 경우 웹브라우저에서 http://[transmission이 실행중인 아이피]:9091로 접속을 확인해 보는 것이 좋습니다. 우분투, 데비안의 경우 트랜스미션 데몬의 기본값을 변경하지 않은 경우에는 아래 설정을 변경하지 않아도 된다. 
+torrent_web_scraper이 transmission과 통신할 호스트(아이피), 포트, 아이디와 패스워드를 지정합니다. "host"는 torrent_web_scraper와 transmission이 동일한 컴퓨터가 아닌 경우 웹브라우저에서 http://[transmission이 실행중인 아이피]:9091로 접속을 확인해 보는 것이 좋습니다. 우분투, 데비안의 경우 트랜스미션 데몬의 기본값을 변경하지 않은 경우에는 아래 설정을 변경하지 않아도 된다. 
 
-    "trans-host": "127.0.0.1",
-    "trans-id": "transmission",
-    "trans-pw": "transmission",
-    "trans-port": "9091"
+    "transmission": {
+        "host": "127.0.0.1",
+        "port": 9091,
+        "id": "transmission",
+        "pw": "transmission"
+    }
 
 ## 1.2.2 토렌트 사이트 설정 
 도메인에 숫자가 변경되는 경우가 있을 때에는 수정합니다. 
@@ -32,7 +34,7 @@ torrent_web_scraper이 transmission과 통신할 호스트(아이피), 아이디
     "mainUrl": "https://torrentsir58.com/",
 
 # 1.3 키워드 추가
-TVShow.json 파일에 제목과 해상도 등은 옵션으로 추가로 지정할 수 있습니다. 
+TVShow.json 파일에 제목과 해상도 등을 옵션으로 추가로 지정할 수 있습니다. 
 
     ,{"name": "놀면 뭐하니", "option": "720", "option2":"Next"}
 
@@ -54,10 +56,12 @@ torrent_web_scraper를 주기적으로 실행하게 설정해두면, 토렌트 �
 
 
 # 변경이력
+## 1.2.2
+1. 설정파일 변경(config/setting.json파일에서 trans로 시작하는 설정을 transmission으로 이동)
 ## 1.2.1
 1. 내부성능 일부개선, 패키지 버전업
 ## 1.2
-1. 설정파일 변경(config/setting.json파일에서 download-base, program-list 삭제, tvshow로 이동)
+1. 설정파일 변경(download-base, program-list 삭제, tvshow로 이동)
 ## 1.1.2
 1. 기본 사이트 torrentsir로 변경
 ## 1.1.1

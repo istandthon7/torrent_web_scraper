@@ -34,5 +34,10 @@ class ScraperLibraryTest(unittest.TestCase):
         mySetting.json["notification"]["keywords"].insert(0, "테스트")
         scraperLibrary.executeNotiScript(mySetting, "사이트명", "테스트 게시판 제목")
         self.assertFalse(scraperLibrary.executeNotiScript(mySetting, "사이트명", "테스트 게시판 제목"))
+
+    def test_transmissionSetting(self):
+        mySetting = setting.Setting()
+        self.assertIsNotNone(scraperLibrary.getSessionIdTorrentRpc(mySetting.json))
+
 if __name__ == '__main__':  
     unittest.main()
