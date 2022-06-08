@@ -8,7 +8,6 @@ import movie
 if __name__ == '__main__':
 
     mySetting = setting.Setting()
-    mySetting.loadJson()
     myMovie = movie.Movie(mySetting)
 
     movieTitleScraper = daumMovieTitleScraper.SiteScraper(mySetting)
@@ -20,7 +19,7 @@ if __name__ == '__main__':
     # <strong class="tit_join"><a class="link_g #list #monthly @1" href="/moviedb/main?movieId=111292">기생충</a></strong>, ...
     #print("info, main titles_tag = ", titles_tag)
 
-    f = open(myMovie.fileName, 'a', encoding="utf-8")
+    f = open(myMovie.listFileName, 'a', encoding="utf-8")
 
     for index, movieTitle in enumerate(movieTitles, start=1):
 
@@ -29,7 +28,7 @@ if __name__ == '__main__':
 
         f.write(title+"\n")
 
-        if index == mySetting.json["movie"]["ranking"]:
+        if index == mySetting.json["movie"]["titleScrap"]["ranking"]:
             break
     f.close()
 

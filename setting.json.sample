@@ -6,10 +6,10 @@
   "movie": {
     "download": "",
     "list": "Movie.txt",
-    "ranking": 8,
     "resolution": "1080",
     "video_codec": "264",
     "titleScrap": {
+      "ranking": 8,
       "url": "https://movie.daum.net/ranking/boxoffice/monthly"
     }
   },
