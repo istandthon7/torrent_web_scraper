@@ -16,7 +16,7 @@ class Movie(configHelper.ConfigHelper):
         """
 
         for keyword in self.keywords:
-            keyword = keyword.lower().rstrip("")
+            keyword = keyword.rstrip("\r\n").lower()
             if keyword == "":
                 continue
             keyword = keyword.replace(":", " ")
@@ -30,18 +30,19 @@ class Movie(configHelper.ConfigHelper):
             return keyword
         return ""
 
-    def removeLineInMovie(self, matchedName: str)->None:
+    def removeLineInMovie(self, regKeyword: str)->None:
         """movie_list에서 삭제하기"""
-        
+        if not regKeyword:
+            return
         buffer = ""
 
-        for line in self.keywords:
-            if not matchedName in line:
-                buffer += line
+        for keyword in self.keywords:
+            if not regKeyword in keyword:
+                buffer += keyword
             else:
                 # 영화리스트 파일에 매치되어 파일에 기록하지 않으니 다운받았다는 메시지다.
                 # 영화는 자주 다운로드 하지 않으니 일단 로그 놔두고, 메일 받는 것으로 하자.
-                print("info, remove in movie_list, matchedName = "+matchedName+", line = "+line)
+                print("info, remove in movie_list, matchedName = "+regKeyword+", line = "+keyword)
 
         with open(self.listFileName, "w", encoding="utf-8") as f:
             f.write(buffer)

@@ -23,6 +23,13 @@ class MovieTest(unittest.TestCase):
         myMovie.keywords.insert(0, "천하종사 곽원갑 2022")
         regKeyword = myMovie.getRegKeyword("[액션] 천하종사 곽원갑 Fearless Kungfu King,2022.1080p.KOR.FHDRip.H264.AAC-REEL")
         self.assertGreater(len(regKeyword), 0)
+
+    def test_getRegKeyword_등록된것이_없으면(self):
+        mySetting = setting.Setting()
+        myMovie = movie.Movie(mySetting)
+        myMovie.keywords.insert(0, "재미난 영화")
+        regKeyword = myMovie.getRegKeyword("[액션] 천하종사 곽원갑 Fearless Kungfu King,2022.1080p.KOR.FHDRip.H264.AAC-REEL")
+        self.assertEqual(len(regKeyword), 0)
         
     def test_getRegKeyword_년도가_없어도(self):
         mySetting = setting.Setting()
