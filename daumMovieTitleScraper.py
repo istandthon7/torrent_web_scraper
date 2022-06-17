@@ -1,4 +1,4 @@
-import scraperLibrary
+import scraperHelpers
 import setting
 
 class SiteScraper:
@@ -12,7 +12,7 @@ class SiteScraper:
         self.mySetting = mySetting
 
     def checkUrl(self)->bool:
-        ret = scraperLibrary.checkUrl(self.getScrapUrl())
+        ret = scraperHelpers.checkUrl(self.getScrapUrl())
         return ret
 
     def getScrapUrl(self)->str:
@@ -20,7 +20,7 @@ class SiteScraper:
 
     # 리스트의 url링크 리스트
     def getParseData(self):
-        bsObj = scraperLibrary.getBsObj(self.getScrapUrl())
+        bsObj = scraperHelpers.getSoup(self.getScrapUrl())
         nameList = bsObj.find_all('a', attrs={'class' : 'link_txt'})
         if len(nameList) == 0:
             print(__file__+" getParseData 제목 클래스가 없어요. a tag's class: link_txt")

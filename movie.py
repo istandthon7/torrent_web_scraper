@@ -23,9 +23,9 @@ class Movie(configHelper.ConfigHelper):
             
             if self.IsContainAllWordsInBoardTitle(keyword, boardTitle) is False:
                 continue
-            if self.IsContainAllWordsInBoardTitle(self.movieSetting['resolution'], boardTitle) is False:
+            if self.IsContainAllWordsInBoardTitle(str(self.movieSetting['resolution']), boardTitle) is False:
                 continue
-            if self.IsContainAllWordsInBoardTitle(self.movieSetting['video_codec'], boardTitle) is False:
+            if self.IsContainAllWordsInBoardTitle(self.movieSetting['videoCodec'], boardTitle) is False:
                 continue
             return keyword
         return ""

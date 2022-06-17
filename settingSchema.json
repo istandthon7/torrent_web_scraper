@@ -1,0 +1,196 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "tvshow": {
+      "type": "object",
+      "properties": {
+        "download": {
+          "type": "string",
+          "description": "Transmission에 지정된 기본경로를 사용하는 경우에는 입력하지 않아도 됩니다."
+        },
+        "list": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "list"
+      ]
+    },
+    "movie": {
+      "type": "object",
+      "properties": {
+        "download": {
+          "type": "string",
+          "description": "Transmission에 지정된 기본경로를 사용하는 경우에는 입력하지 않아도 됩니다."
+        },
+        "list": {
+          "type": "string"
+        },
+        "resolution": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "videoCodec": {
+          "type": "string"
+        },
+        "titleScrap": {
+          "type": "object",
+          "properties": {
+            "ranking": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "url": {
+              "type": "string",
+              "const": "https://movie.daum.net/ranking/boxoffice/monthly"
+            }
+          },
+          "required": [
+            "ranking",
+            "url"
+          ]
+        }
+      },
+      "required": [
+        "list"
+      ]
+    },
+    "sites": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "categories": {
+              "type": "array",
+              "items": {"$ref": "#/$defs/category"},
+              "minItems": 1,
+              "uniqueItems": true
+            },
+            "enable": {
+              "type": "boolean"
+            },
+            "mainUrl": {
+              "type": "string",
+              "pattern": "(http|https):\\/\\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-\\/].[^\\s]*$))?"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "categories",
+            "enable",
+            "mainUrl",
+            "name"
+          ]
+        }
+      ]
+    },
+    "notification": {
+      "type": "object",
+      "properties": {
+        "cmd": {
+          "type": "string",
+          "examples":["telegram.sh 'torrent_web_scraper keyword notification. title: $board_title'"]
+        },
+        "keywords": {
+          "type": "array",
+          "items": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "history":{
+          "type":"string",
+          "const":"notiHistory.csv"
+        }
+      },
+      "required": [
+        "cmd",
+        "keywords",
+        "history"
+      ]
+    },
+    "scrapPage": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "torrentHistory": {
+      "type":"string",
+      "const": "torrentHistory.csv"
+    },
+    "torrentFail":{
+      "type": "string",
+      "const": "torrentFail.csv"
+    },
+    "transmission": {
+      "type": "object",
+      "properties": {
+        "host": {
+          "type": "string"
+        },
+        "port": {
+          "type": "integer"
+        },
+        "id": {
+          "type": "string"
+        },
+        "pw": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "host",
+        "port",
+        "id",
+        "pw"
+      ]
+    }
+  },
+  "required": ["tvshow", "movie", "sites", "scrapPage", "transmission", "torrentHistory"],
+  "$defs":{
+    "category": {
+      "type": "object",
+      "properties": {
+        "history": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "title":{
+          "type":"object",
+          "properties": {
+            "tag": {
+              "type": "string",
+              "examples":["td", "div", "li"]
+            },
+            "class": {
+              "type": "string",
+              "examples":["list-subject", "wr-subject", "tit", "movie-title"
+                  , "list-desc", "td-subject", "list-item", "td-lf", "td_subject"
+                  , "topic-item", "ml-2", "flex-grow truncate", "list_subject"
+                ]
+            }
+          },
+          "required":["tag", "class"]
+        }
+      },
+      "required": [
+        "history",
+        "name",
+        "url",
+        "title"
+      ]
+    }
+  }
+}

@@ -31,10 +31,10 @@ torrent_web_scraper이 transmission과 통신할 호스트(아이피), 포트, �
 ## 1.2.2 토렌트 사이트 설정 
 도메인에 숫자가 변경되는 경우가 있을 때에는 수정합니다. 
 
-    "mainUrl": "https://torrentsir58.com/",
+    "mainUrl": "https://torrentsee114.com/",
 
 # 1.3 키워드 추가
-TVShow.json 파일에 제목과 해상도 등을 옵션으로 추가로 지정할 수 있습니다. 
+TVShow.json 파일에 제목과 해상도 등을 옵션으로 추가로 지정할 수 있습니다. (옵션은 생략가능) 
 
     ,{"name": "놀면 뭐하니", "option": "720", "option2":"Next"}
 
@@ -56,20 +56,30 @@ torrent_web_scraper를 주기적으로 실행하게 설정해두면, 토렌트 �
 
 
 # 변경이력
+## 2.0.00-alpha1
+* 설정파일 변경
+  * "movie"에서 
+    * "resolution": "1080"를 "resolution": 1080 숫자로 변경.
+    * "video_codec"을 "videoCodec"으로 변경.
+  * "sites"에서 
+    * "board"제거(사용안함)
+    * "category"를 "categories"로 변경.및 "title" 추가. 
+  * "page_scrap_max"를 "scrapPage"로 변경.
+  * torrentHistory, torrentFail 추가
 ## 1.2.2
-1. 설정파일 변경(config/setting.json파일에서 trans로 시작하는 설정을 transmission으로 이동)
+* 설정파일 변경(config/setting.json파일에서 trans로 시작하는 설정을 transmission으로 이동)
 ## 1.2.1
-1. 내부성능 일부개선, 패키지 버전업
+* 내부성능 일부개선, 패키지 버전업
 ## 1.2
-1. 설정파일 변경(download-base, program-list 삭제, tvshow로 이동)
+* 설정파일 변경(download-base와 program-list 삭제, tvshow로 이동)
 ## 1.1.2
-1. 기본 사이트 torrentsir로 변경
+* 기본 사이트 torrentsir로 변경
 ## 1.1.1
-1. 기본 사이트 torrentview로 변경
+* 기본 사이트 torrentview로 변경
 
 ## 1.1
-1. 파일명 변경
-* settings.json -> config/setting.json
-* program_list.json -> config/TVShow.json 
-* movie_list.txt -> config/Movie.txt 
+* 파일명 변경
+  * settings.json -> config/setting.json
+  * program_list.json -> config/TVShow.json 
+  * movie_list.txt -> config/Movie.txt 
 

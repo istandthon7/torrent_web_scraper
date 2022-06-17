@@ -2,20 +2,20 @@
 
 import os
 import sys
-import scraperLibrary
+import scraperHelpers
 import re
 import json
 import configHelper 
 
 def setSeasonTorrentFile(setting, torrentTitle, season):
 
-    sessionId = scraperLibrary.getSessionIdTorrentRpc(setting)
+    sessionId = scraperHelpers.getSessionIdTorrentRpc(setting)
     print("info, setSeasonTorrentFile session_id = "+sessionId)
 
-    torrentId = scraperLibrary.getIdTransmissionRemote(setting, sessionId, torrentTitle)
+    torrentId = scraperHelpers.getIdTransmissionRemote(setting, sessionId, torrentTitle)
     print("info, setSeasonTorrentFile id = "+torrentId)
 
-    torrents = scraperLibrary.getFilesTorrentRemote(setting, sessionId, torrentId)
+    torrents = scraperHelpers.getFilesTorrentRemote(setting, sessionId, torrentId)
     print("info setSeasonTorrentFile torrents = "+torrents)
 
     for torrent in torrents:
@@ -28,7 +28,7 @@ def setSeasonTorrentFile(setting, torrentTitle, season):
             newFileName = re.sub('(?P<epi>E\d+.)', replaceString, fileName)
             print("info setSeasonTorrentFile newFileName = "+newFileName)
 
-            scraperLibrary.renameFileTorrentRpc(setting, torrentId, sessionId, torrent['name'], newFileName)
+            scraperHelpers.renameFileTorrentRpc(setting, torrentId, sessionId, torrent['name'], newFileName)
     return
 
 if __name__ == '__main__':

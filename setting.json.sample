@@ -6,8 +6,8 @@
   "movie": {
     "download": "",
     "list": "Movie.txt",
-    "resolution": "1080",
-    "video_codec": "264",
+    "resolution": 1080,
+    "videoCodec": "264",
     "titleScrap": {
       "ranking": 8,
       "url": "https://movie.daum.net/ranking/boxoffice/monthly"
@@ -15,41 +15,104 @@
   },
   "sites": [
     {
-      "board": "GNBoardBasicSkin",
-      "category": [
+      "categories": [
         {
           "history": 0,
-          "name": "예능",
-          "url": "bbs/board.php?bo_table=entertain"
+          "name": "해외영화",
+          "url": "topic/index?category1=1&category2=10",
+          "title": {
+            "tag": "li",
+            "class": "tit"
+          }
         },
         {
           "history": 0,
-          "name": "다큐",
-          "url": "bbs/board.php?bo_table=tv"
+          "name": "한국영화",
+          "url": "topic/index?category1=1&category2=11",
+          "title": {
+            "tag": "li",
+            "class": "tit"
+          }
         },
         {
           "history": 0,
-          "name": "드라마",
-          "url": "bbs/board.php?bo_table=drama"
+          "name": "해외드라마",
+          "url": "topic/index?category1=2&category2=12",
+          "title": {
+            "tag": "li",
+            "class": "tit"
+          }
         },
         {
           "history": 0,
-          "name": "영화",
-          "url": "bbs/board.php?bo_table=movie"
+          "name": "한국드라마",
+          "url": "topic/index?category1=2&category2=13",
+          "title": {
+            "tag": "li",
+            "class": "tit"
+          }
+        },
+        {
+          "history": 163322,
+          "name": "넷플릭스 영화",
+          "url": "topic/index?category1=3&category2=14",
+          "title": {
+            "tag": "li",
+            "class": "tit"
+          }
+        },
+        {
+          "history": 0,
+          "name": "넷플릭스 시리즈",
+          "url": "topic/index?category1=3&category2=15",
+          "title": {
+            "tag": "li",
+            "class": "tit"
+          }
+        },
+        {
+          "history": 0,
+          "name": "디플 영화",
+          "url": "topic/index?category1=102&category2=103",
+          "title": {
+            "tag": "li",
+            "class": "tit"
+          }
+        },
+        {
+          "history": 0,
+          "name": "예능·오락",
+          "url": "topic/index?category1=4&category2=16",
+          "title": {
+            "tag": "li",
+            "class": "tit"
+          }
+        },
+        {
+          "history": 0,
+          "name": "다큐·교양",
+          "url": "topic/index?category1=4&category2=17",
+          "title": {
+            "tag": "li",
+            "class": "tit"
+          }
         }
       ],
       "enable": true,
-      "mainUrl": "https://torrentsir58.com/",
-      "name": "torrentsir"
+      "mainUrl": "https://torrentsee114.com/",
+      "name": "토렌트씨"
     }
   ],
-  "page_scrap_max": 1,
+  "scrapPage": 2,
+  "torrentHistory":"torrentHistory.csv",
+  "torrentFail":"torrentFail.csv",
   "notification": {
-    "cmd": "telegram.sh 'torrent_web_scraper keyword notification. title: $board_title' ",
+    "cmd": "",
     "keywords": [
       "키워드",
       "키워드2"
-    ]
+    ],
+    "history":"notiHistory.csv"
   },
   "transmission": {
     "host": "127.0.0.1",

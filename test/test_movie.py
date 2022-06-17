@@ -48,7 +48,7 @@ class MovieTest(unittest.TestCase):
     def test_getRegKeyword_해상도가_같으면(self):
         mySetting = setting.Setting()
         myMovie = movie.Movie(mySetting)
-        myMovie.movieSetting['resolution'] = "1080"
+        myMovie.movieSetting['resolution'] = 1080
         myMovie.keywords.insert(0, "천하종사 곽원갑")
         regKeyword = myMovie.getRegKeyword("[액션] 천하종사 곽원갑 Fearless Kungfu King,2022.1080p.KOR.FHDRip.H264.AAC-REEL")
         self.assertGreater(len(regKeyword), 0)
@@ -56,7 +56,7 @@ class MovieTest(unittest.TestCase):
     def test_getRegKeyword_해상도가_다르면(self):
         mySetting = setting.Setting()
         myMovie = movie.Movie(mySetting)
-        myMovie.movieSetting['resolution'] = "720"
+        myMovie.movieSetting['resolution'] = 720
         myMovie.keywords.insert(0, "천하종사 곽원갑")
         regKeyword = myMovie.getRegKeyword("[액션] 천하종사 곽원갑 Fearless Kungfu King,2022.1080p.KOR.FHDRip.H264.AAC-REEL")
         self.assertEqual(len(regKeyword), 0)
@@ -64,7 +64,7 @@ class MovieTest(unittest.TestCase):
     def test_getRegKeyword_코덱이_같으면(self):
         mySetting = setting.Setting()
         myMovie = movie.Movie(mySetting)
-        myMovie.movieSetting['video_codec'] = "264"
+        myMovie.movieSetting['videoCodec'] = "264"
         myMovie.keywords.insert(0, "천하종사 곽원갑")
         regKeyword = myMovie.getRegKeyword("[액션] 천하종사 곽원갑 Fearless Kungfu King,2022.1080p.KOR.FHDRip.H264.AAC-REEL")
         self.assertGreater(len(regKeyword), 0)
@@ -72,7 +72,7 @@ class MovieTest(unittest.TestCase):
     def test_getRegKeyword_코덱이_다르면(self):
         mySetting = setting.Setting()
         myMovie = movie.Movie(mySetting)
-        myMovie.movieSetting['video_codec'] = "265"
+        myMovie.movieSetting['videoCodec'] = "265"
         myMovie.keywords.insert(0, "천하종사 곽원갑")
         regKeyword = myMovie.getRegKeyword("[액션] 천하종사 곽원갑 Fearless Kungfu King,2022.1080p.KOR.FHDRip.H264.AAC-REEL")
         self.assertEqual(len(regKeyword), 0)

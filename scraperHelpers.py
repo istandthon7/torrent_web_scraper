@@ -14,28 +14,44 @@ import os
 import setting
 import ssl
 
-def getBsObj(url: str):
+def getSoup(url: str):
+    try:
+        html = getHtml(url)
+        soup = BeautifulSoup(html, "html.parser")
+        return soup
+    except Exception as e:
+        print("Exception getSoup url: "+url+" , error: " + str(e))
+
+
+def getHtml(url: str):
     try:
         time.sleep(random.randrange(1,4))
-        req = Request(url, headers={"User-Agent": "Mozilla/5.0"})
+        request = Request(url, headers={"User-Agent": "Mozilla/5.0"})
         # python 3.6이상에서
         context = ssl._create_unverified_context()
-        html = urlopen(req).read().decode('utf-8','replace')
-        data = BeautifulSoup(html, "html.parser")
-        return data
+        # urlopen(request, context=context) as response
+        return urlopen(request, context=context).read().decode('utf-8','replace')
     except Exception as e:
-        print("Exception getBsObj url: "+url+" , error: " + str(e))
+        print("Exception getHtml url: "+url+" , error: " + str(e))
+
+
+def getSoupFromFile(filePath: str):
+    try:
+        soup = BeautifulSoup(open(filePath), "html.parser")
+        return soup
+    except Exception as e:
+        print("Exception getSoupFromFile path: "+filePath+" , error: " + str(e))
+
 
 def checkUrl(url: str)->bool:
     try:
-        if getBsObj(url) is None:
+        if getSoup(url) is None:
             return False
     except Exception:# as e:
         #print(f"Exception access url : {e}")
         #print(f"We can not scrap {url} , something wrong.\n")
         return False
     return True
-
 
 
 #X-Transmission-Session-Id
@@ -159,10 +175,14 @@ def executeNotiScript(mySetting: setting.Setting, siteName: str, boardTitle: str
     if notiSetting == "":
         return False
 
+    if notiSetting["cmd"] == "":
+        return False
+
     for keyword in notiSetting["keywords"]:
-        if checkNotiHistory(mySetting.notiHistoryPath, boardTitle):
-            return False
+        
         if keyword in boardTitle:
+            if checkNotiHistory(mySetting.notiHistoryPath, boardTitle):
+                return False
             cmd = notiSetting["cmd"]
             cmd = cmd.replace("$board_title", "["+siteName+"]" + boardTitle)
             try:
@@ -176,6 +196,7 @@ def executeNotiScript(mySetting: setting.Setting, siteName: str, boardTitle: str
                                   , siteName, boardTitle, keyword)
                 return True
 
+
 def checkNotiHistory(csvFile: str, title: str)->bool:
         if os.path.isfile(csvFile) is False:
             return False
@@ -188,6 +209,7 @@ def checkNotiHistory(csvFile: str, title: str)->bool:
                     #web_scraper_history.csv")
                     return True
         return False
+
 
 def addNotiHistory(csvFile: str, runtime: str, sitename: str, title: str, keyword: str)->None:
     new = [runtime, sitename, title, keyword]

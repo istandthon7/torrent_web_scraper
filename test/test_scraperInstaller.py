@@ -50,5 +50,7 @@ class ScraperInstallerTest(unittest.TestCase):
         installer.installTransmissionScript()
         #assert
         self.assertTrue(os.path.isdir(mySetting.transmissionScriptDirPath))
+
+        
 if __name__ == '__main__':  
     unittest.main()
