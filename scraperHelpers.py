@@ -13,6 +13,7 @@ import json
 import os
 import setting
 import ssl
+import argparse
 
 def getSoup(url: str):
     try:
@@ -218,3 +219,17 @@ def addNotiHistory(csvFile: str, runtime: str, sitename: str, title: str, keywor
         writer = csv.writer(f)
         writer.writerow(new)
     f.close()
+
+
+def addMagnet(magnet: str, downloadPath: str):
+    mySetting = setting.Setting()
+    sessionId = getSessionIdTorrentRpc(mySetting.json)
+    addMagnetTransmissionRemote(magnet, mySetting.json, downloadPath, sessionId)
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("magnet", help="magnet")
+    parser.add_argument("downloadPath", help="다운로드 경로")
+    args = parser.parse_args()
+    addMagnet(args.magnet, args.downloadPath)

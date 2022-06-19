@@ -96,7 +96,6 @@ class BoardScraper():
 
 
 if __name__ == '__main__':
-    #
     parser = argparse.ArgumentParser()
     parser.add_argument("urlOrFilePath", help="스크랩할 url이나 html파일경로")
     parser.add_argument("--titleTag", help="제목 태그")
