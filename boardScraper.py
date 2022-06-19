@@ -99,20 +99,12 @@ if __name__ == '__main__':
     #
     parser = argparse.ArgumentParser()
     parser.add_argument("urlOrFilePath", help="스크랩할 url이나 html파일경로")
-    # parser.add_argument("--boardTag", help="게시판 태그")
-    # parser.add_argument("--boardClass", help="게시판 클래스")
     parser.add_argument("--titleTag", help="제목 태그")
     parser.add_argument("--titleClass", help="제목 클래스")
     args = parser.parse_args()
     myBoardScraper = BoardScraper()
     if args.titleTag is None:
         print(myBoardScraper.getMagnetDataFromPageUrl(args.urlOrFilePath))
-        
-    # elif args.titleTag is None and args.boardTag is not None:
-    #     board = myBoardScraper.getBoard(args.urlOrFilePath, 1, args.boardTag
-    #     , args.boardClass)
-    #     if board is not None:
-    #         print(board)
     else:
         boardItems = myBoardScraper.getBoardItemInfos(args.urlOrFilePath, 1
                         , args.titleTag, args.titleClass)

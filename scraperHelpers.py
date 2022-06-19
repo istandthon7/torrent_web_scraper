@@ -140,6 +140,7 @@ def removeTransmissionRemote(jsonOfSetting, sessionId, containName: str)->None:
             res = rpc(jsonOfSetting, payload, sessionId)
 
 def rpc(jsonOfSetting, payload, sessionId):
+    """접속정보는 jsonOfSetting에서"""
     url = getUrl(jsonOfSetting)
     headers = {'content-type': 'application/json'}
     headers.update(sessionId)
