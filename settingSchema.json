@@ -151,9 +151,24 @@
         "id",
         "pw"
       ]
+    },
+    "logging":{
+      "type": "object",
+      "properties": {
+        "logLevel":{
+          "type":"string",
+          "enum": ["DEBUG", "INFO", "WARNING", "ERROR","CRITICAL"]
+        },
+        "logFile":{
+          "type":"string",
+          "default":"scraper.log"
+        }
+      },
+      "required":["logLevel", "logFile"]
     }
   },
-  "required": ["tvshow", "movie", "sites", "scrapPage", "transmission", "torrentHistory"],
+  "required": ["tvshow", "movie", "sites", "scrapPage", "transmission"
+    , "torrentHistory", "logging"],
   "$defs":{
     "category": {
       "type": "object",

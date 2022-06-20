@@ -3,6 +3,7 @@
 """
 import argparse
 import json
+import logging
 import re
 import bs4
 import scraperHelpers
@@ -36,7 +37,9 @@ class BoardScraper():
         
         titles = soup.find_all(titleTag, class_=titleClass)
         if titles is None or not any(titles):
-            print(f"게시판에서 제목리스트 얻기에 실패하였습니다. {urlOrFilePath}, tag: {titleTag}, class: {titleClass}")
+            msg = f"게시판에서 제목리스트 얻기에 실패하였습니다. {urlOrFilePath}, tag: {titleTag}, class: {titleClass}"
+            print(msg)
+            logging.error(msg)
             return [];
         items = []
         for title in titles:
@@ -51,7 +54,9 @@ class BoardScraper():
             elif boardItemInfo.id == -1:
                 isNotSupportID = True
         if isNotSupportID:
-            print("게시물 아이디를 확인할 수 없습니다.")
+            msg = "게시물 아이디를 확인할 수 없습니다."
+            print(msg)
+            logging.error(msg)
         return results
  
     #게시판 아이디 파싱, url을 기반으로 wr_id text를 뒤의 id parsing

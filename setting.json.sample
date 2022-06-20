@@ -119,5 +119,9 @@
     "port": 9091,
     "id": "transmission",
     "pw": "transmission"
+  },
+  "logging": {
+    "logLevel": "ERROR",
+    "logFile": "scraper.log"
   }
 }

@@ -56,6 +56,9 @@ torrent_web_scraper를 주기적으로 실행하게 설정해두면, 토렌트 �
 
 
 # 변경이력
+## 2.0.00-alpha2
+* 로그 추가
+  * 설정파일 "logging" 추가
 ## 2.0.00-alpha1
 * 설정파일 변경
   * "movie"에서 

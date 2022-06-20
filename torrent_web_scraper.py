@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import logging
 import sys
 import boardScraper
 import scraperHelpers
@@ -50,17 +51,28 @@ if __name__ == '__main__':
     myMovie = movie.Movie(mySetting)
     myTvShow = tvshow.TVShow(mySetting)
 
+    loglevel = mySetting.json["logging"]["logLevel"]
+    getattr(logging, loglevel.upper())
+    numericLevel = getattr(logging, loglevel.upper(), None)
+    if not isinstance(numericLevel, int):
+        raise ValueError('Invalid log level: %s' % loglevel)
+    logging.basicConfig(level=numericLevel, filename=mySetting.json["logging"]["logFile"]
+        , format='%(asctime)s %(levelname)s:%(message)s')
+    logging.info('Started')
     for siteIndex, site in enumerate(mySetting.json["sites"]):
-
+        logging.info(f'사이트 스크랩을 시작합니다. {site["name"]}')
         #Step 1.  test for access with main url
         if site['enable'] is False:
+            logging.info(f'[{site["name"]}] 비활성화되어 있습니다.')
             continue;
         if scraperHelpers.checkUrl(site["mainUrl"]) is False:
             #site['mainUrl'] = scraperLibrary.updateUrl(site['mainUrl'])
-            continue
+            logging.warn(f'[{site["name"]}] 접속할 수 없습니다. {site["mainUrl"]}')
+            continue;
         myBoardScraper = boardScraper.BoardScraper()
         #Step 2.  Iterate categories for this site
         for categoryIndex, category in enumerate(site["categories"]):
+            logging.info(f'게시판 스크랩을 시작합니다. {category["name"]}')
             isNextPageScrap = True
             toSaveBoardItemNum = None
 
@@ -69,23 +81,31 @@ if __name__ == '__main__':
 
             #Step 4.  iterate page (up to 10) for this site/this category
             for pageNumber in range(1, mySetting.json['scrapPage']+1):
-
+                logging.info(f'페이지 스크랩을 시작합니다. page: {pageNumber}')
                 if isNextPageScrap == False:
+                    logging.info(f'페이지 스크랩을 마칩니다.')
                     break;
                 boardItems = myBoardScraper.getBoardItemInfos(site["mainUrl"]+category["url"], pageNumber
                                 , category["title"]["tag"], category["title"]["class"])
-
+                
                 if not boardItems:
-                    #에러메시지는 getParseDataReverse에서 출력
-                    continue
+                    logging.warn(f'게시물 목록을 스크랩하지 못했습니다.')
+                    continue;
+                # 필터링 하기 전의 마지막 아이디. 
+                # 필터링 한 후의 아이디가 더 커진다면 다음 페이지는 갈 필요없음.
+                lastID = boardItems[-1].id
+
+                boardItems = list(filter(lambda x: x.id>category['history'], boardItems))
+                
+                if len(boardItems) == 0:
+                    logging.info(f'모든 게시물을 검색하였으므로 다음 게시판으로 넘어갑니다. history: {category["history"]}')
+                    break;
+                    
                 #for board in boardList:
                 for boardItemIndex, boardItem in enumerate(boardItems, start=1):
-
-                    #print(f"탐색중... 제목: {boardItemTitle}")
-                    #boardList의 첫 게시물의 id를 확인
-                    if (category['history'] >= boardItem.id):
-                        isNextPageScrap = False
-                        break;
+                    if boardItem.url.startswith("http") is False:
+                        boardItem.url = (str(site["mainUrl"])[:-1])+boardItem.url
+                    logging.info(f'게시물 제목검색을 시작합니다. {boardItem.id}, {boardItem.title}, {boardItem.url}')
                     
                     if "영화" in category['name']:
                         regKeyword = myMovie.getRegKeyword(boardItem.title)
@@ -96,11 +116,12 @@ if __name__ == '__main__':
                         toSaveBoardItemNum = boardItem.id
                     
                     if not regKeyword:
+                        logging.info(f'키워드에 해당하지 않습니다.')
                         scraperHelpers.executeNotiScript(mySetting , site['name'], boardItem.title)
-                        continue
+                        continue;
 
-                    if boardItem.url.startswith("http") is False:
-                        boardItem.url = (str(site["mainUrl"])[:-1])+boardItem.url
+                    logging.info(f'게시물을 검색하였습니다. {boardItem.title}')
+                    
                     magnet = myBoardScraper.getMagnetDataFromPageUrl(boardItem.url)
 
                     if not "영화" in category['name']:
@@ -110,27 +131,43 @@ if __name__ == '__main__':
                             # rpc로 하는 경우는 만들 필요가 없는 것 같은데...
                             if os.path.exists(downloadPath) is False:
                                 os.makedirs(downloadPath)
+                                logging.info(f'tvshow 폴더를 만들었습니다. {downloadPath}')
                     if not magnet:
                         addTorrentFailToFile(mySetting, site['name'], boardItem.title, boardItem.url, regKeyword, downloadPath)
-                        print(f"매그넷 검색에 실패하였습니다. {regKeyword}  {boardItem.title} {boardItem.url}  {downloadPath}")
-                        continue
+                        msg = f"매그넷 검색에 실패하였습니다. {regKeyword}  {boardItem.title} {boardItem.url}  {downloadPath}"
+                        print(msg)
+                        logging.error(msg)
+                        continue;
                     #magnet was already downloaded.
                     if checkMagnetHistory(mySetting.torrentHistoryPath, magnet):
-                        continue
+                        logging.info(f'이미 다운로드 받은 파일입니다. {regKeyword}, {magnet}')
+                        continue;
                    
                     sessionId = scraperHelpers.getSessionIdTorrentRpc(mySetting.json)
 
                     if sessionId == None:
+                        logging.critical(f'Transmission 세션아이디를 구하지 못했습니다.')
                         sys.exit()
                     scraperHelpers.addMagnetTransmissionRemote(magnet, mySetting.json, downloadPath, sessionId)
 
                     if "영화" in category['name']:
                         myMovie.removeLineInMovie(regKeyword)
+                        logging.info(f'영화 리스트에서 삭제했습니다. {regKeyword}')
                     else:
                         scraperHelpers.removeTransmissionRemote(mySetting.json, sessionId, regKeyword)
+                        logging.info(f'tvshow 이전 에피소드를 Transmission에서 삭제했습니다. {regKeyword}')
                     addMagnetInfoToFile(mySetting, site['name'], boardItem.title, magnet, regKeyword)
+                    logging.info(f'Transmission에 추가하였습니다. {regKeyword}, {magnet}')
+                # --> 현재 페이지의 게시물 검색 완료
+                # 필터링 한 후의 아이디가 필터링 전 아이디보다 더 크다면 다음 페이지는 갈 필요없음
+                if boardItems[-1].id > lastID:
+                    logging.info(f'다음 페이지는 검색할 필요없음. 현재 페이지: {pageNumber}')
+                    break;
             #값이 있는 경우만 갱신
             if toSaveBoardItemNum is not None:
                 mySetting.json["sites"][siteIndex]["categories"][categoryIndex]["history"] = toSaveBoardItemNum
+                logging.info(f'history를 변경했습니다. {toSaveBoardItemNum}')
         #Step 5.  save scrap ID
         mySetting.saveJson()
+        logging.info(f'설정파일을 저장했습니다.')
+logging.info(f'--------------------------------------------------------')
