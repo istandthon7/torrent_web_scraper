@@ -78,7 +78,13 @@ if __name__ == '__main__':
 
             if "영화" in category['name']:
                 downloadPath = mySetting.json["movie"]["download"]
-
+                if len(downloadPath) > 0:
+                    if os.path.exists(downloadPath) is False:
+                        os.makedirs(downloadPath)
+                        logging.info(f'movie 폴더를 만들었습니다. {downloadPath}')
+                        os.chown(downloadPath, 1000, 1000)
+                        logging.info(f'movie 폴더 소유권을 변경하였습니다. {downloadPath}')
+                        
             #Step 4.  iterate page (up to 10) for this site/this category
             for pageNumber in range(1, mySetting.json['scrapPage']+1):
                 logging.info(f'페이지 스크랩을 시작합니다. page: {pageNumber}')
@@ -128,10 +134,11 @@ if __name__ == '__main__':
                         downloadPath = mySetting.json["tvshow"]["download"]
                         if len(downloadPath) > 0:
                             downloadPath = downloadPath + "/" + regKeyword
-                            # rpc로 하는 경우는 만들 필요가 없는 것 같은데...
                             if os.path.exists(downloadPath) is False:
                                 os.makedirs(downloadPath)
                                 logging.info(f'tvshow 폴더를 만들었습니다. {downloadPath}')
+                                os.chown(downloadPath, 1000, 1000)
+                                logging.info(f'tvshow 폴더 소유권을 변경하였습니다. {downloadPath}')
                     if not magnet:
                         addTorrentFailToFile(mySetting, site['name'], boardItem.title, boardItem.url, regKeyword, downloadPath)
                         msg = f"매그넷 검색에 실패하였습니다. {regKeyword}  {boardItem.title} {boardItem.url}  {downloadPath}"
