@@ -162,7 +162,11 @@ def rpc(jsonOfSetting, payload, sessionId):
 
 def getUrl(json)->str:
     transmissionSetting = json['transmission']
-    url = "http://%s:%s@%s:%s/transmission/rpc" % (transmissionSetting['id'], transmissionSetting['pw']
+    url = "http"
+    if transmissionSetting['port'] == 443:
+        url += "s"
+
+    url += "://%s:%s@%s:%s/transmission/rpc" % (transmissionSetting['id'], transmissionSetting['pw']
                                                    , transmissionSetting['host'], transmissionSetting['port'])
     return url
 

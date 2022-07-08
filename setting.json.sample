@@ -103,7 +103,7 @@
       "name": "토렌트씨"
     }
   ],
-  "scrapPage": 2,
+  "scrapPage": 3,
   "torrentHistory":"torrentHistory.csv",
   "torrentFail":"torrentFail.csv",
   "notification": {

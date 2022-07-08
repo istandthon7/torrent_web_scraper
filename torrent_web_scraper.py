@@ -122,7 +122,7 @@ if __name__ == '__main__':
                         toSaveBoardItemNum = boardItem.id
                     
                     if not regKeyword:
-                        logging.info(f'키워드에 해당하지 않습니다.')
+                        logging.info(f'키워드에 해당하지 않습니다.(해상도등 포함)')
                         scraperHelpers.executeNotiScript(mySetting , site['name'], boardItem.title)
                         continue;
 
