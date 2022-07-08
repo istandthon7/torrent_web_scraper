@@ -56,6 +56,10 @@ torrent_web_scraper를 주기적으로 실행하게 설정해두면, 토렌트 �
 
 
 # 변경이력
+## 2.0.00-beta1
+* Movie.txt 에서 간헐적으로 삭제되지 않았던 버그 수정
+* transmission 보안연결 지원
+* 스크랩 페이지 2에서 3으로 수정(scrapPage)
 ## 2.0.00-alpha3
 * 폴더 권한 처리
 ## 2.0.00-alpha2
