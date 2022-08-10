@@ -56,12 +56,13 @@ def checkUrl(url: str)->bool:
 
 
 #X-Transmission-Session-Id
-def getSessionIdTorrentRpc(jsonOfSetting):
-    url = getUrl(jsonOfSetting)
+def getSessionIdTorrentRpc(url:str):
+    
     try:
         res = requests.get(url)
         bs = BeautifulSoup(res.text, "html.parser")
         code_text = bs.find('code').text
+        # CSRF protection
         #X-Transmission-Session-Id:
         #YeUFW7rotzuLHrx4TfmWCRUF6qVlPd9DcPCEUHzlBcFMXZUd
         array = code_text.split()
@@ -70,9 +71,8 @@ def getSessionIdTorrentRpc(jsonOfSetting):
             return session_id
     except requests.exceptions.ConnectionError:
         print("transmission이 실행중인 아닌 것으로 보입니다. " + url)
-    return
 
-def addMagnetTransmissionRemote(magnetAddr: str, jsonOfSetting, downloadDir: str, sessionId)->None:
+def addMagnetTransmissionRemote(magnetAddr: str, url: str, downloadDir: str, sessionId)->None:
     payload = {
 		"arguments":{
 			"filename": magnetAddr
@@ -82,9 +82,9 @@ def addMagnetTransmissionRemote(magnetAddr: str, jsonOfSetting, downloadDir: str
 
     if len(downloadDir) > 0:
         payload["arguments"]["download-dir"] = downloadDir
-    rpc(jsonOfSetting, payload, sessionId)
+    rpc(url, payload, sessionId)
 
-def getIdTransmissionRemote(jsonOfSetting, sessionId, torrentTitle: str):
+def getIdTransmissionRemote(url:str, sessionId, torrentTitle: str):
     payload = {
 		"arguments":{
 			"fields": ["id", "name"]
@@ -92,13 +92,13 @@ def getIdTransmissionRemote(jsonOfSetting, sessionId, torrentTitle: str):
 		"method": "torrent-get"
     }
 
-    res = rpc(jsonOfSetting, payload, sessionId)
+    res = rpc(url, payload, sessionId)
     #print("info, get_id_transmission_remote res\n", res)
     for torrent in res["arguments"]["torrents"]:
         if torrent["name"] == torrentTitle:
             return torrent["id"]
 
-def getFilesTorrentRemote(jsonOfSetting, sessionId, torrentId):
+def getFilesTorrentRemote(url:str, sessionId, torrentId):
     payload = {
 		"arguments":{
 			"fields": ["id", "name", "files"]
@@ -106,23 +106,23 @@ def getFilesTorrentRemote(jsonOfSetting, sessionId, torrentId):
 		"method": "torrent-get"
     }
 
-    res = rpc(jsonOfSetting, payload, sessionId)
+    res = rpc(url, payload, sessionId)
 
     for torrent in res["arguments"]["torrents"]:
         if torrent["id"] == torrentId:
             return torrent["files"]
 
-def renameFileTorrentRpc(jsonOfSetting, torrentId, sessionId, srcFile: str, destFile: str)->None:
+def renameFileTorrentRpc(url:str, torrentId, sessionId, srcFile: str, destFile: str)->None:
     json_input = {
         "method": "torrent-rename-path"
     }
     json_input["arguments"] = {"ids": [int(torrentId)], "path": srcFile, "name": destFile}
 
-    rpc(jsonOfSetting, json_input, sessionId)
+    rpc(url, json_input, sessionId)
 
 # 상태가 Finished 이고 contain_name 인 토렌트 id를 구해서 삭제 (리스트에 남아있지 않도록 자동삭제되도록 하는
 # 기능이다.)
-def removeTransmissionRemote(jsonOfSetting, sessionId, containName: str)->None:
+def removeTransmissionRemote(url: str, sessionId, containName: str)->None:
     payload = {
         "arguments":{
             "fields": ["id", "name", "isFinished"]
@@ -130,7 +130,7 @@ def removeTransmissionRemote(jsonOfSetting, sessionId, containName: str)->None:
         "method": "torrent-get"
     }
 
-    res = rpc(jsonOfSetting, payload, sessionId)
+    res = rpc(url, payload, sessionId)
 
     for torrent in res["arguments"]["torrents"]:
         if containName in torrent["name"] and torrent["isFinished"]:
@@ -138,11 +138,11 @@ def removeTransmissionRemote(jsonOfSetting, sessionId, containName: str)->None:
                 "method": "torrent-remove",
                 "arguments":{"ids":[torrent["id"]]}
             }
-            res = rpc(jsonOfSetting, payload, sessionId)
+            res = rpc(url, payload, sessionId)
 
-def rpc(jsonOfSetting, payload, sessionId):
+def rpc(url:str, payload, sessionId):
     """접속정보는 jsonOfSetting에서"""
-    url = getUrl(jsonOfSetting)
+    
     headers = {'content-type': 'application/json'}
     headers.update(sessionId)
     #print("info, rpc header = ", headers)
@@ -159,17 +159,6 @@ def rpc(jsonOfSetting, payload, sessionId):
     #assert response["id"] == 0
 
     return response
-
-def getUrl(json)->str:
-    transmissionSetting = json['transmission']
-    url = "http"
-    if transmissionSetting['port'] == 443:
-        url += "s"
-
-    url += "://%s:%s@%s:%s/transmission/rpc" % (transmissionSetting['id'], transmissionSetting['pw']
-                                                   , transmissionSetting['host'], transmissionSetting['port'])
-    return url
-
 
 def executeNotiScript(mySetting: setting.Setting, siteName: str, boardTitle: str)->bool:
     """
@@ -227,13 +216,20 @@ def addNotiHistory(csvFile: str, runtime: str, sitename: str, title: str, keywor
 
 def addMagnet(magnet: str, downloadPath: str):
     mySetting = setting.Setting()
-    sessionId = getSessionIdTorrentRpc(mySetting.json)
-    addMagnetTransmissionRemote(magnet, mySetting.json, downloadPath, sessionId)
+    url = mySetting.getRPCUrl()
+    sessionId = getSessionIdTorrentRpc(url)
+    addMagnetTransmissionRemote(magnet, url, downloadPath, sessionId)
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument("magnet", help="magnet")
-    parser.add_argument("downloadPath", help="다운로드 경로")
-    args = parser.parse_args()
-    addMagnet(args.magnet, args.downloadPath)
+def getDownloadDir(url:str)->str:
+    payload = {
+		"arguments":{
+			"fields": ["download-dir"]
+		},
+		"method": "session-get"
+    }
+
+    res = rpc(url, payload, getSessionIdTorrentRpc(url))
+    #print("info, get_id_transmission_remote res\n", res)
+    return res["arguments"]["download-dir"]
+        

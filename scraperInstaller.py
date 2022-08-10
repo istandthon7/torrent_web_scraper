@@ -59,7 +59,7 @@ class ScraperInstaller:
             addUserX(mySetting.torrentDoneSHPath)
         self.copyPythonFileIfNotExist(mySetting.renameSeasonTransmissionPYPath)
         self.copyPythonFileIfNotExist(mySetting.scraperLibraryPYPath)
-        self.copyPythonFileIfNotExist(mySetting.configHelperPYPath)
+        self.copyPythonFileIfNotExist(mySetting.settingPYPath)
 
 if __name__ == '__main__':
     installer = ScraperInstaller()

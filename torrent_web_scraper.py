@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import logging
+import stat
 import sys
 import boardScraper
 import scraperHelpers
@@ -44,7 +45,21 @@ def addTorrentFailToFile(mySetting: setting.Setting, siteName: str, boardTitle: 
         writer.writerow(torrentFailInfo)
     f.close()
 
+def initFolder(downloadPath:str):
+    if os.path.exists(downloadPath) is False:
+        os.makedirs(downloadPath)
+        logging.info(f'폴더를 만들었습니다. {downloadPath}')
+        # 하드코딩이네.
+        os.chown(downloadPath, 1000, 1000)
+        logging.info(f'폴더 소유권을 변경하였습니다.')
+    # 권한 체크
+    mode = os.lstat(downloadPath).st_mode
+    if stat.filemode(mode).startswith("drw") is False:
+        os.chmod(downloadPath, stat.S_IRWXU)
+        logging.info(f'폴더에 읽기 쓰기 권한을 추가했습니다.')
 
+def setWritable(path:str):
+    mode = os.lstat(path).st_mode
 if __name__ == '__main__':
 
     mySetting = setting.Setting()
@@ -52,7 +67,7 @@ if __name__ == '__main__':
     myTvShow = tvshow.TVShow(mySetting)
 
     loglevel = mySetting.json["logging"]["logLevel"]
-    getattr(logging, loglevel.upper())
+    #getattr(logging, loglevel.upper())
     numericLevel = getattr(logging, loglevel.upper(), None)
     if not isinstance(numericLevel, int):
         raise ValueError('Invalid log level: %s' % loglevel)
@@ -67,7 +82,7 @@ if __name__ == '__main__':
             continue;
         if scraperHelpers.checkUrl(site["mainUrl"]) is False:
             #site['mainUrl'] = scraperLibrary.updateUrl(site['mainUrl'])
-            logging.warn(f'[{site["name"]}] 접속할 수 없습니다. {site["mainUrl"]}')
+            logging.critical(f'[{site["name"]}] 접속할 수 없습니다. {site["mainUrl"]}')
             continue;
         myBoardScraper = boardScraper.BoardScraper()
         #Step 2.  Iterate categories for this site
@@ -79,11 +94,7 @@ if __name__ == '__main__':
             if "영화" in category['name']:
                 downloadPath = mySetting.json["movie"]["download"]
                 if len(downloadPath) > 0:
-                    if os.path.exists(downloadPath) is False:
-                        os.makedirs(downloadPath)
-                        logging.info(f'movie 폴더를 만들었습니다. {downloadPath}')
-                        os.chown(downloadPath, 1000, 1000)
-                        logging.info(f'movie 폴더 소유권을 변경하였습니다. {downloadPath}')
+                    initFolder(downloadPath)
                         
             #Step 4.  iterate page (up to 10) for this site/this category
             for pageNumber in range(1, mySetting.json['scrapPage']+1):
@@ -134,11 +145,7 @@ if __name__ == '__main__':
                         downloadPath = mySetting.json["tvshow"]["download"]
                         if len(downloadPath) > 0:
                             downloadPath = downloadPath + "/" + regKeyword
-                            if os.path.exists(downloadPath) is False:
-                                os.makedirs(downloadPath)
-                                logging.info(f'tvshow 폴더를 만들었습니다. {downloadPath}')
-                                os.chown(downloadPath, 1000, 1000)
-                                logging.info(f'tvshow 폴더 소유권을 변경하였습니다. {downloadPath}')
+                            initFolder(downloadPath)
                     if not magnet:
                         addTorrentFailToFile(mySetting, site['name'], boardItem.title, boardItem.url, regKeyword, downloadPath)
                         msg = f"매그넷 검색에 실패하였습니다. {regKeyword}  {boardItem.title} {boardItem.url}  {downloadPath}"
@@ -150,18 +157,18 @@ if __name__ == '__main__':
                         logging.info(f'이미 다운로드 받은 파일입니다. {regKeyword}, {magnet}')
                         continue;
                    
-                    sessionId = scraperHelpers.getSessionIdTorrentRpc(mySetting.json)
+                    sessionId = scraperHelpers.getSessionIdTorrentRpc(mySetting.getRPCUrl())
 
                     if sessionId == None:
                         logging.critical(f'Transmission 세션아이디를 구하지 못했습니다.')
                         sys.exit()
-                    scraperHelpers.addMagnetTransmissionRemote(magnet, mySetting.json, downloadPath, sessionId)
+                    scraperHelpers.addMagnetTransmissionRemote(magnet, mySetting.getRPCUrl(), downloadPath, sessionId)
 
                     if "영화" in category['name']:
                         myMovie.removeLineInMovie(regKeyword)
                         logging.info(f'영화 리스트에서 삭제했습니다. {regKeyword}')
                     else:
-                        scraperHelpers.removeTransmissionRemote(mySetting.json, sessionId, regKeyword)
+                        scraperHelpers.removeTransmissionRemote(mySetting.getRPCUrl(), sessionId, regKeyword)
                         logging.info(f'tvshow 이전 에피소드를 Transmission에서 삭제했습니다. {regKeyword}')
                     addMagnetInfoToFile(mySetting, site['name'], boardItem.title, magnet, regKeyword)
                     logging.info(f'Transmission에 추가하였습니다. {regKeyword}, {magnet}')

@@ -7,15 +7,15 @@ import re
 import json
 import configHelper 
 
-def setSeasonTorrentFile(setting, torrentTitle, season):
-
-    sessionId = scraperHelpers.getSessionIdTorrentRpc(setting)
+def setSeasonTorrentFile(url: str, torrentTitle, season):
+    
+    sessionId = scraperHelpers.getSessionIdTorrentRpc(url)
     print("info, setSeasonTorrentFile session_id = "+sessionId)
 
-    torrentId = scraperHelpers.getIdTransmissionRemote(setting, sessionId, torrentTitle)
+    torrentId = scraperHelpers.getIdTransmissionRemote(url, sessionId, torrentTitle)
     print("info, setSeasonTorrentFile id = "+torrentId)
 
-    torrents = scraperHelpers.getFilesTorrentRemote(setting, sessionId, torrentId)
+    torrents = scraperHelpers.getFilesTorrentRemote(url, sessionId, torrentId)
     print("info setSeasonTorrentFile torrents = "+torrents)
 
     for torrent in torrents:
@@ -28,7 +28,7 @@ def setSeasonTorrentFile(setting, torrentTitle, season):
             newFileName = re.sub('(?P<epi>E\d+.)', replaceString, fileName)
             print("info setSeasonTorrentFile newFileName = "+newFileName)
 
-            scraperHelpers.renameFileTorrentRpc(setting, torrentId, sessionId, torrent['name'], newFileName)
+            scraperHelpers.renameFileTorrentRpc(url, torrentId, sessionId, torrent['name'], newFileName)
     return
 
 if __name__ == '__main__':
@@ -51,7 +51,7 @@ if __name__ == '__main__':
             if tvshowTitleName in torrentTitle and len(tvshowTitle) >= 4:
 
               print("info, main program name = "+torrentTitle+", season = "+tvshowTitle['season'])
-              setSeasonTorrentFile(setting.json, torrentTitle, tvshowTitle['season'])
+              setSeasonTorrentFile(setting.getRPCUrl(), torrentTitle, tvshowTitle['season'])
             #else:
             #  print("not equal")
     sys.exit()

@@ -19,7 +19,8 @@ class Setting:
     torrentDoneSHPath = transmissionScriptDirPath + "torrent_done.sh"
     renameSeasonTransmissionPYPath = transmissionScriptDirPath + "rename_season_transmission.py"
     scraperLibraryPYPath = transmissionScriptDirPath + "scraperHelpers.py"
-    configHelperPYPath = transmissionScriptDirPath + "configHelper.py"
+    #configHelperPYPath = transmissionScriptDirPath + "configHelper.py"
+    settingPYPath = transmissionScriptDirPath + "setting.py"
 
     def __init__(self) -> None:
         if os.path.isfile(self.settingPath):
@@ -43,3 +44,13 @@ class Setting:
     def saveJson(self)->None:
         with open(self.settingPath, 'w', encoding='utf-8') as dataFile:
             json.dump(self.json, dataFile, sort_keys = True, ensure_ascii=False, indent = 2)
+
+    def getRPCUrl(self)->str:
+        transmissionSetting = self.json['transmission']
+        url = "http"
+        if transmissionSetting['port'] == 443:
+            url += "s"
+
+        url += "://%s:%s@%s:%s/transmission/rpc" % (transmissionSetting['id'], transmissionSetting['pw']
+                                                    , transmissionSetting['host'], transmissionSetting['port'])
+        return url

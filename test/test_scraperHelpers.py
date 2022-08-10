@@ -37,7 +37,13 @@ class ScraperHelpersTest(unittest.TestCase):
 
     def test_transmissionSetting(self):
         mySetting = setting.Setting()
-        self.assertIsNotNone(scraperHelpers.getSessionIdTorrentRpc(mySetting.json))
+        self.assertIsNotNone(scraperHelpers.getSessionIdTorrentRpc(mySetting.getRPCUrl()))
+
+    def test_다운로드_경로를_가져올수_있나(self):
+        mySetting = setting.Setting()
+        dir = scraperHelpers.getDownloadDir(mySetting.getRPCUrl())
+        
+        self.assertIsNotNone(dir)
 
 if __name__ == '__main__':  
     unittest.main()
