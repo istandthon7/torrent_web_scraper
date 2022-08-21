@@ -45,6 +45,13 @@ def addTorrentFailToFile(mySetting: setting.Setting, siteName: str, boardTitle: 
         writer.writerow(torrentFailInfo)
     f.close()
 
+# def initTvFolder(downloadPath:str, puid:int, pgid:int):
+#     if os.path.exists(downloadPath) is False:
+#         os.makedirs(downloadPath)
+#         logging.info(f'폴더를 만들었습니다. {downloadPath}')
+#         os.chown(downloadPath, puid, pgid)
+#         logging.info(f'폴더 소유권을 변경하였습니다.')
+
 def setPermisson(path:str, newMode = stat.S_IRWXU|stat.S_IRWXG|stat.S_IRWXO):
     if os.path.exists(path) is False:
         logging.info(f'폴더에 권한을 추가하려고 했으나 폴더가 없네요. {path}')
@@ -145,10 +152,13 @@ if __name__ == '__main__':
                     if not "영화" in category['name']:
                         downloadPath = mySetting.json["tvshow"]["download"]
                         if len(downloadPath) > 0:
-                            # 777
-                            setPermisson(downloadPath, stat.S_IRWXO|stat.S_IRWXU|stat.S_IRWXG)
                             # 755
-                            setPermisson(Path(downloadPath).parent.absolute(), stat.S_IRWXU|stat.S_IRGRP|stat.S_IXGRP|stat.S_IROTH|stat.S_IXOTH)
+                            setPermisson(downloadPath, stat.S_IRWXU|stat.S_IRGRP|stat.S_IXGRP|stat.S_IROTH|stat.S_IXOTH)
+                            downloadPath = downloadPath + "/" + regKeyword
+                            #initTvFolder(downloadPath, mySetting.json["transmission"]["PUID"], mySetting.json["transmission"]["PGID"])
+                            # 777
+                            # setPermisson(downloadPath, stat.S_IRWXU)
+                            
                     if not magnet:
                         addTorrentFailToFile(mySetting, site['name'], boardItem.title, boardItem.url, regKeyword, downloadPath)
                         msg = f"매그넷 검색에 실패하였습니다. {regKeyword}  {boardItem.title} {boardItem.url}  {downloadPath}"
