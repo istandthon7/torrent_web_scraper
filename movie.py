@@ -1,5 +1,6 @@
 import configHelper 
 import setting
+import logging
 
 class Movie(configHelper.ConfigHelper):
     def __init__(self, mySetting: setting.Setting):
@@ -17,7 +18,6 @@ class Movie(configHelper.ConfigHelper):
         게시판 제목에 등록된 키워드가 포함되어 있으면 키워드를 반환한다.
         등록되어 있지 않다면 빈문자열을 반환한다.
         """
-
         for keyword in self.keywords:
             keyword = keyword.rstrip("\r\n")
             searchKeyword = keyword.lower()
@@ -26,10 +26,13 @@ class Movie(configHelper.ConfigHelper):
             searchKeyword = searchKeyword.replace(":", " ")
             
             if self.IsContainAllWordsInBoardTitle(searchKeyword, boardTitle) is False:
+                logging.debug(f'Movie 키워드에 해당하지 않습니다.')
                 continue
             if self.IsContainAllWordsInBoardTitle(str(self.movieSetting['resolution']), boardTitle) is False:
+                logging.info(f"해상도가 달라요. 설정된 해상도: {self.movieSetting['resolution']}")
                 continue
             if self.IsContainAllWordsInBoardTitle(self.movieSetting['videoCodec'], boardTitle) is False:
+                logging.info(f"코덱이 달라요. 설정된 코덱: {self.movieSetting['videoCodec']}")
                 continue
             return keyword
         return ""

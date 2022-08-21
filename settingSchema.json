@@ -7,7 +7,7 @@
       "properties": {
         "download": {
           "type": "string",
-          "description": "Transmission에 지정된 기본경로를 사용하는 경우에는 입력하지 않아도 됩니다."
+          "description": "Transmission에 지정된 기본경로를 사용하는 경우에는 입력하지 않아도 됩니다. 지정된 경로가 보안에 취약한 프로그램이 접근하지 않도록 하세요."
         },
         "list": {
           "type": "string"
@@ -22,7 +22,7 @@
       "properties": {
         "download": {
           "type": "string",
-          "description": "Transmission에 지정된 기본경로를 사용하는 경우에는 입력하지 않아도 됩니다."
+          "description": "Transmission에 지정된 기본경로를 사용하는 경우에는 입력하지 않아도 됩니다. 지정된 경로가 보안에 취약한 프로그램이 접근하지 않도록 하세요."
         },
         "list": {
           "type": "string"
