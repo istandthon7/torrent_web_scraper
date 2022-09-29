@@ -46,17 +46,12 @@ class BoardScraper():
             items.extend(title.find_all('a'))
         items = list(filter(lambda x: len(x.text.strip())>0 and x.get('href') != "#", items))
         results = []
-        isNotSupportID = False
         for item in items:
             boardItemInfo = self.GetBoardItemInfo(item)
             if boardItemInfo.id > 10:
                 results.append(boardItemInfo)
             elif boardItemInfo.id == -1:
-                isNotSupportID = True
-        if isNotSupportID:
-            msg = "게시물 아이디를 확인할 수 없습니다."
-            print(msg)
-            logging.error(msg)
+                logging.info(f"게시물 아이디를 확인할 수 없습니다. title: {boardItemInfo.title}")
         return results
  
     #게시판 아이디 파싱, url을 기반으로 wr_id text를 뒤의 id parsing

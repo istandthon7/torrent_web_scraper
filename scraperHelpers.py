@@ -181,7 +181,8 @@ def executeNotiScript(mySetting: setting.Setting, siteName: str, boardTitle: str
             cmd = notiSetting["cmd"]
             cmd = cmd.replace("$board_title", "["+siteName+"]" + boardTitle)
             try:
-                subprocess.run(cmd, check=True)
+                # check가 참이고, 프로세스가 0이 아닌 종료 코드로 종료되면, CalledProcessError 예외가 발생합니다. 
+                subprocess.run(cmd, shell=True, check=True)
 
             except Exception as e:
                 print("executeNotiScript error, message: "+str(e))
