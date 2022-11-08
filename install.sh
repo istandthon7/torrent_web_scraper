@@ -2,7 +2,7 @@
 
 # ubuntu or debian
 sudo apt update
-sudo apt install -y python3-pip python3-testresources
+sudo apt install -y python3-pip python3-testresources curl
 
 #alpine
 #apk add python3
