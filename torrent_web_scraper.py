@@ -23,10 +23,8 @@ def checkMagnetHistory(csvFileName: str, magnet: str)->bool:
                 return True
     return False
 
-
 def addMagnetInfoToFile(mySetting: setting.Setting, siteName: str, boardTitle: str
     , magnet: str, keyword: str)->None:
-
     runtime = mySetting.runTime
     magnetInfo = [runtime, siteName, boardTitle, magnet, keyword]
     with open(mySetting.torrentHistoryPath, 'a', newline = '\n', encoding="utf-8") as f:
@@ -34,10 +32,8 @@ def addMagnetInfoToFile(mySetting: setting.Setting, siteName: str, boardTitle: s
         writer.writerow(magnetInfo)
     f.close()
 
-
 def addTorrentFailToFile(mySetting: setting.Setting, siteName: str, boardTitle: str
     , boardUrl: str, keyword: str, downloadDir: str)->None:
-
     runtime = mySetting.runTime
     torrentFailInfo = [runtime, siteName, boardTitle, boardUrl, keyword, downloadDir]
     with open(mySetting.torrentFailPath, 'a', newline = '\n', encoding="utf-8") as f:
@@ -71,13 +67,6 @@ if __name__ == '__main__':
     myMovie = movie.Movie(mySetting)
     myTvShow = tvshow.TVShow(mySetting)
 
-    loglevel = mySetting.json["logging"]["logLevel"]
-    #getattr(logging, loglevel.upper())
-    numericLevel = getattr(logging, loglevel.upper(), None)
-    if not isinstance(numericLevel, int):
-        raise ValueError('Invalid log level: %s' % loglevel)
-    logging.basicConfig(level=numericLevel, filename=mySetting.json["logging"]["logFile"]
-        , format='%(asctime)s %(levelname)s:%(message)s')
     logging.info(f'--------------------------------------------------------')
     logging.info('Started.')
     for siteIndex, site in enumerate(mySetting.json["sites"]):
@@ -147,7 +136,7 @@ if __name__ == '__main__':
 
                     logging.info(f'게시물을 검색하였습니다. {boardItem.title}')
 
-                    magnet = myBoardScraper.getMagnetDataFromPageUrl(boardItem.url)
+                    magnet = myBoardScraper.getMagnet(boardItem.url)
 
                     if not "영화" in category['name']:
                         downloadPath = mySetting.json["tvshow"]["download"]

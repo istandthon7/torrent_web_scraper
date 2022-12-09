@@ -3,13 +3,18 @@ import boardScraper
 import setting
 
 class BoardScraperTest(unittest.TestCase):
-    def test_getParseData(self):
+    def test_getBoardList(self):
         mySetting = setting.Setting()
         site = mySetting.json["sites"][0]
         category = site["categories"][0]
         myBoardScraper = boardScraper.BoardScraper()
         boardItems = myBoardScraper.getBoardItemInfos(site["mainUrl"]+category["url"], 1
                         , category["title"]["tag"], category["title"]["class"])
+        self.assertTrue(boardItems)
+
+    def test_getBoardListFromFile(self):
+        myBoardScraper = boardScraper.BoardScraper()
+        boardItems = myBoardScraper.getBoardItemInfos("test/test.html", 1, "div", "wr-subject")
         self.assertTrue(boardItems)
 
     def test_getID(self):
@@ -53,9 +58,9 @@ class BoardScraperTest(unittest.TestCase):
         self.assertEqual(myBoardScraper.getID(url), id)
 
 
-    def test_getMagnetDataFromPageUrl(self):
+    def test_getMagnet(self):
         myBoardScraper = boardScraper.BoardScraper()
-        testUrl = "https://torrentsee114.com/topic/170186"
-        magnet = myBoardScraper.getMagnetDataFromPageUrl(testUrl)
+        testUrl = "https://torrentsir83.com/bbs/board.php?bo_table=entertain&wr_id=33180"
+        magnet = myBoardScraper.getMagnet(testUrl)
 
         self.assertGreater(len(magnet), 0)

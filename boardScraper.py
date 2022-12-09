@@ -1,23 +1,19 @@
-"""
-파일명 변경시: app settings
-"""
 import argparse
 import json
 import logging
 import re
 import bs4
 import scraperHelpers
+import setting
+from urllib import parse
 
 class BoardItemInfo:
-
     def __init__(self, title: str, url: str, ID: int) -> None:
         self.title = title
         self.url = url
         self.id = ID
 
-
 class BoardScraper():
-
     def getScrapUrl(self, url: str, page: int)->str:
         if page > 1:
             if not "?" in url:
@@ -26,9 +22,11 @@ class BoardScraper():
         else:
             return url
 
-
     def getBoardItemInfos(self, urlOrFilePath: str, page: int, titleTag: str, titleClass: str)->list:
-
+        """
+        게시판에서 제목리스트 얻기
+        """
+        logging.debug(f'게시판에서 제목리스트를 추출합니다. {urlOrFilePath}, tag: {titleTag}, class: {titleClass}')
         if urlOrFilePath.startswith("http"):
             urlOrFilePath = self.getScrapUrl(urlOrFilePath, page)
             soup = scraperHelpers.getSoup(urlOrFilePath)
@@ -37,9 +35,7 @@ class BoardScraper():
         
         titles = soup.find_all(titleTag, class_=titleClass)
         if titles is None or not any(titles):
-            msg = f"게시판에서 제목리스트 얻기에 실패하였습니다. {urlOrFilePath}, tag: {titleTag}, class: {titleClass}"
-            print(msg)
-            logging.error(msg)
+            logging.error(f"게시판에서 제목리스트 얻기에 실패하였습니다. {urlOrFilePath}, tag: {titleTag}, class: {titleClass}")
             return [];
         items = []
         for title in titles:
@@ -75,23 +71,26 @@ class BoardScraper():
         #print("게시물 아이디 얻기에 실패하였습니다. "+url)
         return -1
 
-
     def GetBoardItemInfo(self, boardItem: bs4.element.Tag) -> BoardItemInfo:
         url = boardItem.get('href')
         boardItemInfo = BoardItemInfo(boardItem.text.strip(), url, self.getID(url))
         return boardItemInfo
 
-
-    def getMagnetDataFromPageUrl(self, url: str)->str:
+    def getMagnet(self, url: str)->str:
+        logging.debug(f'magnet을 검색합니다. url: {url}')
         html = scraperHelpers.getHtml(url)
 
         if html is None:
+            logging.error(f'url로부터 html을 얻지 못했어요. url: {url}')
             return ""
         
         match = re.search(r"[^\w]([A-Za-z0-9]){40}[^\w]", html)
         if match:
             return "magnet:?xt=urn:btih:"+ match.group()[1:-1]
-
+        f = open("/tmp/magnet.html", 'w')
+        f.write(html)
+        f.close()
+        logging.error(f'html에서 magnet을 찾지 못했어요. url: {url}')
         return ""
 
 
@@ -101,10 +100,14 @@ if __name__ == '__main__':
     parser.add_argument("--titleTag", help="제목 태그")
     parser.add_argument("--titleClass", help="제목 클래스")
     args = parser.parse_args()
+    # 로그파일 초기화용
+    mySetting = setting.Setting()
     myBoardScraper = BoardScraper()
     if args.titleTag is None:
-        print(myBoardScraper.getMagnetDataFromPageUrl(args.urlOrFilePath))
+        url = parse.unquote(args.urlOrFilePath)
+        print(myBoardScraper.getMagnet(url))
     else:
+        logging.debug(f'스크랩 테스트를 시작합니다. [{args.urlOrFilePath}], [{args.titleTag}], [{args.titleClass}]')
         boardItems = myBoardScraper.getBoardItemInfos(args.urlOrFilePath, 1
                         , args.titleTag, args.titleClass)
         print(json.dumps(boardItems, default=lambda x: x.__dict__))
