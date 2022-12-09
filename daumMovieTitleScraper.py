@@ -12,8 +12,9 @@ class SiteScraper:
         self.mySetting = mySetting
 
     def checkUrl(self)->bool:
-        ret = scraperHelpers.checkUrl(self.getScrapUrl())
-        return ret
+        if scraperHelpers.getResponse(self.getScrapUrl()) is None:
+            return False
+        return True
 
     def getScrapUrl(self)->str:
         return (self.mySetting.json["movie"]["titleScrap"]["url"])

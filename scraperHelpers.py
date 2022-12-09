@@ -1,6 +1,4 @@
-
-# 스크래핑시 사용하는 함수들
-
+# 스크래핑에 사용하는 함수들
 from urllib.request import Request, urlopen
 import requests
 from bs4 import BeautifulSoup
@@ -13,7 +11,6 @@ import json
 import os
 import setting
 import ssl
-import argparse
 
 def getSoup(url: str):
     try:
@@ -21,20 +18,21 @@ def getSoup(url: str):
         soup = BeautifulSoup(html, "html.parser")
         return soup
     except Exception as e:
-        print("Exception getSoup url: "+url+" , error: " + str(e))
+        print(f"Exception getSoup url: {url} , error: {str(e)}")
 
-
-def getHtml(url: str):
+def getHtml(url: str)->str:
     try:
-        time.sleep(random.randrange(1,4))
-        request = Request(url, headers={"User-Agent": "Mozilla/5.0"})
-        # python 3.6이상에서
-        context = ssl._create_unverified_context()
-        # urlopen(request, context=context) as response
-        return urlopen(request, context=context).read().decode('utf-8','replace')
+        time.sleep(random.randrange(1, 4))
+        return getResponse(url).read().decode('utf-8','replace')
     except Exception as e:
         print("Exception getHtml url: "+url+" , error: " + str(e))
 
+def getResponse(url):
+    request = Request(url, headers={"User-Agent": "Mozilla/5.0"})
+        # python 3.6이상에서
+    context = ssl._create_unverified_context()
+        # urlopen(request, context=context) as response
+    return urlopen(request, context=context)
 
 def getSoupFromFile(filePath: str):
     try:
@@ -42,18 +40,6 @@ def getSoupFromFile(filePath: str):
         return soup
     except Exception as e:
         print("Exception getSoupFromFile path: "+filePath+" , error: " + str(e))
-
-
-def checkUrl(url: str)->bool:
-    try:
-        if getSoup(url) is None:
-            return False
-    except Exception:# as e:
-        #print(f"Exception access url : {e}")
-        #print(f"We can not scrap {url} , something wrong.\n")
-        return False
-    return True
-
 
 #X-Transmission-Session-Id
 def getSessionIdTorrentRpc(url:str):
@@ -192,7 +178,6 @@ def executeNotiScript(mySetting: setting.Setting, siteName: str, boardTitle: str
                                   , siteName, boardTitle, keyword)
                 return True
 
-
 def checkNotiHistory(csvFile: str, title: str)->bool:
         if os.path.isfile(csvFile) is False:
             return False
@@ -206,7 +191,6 @@ def checkNotiHistory(csvFile: str, title: str)->bool:
                     return True
         return False
 
-
 def addNotiHistory(csvFile: str, runtime: str, sitename: str, title: str, keyword: str)->None:
     new = [runtime, sitename, title, keyword]
     with open(csvFile, 'a', newline = '\n', encoding="utf-8") as f:
@@ -214,13 +198,11 @@ def addNotiHistory(csvFile: str, runtime: str, sitename: str, title: str, keywor
         writer.writerow(new)
     f.close()
 
-
 def addMagnet(magnet: str, downloadPath: str):
     mySetting = setting.Setting()
     url = mySetting.getRPCUrl()
     sessionId = getSessionIdTorrentRpc(url)
     addMagnetTransmissionRemote(magnet, url, downloadPath, sessionId)
-
 
 def getDownloadDir(url:str)->str:
     payload = {
@@ -233,4 +215,3 @@ def getDownloadDir(url:str)->str:
     res = rpc(url, payload, getSessionIdTorrentRpc(url))
     #print("info, get_id_transmission_remote res\n", res)
     return res["arguments"]["download-dir"]
-        

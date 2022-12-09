@@ -75,10 +75,14 @@ if __name__ == '__main__':
         if site['enable'] is False:
             logging.info(f'[{site["name"]}] 비활성화되어 있습니다.')
             continue;
-        if scraperHelpers.checkUrl(site["mainUrl"]) is False:
+        response = scraperHelpers.getResponse(site["mainUrl"])
+        if response is None:
             #site['mainUrl'] = scraperLibrary.updateUrl(site['mainUrl'])
             logging.critical(f'[{site["name"]}] 접속할 수 없습니다. {site["mainUrl"]}')
             continue;
+        if response.url != site["mainUrl"]:
+            logging.info(f'url을 갱신합니다. {site["mainUrl"]}->{response.url}')
+            site["mainUrl"] = response.url
         myBoardScraper = boardScraper.BoardScraper()
         #Step 2.  Iterate categories for this site
         for categoryIndex, category in enumerate(site["categories"]):
@@ -104,7 +108,7 @@ if __name__ == '__main__':
                                 , category["title"]["tag"], category["title"]["class"])
 
                 if not boardItems:
-                    logging.warn(f'게시물 목록을 스크랩하지 못했습니다.')
+                    logging.warning(f'게시물 목록을 스크랩하지 못했습니다.')
                     continue;
                 # 필터링 하기 전의 마지막 아이디. 
                 # 필터링 한 후의 아이디가 더 커진다면 다음 페이지는 갈 필요없음.
