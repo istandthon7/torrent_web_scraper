@@ -31,17 +31,16 @@ torrent_web_scraper이 transmission과 통신할 호스트(아이피), 포트, �
 ## 1.2.2 토렌트 사이트 설정 
 도메인에 숫자가 변경되는 경우가 있을 때에는 수정합니다. 
 
-    "mainUrl": "https://torrentsee114.com/",
+    "mainUrl": "https://torrentsee140.com/",
 
 # 1.3 키워드 추가
 TVShow.json 파일에 제목과 해상도 등을 옵션으로 추가로 지정할 수 있습니다. (옵션은 생략가능) 
 
-    ,{"name": "놀면 뭐하니", "option": "720", "option2":"Next"}
+    ,{"name": "제목", "option": "720", "option2":"Next"}
 
 Movie.txt 파일에 추가할 수 있습니다. 코덱과 해상도는 config/setting.json에서 movie에서 변경할 수 있습니다.
 
-    아바타 2009
-    어벤져스: 엔드게임
+    제목 2009
 
 # 1.4 실행
 torrent_web_scraper.py를 실행시키면 게시판을 읽어와서 TVShow.json와 Movie.txt에 등록한 키워드를 검색하여 transmission에 추가됩니다. 웹사이트에서 데이터를 가지고 오는 것은 다소 시간이 걸릴 수 있습니다. 
@@ -56,6 +55,8 @@ torrent_web_scraper를 주기적으로 실행하게 설정해두면, 토렌트 �
 
 
 # 변경이력
+## 2.1.00 
+* 사이트 주소 자동갱신
 ## 2.0.00
 * 로그 개선
 * 스크랩 사이트 추가 지원
