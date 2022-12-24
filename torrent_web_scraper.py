@@ -82,7 +82,7 @@ if __name__ == '__main__':
             continue;
         if response.url != site["mainUrl"]:
             logging.info(f'url을 갱신합니다. {site["mainUrl"]}->{response.url}')
-            site["mainUrl"] = response.url
+            mySetting.json["sites"][siteIndex]["mainUrl"] = response.url
         myBoardScraper = boardScraper.BoardScraper()
         #Step 2.  Iterate categories for this site
         for categoryIndex, category in enumerate(site["categories"]):
