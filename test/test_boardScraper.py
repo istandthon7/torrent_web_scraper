@@ -59,8 +59,12 @@ class BoardScraperTest(unittest.TestCase):
 
 
     def test_getMagnet(self):
+        mySetting = setting.Setting()
+        site = mySetting.json["sites"][0]
+        category = site["categories"][0]
         myBoardScraper = boardScraper.BoardScraper()
-        testUrl = "https://torrentsir83.com/bbs/board.php?bo_table=entertain&wr_id=33180"
-        magnet = myBoardScraper.getMagnet(testUrl)
+        boardItems = myBoardScraper.getBoardItemInfos(site["mainUrl"]+category["url"], 1
+                        , category["title"]["tag"], category["title"]["class"])
+        magnet = myBoardScraper.getMagnet(boardItems[0].url)
 
         self.assertGreater(len(magnet), 0)

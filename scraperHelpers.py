@@ -106,9 +106,9 @@ def renameFileTorrentRpc(url:str, torrentId, sessionId, srcFile: str, destFile: 
 
     rpc(url, json_input, sessionId)
 
-# 상태가 Finished 이고 contain_name 인 토렌트 id를 구해서 삭제 (리스트에 남아있지 않도록 자동삭제되도록 하는
-# 기능이다.)
 def removeTransmissionRemote(url: str, sessionId, containName: str)->None:
+    """ 상태가 Finished 이고 containName 인 토렌트 id를 구해서 삭제 (리스트에 남아있지 않도록 자동삭제되도록 하는
+    기능이다.) """
     payload = {
         "arguments":{
             "fields": ["id", "name", "isFinished"]
@@ -127,7 +127,6 @@ def removeTransmissionRemote(url: str, sessionId, containName: str)->None:
             res = rpc(url, payload, sessionId)
 
 def rpc(url:str, payload, sessionId):
-    """접속정보는 jsonOfSetting에서"""
     
     headers = {'content-type': 'application/json'}
     headers.update(sessionId)
