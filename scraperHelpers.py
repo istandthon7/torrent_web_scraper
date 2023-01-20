@@ -197,12 +197,6 @@ def addNotiHistory(csvFile: str, runtime: str, sitename: str, title: str, keywor
         writer.writerow(new)
     f.close()
 
-def addMagnet(magnet: str, downloadPath: str):
-    mySetting = setting.Setting()
-    url = mySetting.getRPCUrl()
-    sessionId = getSessionIdTorrentRpc(url)
-    addMagnetTransmissionRemote(magnet, url, downloadPath, sessionId)
-
 def getDownloadDir(url:str)->str:
     payload = {
 		"arguments":{
