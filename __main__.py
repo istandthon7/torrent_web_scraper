@@ -1,65 +1,18 @@
 #!/usr/bin/python3
 
+import argparse
+import setting
+import movie
+import tvshow
 import logging
 import stat
 import sys
 import boardScraper
 import scraperHelpers
-import os
-import csv
-import setting
-import movie
-import tvshow
 from pathlib import Path
-
-def checkMagnetHistory(csvFileName: str, magnet: str)->bool:
-    if not os.path.isfile(csvFileName):
-        return False
-
-    with open(csvFileName, 'r', encoding="utf-8") as f:
-        ff = csv.reader(f)
-        for row in ff:
-            if magnet == row[3]:
-                return True
-    return False
-
-def addMagnetInfoToFile(mySetting: setting.Setting, siteName: str, boardTitle: str
-    , magnet: str, keyword: str)->None:
-    runtime = mySetting.runTime
-    magnetInfo = [runtime, siteName, boardTitle, magnet, keyword]
-    with open(mySetting.torrentHistoryPath, 'a', newline = '\n', encoding="utf-8") as f:
-        writer = csv.writer(f)
-        writer.writerow(magnetInfo)
-    f.close()
-
-def addTorrentFailToFile(mySetting: setting.Setting, siteName: str, boardTitle: str
-    , boardUrl: str, keyword: str, downloadDir: str)->None:
-    runtime = mySetting.runTime
-    torrentFailInfo = [runtime, siteName, boardTitle, boardUrl, keyword, downloadDir]
-    with open(mySetting.torrentFailPath, 'a', newline = '\n', encoding="utf-8") as f:
-        writer = csv.writer(f)
-        writer.writerow(torrentFailInfo)
-    f.close()
-
-# def initTvFolder(downloadPath:str, puid:int, pgid:int):
-#     if os.path.exists(downloadPath) is False:
-#         os.makedirs(downloadPath)
-#         logging.info(f'폴더를 만들었습니다. {downloadPath}')
-#         os.chown(downloadPath, puid, pgid)
-#         logging.info(f'폴더 소유권을 변경하였습니다.')
-
-def setPermisson(path:str, newMode):
-    if os.path.exists(path) is False:
-        logging.info(f'폴더에 권한을 추가하려고 했으나 폴더가 없네요. {path}')
-        return;
-    stat = os.lstat(path)
-    mode = stat.st_mode
-
-    logging.info(f'[{path}]의 소유자 PUID: {stat.st_uid}, PGID: {stat.st_gid}, mode: [{mode}]')
-    
-    #if (mode & newMode) != newMode:
-    os.chmod(path, mode|newMode)
-    logging.info(f'폴더에 권한을 추가했습니다. {newMode}')
+import history
+import osHelper
+import rpc
 
 if __name__ == '__main__':
 
@@ -69,6 +22,13 @@ if __name__ == '__main__':
 
     logging.info(f'--------------------------------------------------------')
     logging.info('Started.')
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--transPass", help="트랜스미션 접속 비밀번호")
+    args = parser.parse_args()
+    mySetting.transPass = args.transPass
+    url = mySetting.getRPCUrl()
+    
     for siteIndex, site in enumerate(mySetting.json["sites"]):
         logging.info(f'사이트 스크랩을 시작합니다. {site["name"]}')
         #Step 1.  test for access with main url
@@ -95,9 +55,9 @@ if __name__ == '__main__':
                 downloadPath = mySetting.json["movie"]["download"]
                 if len(downloadPath) > 0:
                     # 777
-                    setPermisson(downloadPath, stat.S_IRWXO|stat.S_IRWXU|stat.S_IRWXG)
+                    osHelper.setPermisson(downloadPath, stat.S_IRWXO|stat.S_IRWXU|stat.S_IRWXG)
                     # 755
-                    setPermisson(Path(downloadPath).parent.absolute(), stat.S_IRWXU|stat.S_IRGRP|stat.S_IXGRP|stat.S_IROTH|stat.S_IXOTH)
+                    osHelper.setPermisson(Path(downloadPath).parent.absolute(), stat.S_IRWXU|stat.S_IRGRP|stat.S_IXGRP|stat.S_IROTH|stat.S_IXOTH)
 
             #Step 4.  iterate page (up to 10) for this site/this category
             for pageNumber in range(1, mySetting.json['scrapPage']+1):
@@ -147,39 +107,41 @@ if __name__ == '__main__':
                         downloadPath = mySetting.json["tvshow"]["download"]
                         if len(downloadPath) > 0:
                             # 777
-                            setPermisson(downloadPath, stat.S_IRWXO|stat.S_IRWXU|stat.S_IRWXG)
+                            osHelper.setPermisson(downloadPath, stat.S_IRWXO|stat.S_IRWXU|stat.S_IRWXG)
                             # 755
-                            setPermisson(Path(downloadPath).parent.absolute(), stat.S_IRWXU|stat.S_IRGRP|stat.S_IXGRP|stat.S_IROTH|stat.S_IXOTH)
+                            osHelper.setPermisson(Path(downloadPath).parent.absolute(), stat.S_IRWXU|stat.S_IRGRP|stat.S_IXGRP|stat.S_IROTH|stat.S_IXOTH)
                             downloadPath = downloadPath + "/" + regKeyword
                             #initTvFolder(downloadPath, mySetting.json["transmission"]["PUID"], mySetting.json["transmission"]["PGID"])
                             # 777
                             #setPermisson(downloadPath, stat.S_IRWXU|stat.S_IRGRP|stat.S_IXGRP|stat.S_IROTH|stat.S_IXOTH)
                             
                     if not magnet:
-                        addTorrentFailToFile(mySetting, site['name'], boardItem.title, boardItem.url, regKeyword, downloadPath)
+                        history.addTorrentFailToFile(mySetting, site['name'], boardItem.title, boardItem.url, regKeyword, downloadPath)
                         msg = f"매그넷 검색에 실패하였습니다. {regKeyword}  {boardItem.title} {boardItem.url}  {downloadPath}"
                         print(msg)
                         logging.error(msg)
                         continue;
                     #magnet was already downloaded.
-                    if checkMagnetHistory(mySetting.torrentHistoryPath, magnet):
+                    if history.checkMagnetHistory(mySetting.torrentHistoryPath, magnet):
                         logging.info(f'이미 다운로드 받은 파일입니다. {regKeyword}, {magnet}')
                         continue;
 
-                    sessionId = scraperHelpers.getSessionIdTorrentRpc(mySetting.getRPCUrl())
+                    sessionId = rpc.getSessionIdTransRpc(url)
 
                     if sessionId == None:
-                        logging.critical(f'Transmission 세션아이디를 구하지 못했습니다.')
+                        msg = f'Transmission 세션아이디를 구하지 못했습니다. {url}'
+                        logging.critical(msg)
+                        print(msg, file=sys.stderr)
                         sys.exit()
-                    scraperHelpers.addMagnetTransmissionRemote(magnet, mySetting.getRPCUrl(), downloadPath, sessionId)
+                    rpc.addMagnetTransmissionRemote(magnet, mySetting.getRPCUrl(), downloadPath, sessionId)
 
                     if "영화" in category['name']:
                         myMovie.removeLineInMovie(regKeyword)
                         logging.info(f'영화 리스트에서 삭제했습니다. {regKeyword}')
                     else:
-                        scraperHelpers.removeTransmissionRemote(mySetting.getRPCUrl(), sessionId, regKeyword)
+                        rpc.removeTransmissionRemote(mySetting.getRPCUrl(), sessionId, regKeyword)
                         logging.info(f'tvshow 이전 에피소드를 Transmission에서 삭제했습니다. {regKeyword}')
-                    addMagnetInfoToFile(mySetting, site['name'], boardItem.title, magnet, regKeyword)
+                    history.addMagnetToHistory(mySetting, site['name'], boardItem.title, magnet, regKeyword)
                     logging.info(f'Transmission에 추가하였습니다. {regKeyword}, {magnet}')
                 # --> 현재 페이지의 게시물 검색 완료
                 # 필터링 한 후의 아이디가 필터링 전 아이디보다 더 크다면 다음 페이지는 갈 필요없음

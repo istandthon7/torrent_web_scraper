@@ -2,6 +2,7 @@ import unittest
 import scraperHelpers
 import setting
 import os
+import rpc
 
 class ScraperHelpersTest(unittest.TestCase):
     def test_getSoup(self):
@@ -37,11 +38,11 @@ class ScraperHelpersTest(unittest.TestCase):
 
     def test_transmissionSetting(self):
         mySetting = setting.Setting()
-        self.assertIsNotNone(scraperHelpers.getSessionIdTorrentRpc(mySetting.getRPCUrl()))
+        self.assertIsNotNone(rpc.getSessionIdTransRpc(mySetting.getRPCUrl()))
 
-    def test_다운로드_경로를_가져올수_있나(self):
+    def test_rpc_다운로드_경로를_가져올수_있나(self):
         mySetting = setting.Setting()
-        dir = scraperHelpers.getDownloadDir(mySetting.getRPCUrl())
+        dir = rpc.getDownloadDir(mySetting.getRPCUrl())
         
         self.assertIsNotNone(dir)
 

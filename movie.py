@@ -1,8 +1,8 @@
-import configHelper 
+import stringHelper 
 import setting
 import logging
 
-class Movie(configHelper.ConfigHelper):
+class Movie(stringHelper.StringHelper):
     def __init__(self, mySetting: setting.Setting):
         self.listFileName = mySetting.configDirPath + mySetting.json["movie"]['list']
         self.movieSetting = mySetting.json['movie']

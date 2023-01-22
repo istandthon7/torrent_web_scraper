@@ -5,7 +5,7 @@ import sys
 import scraperHelpers
 import re
 import json
-import configHelper 
+import setting 
 
 def setSeasonTorrentFile(url: str, torrentTitle, season):
     
@@ -33,7 +33,7 @@ def setSeasonTorrentFile(url: str, torrentTitle, season):
 
 if __name__ == '__main__':
 
-    setting = configHelper.Setting()
+    setting = setting.Setting()
     setting.loadJson()
 
     torrentTitle = sys.argv[1]

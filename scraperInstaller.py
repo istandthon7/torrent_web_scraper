@@ -2,14 +2,11 @@
 import os
 import shutil
 import setting
-import stat
-
-
-def addUserX(path: str):
-    st = os.stat(path)
-    os.chmod(path, st.st_mode | stat.S_IEXEC)
+import osHelper
 
 class ScraperInstaller:
+
+    mySetting = setting.Setting()
 
     def copyConfigIfNotExist(self, fullPath: str) -> bool:
         """
@@ -28,25 +25,25 @@ class ScraperInstaller:
         """
         if os.path.isfile(fullPath) is False:
             shutil.copyfile("./"+os.path.basename(fullPath), fullPath)
-            addUserX(fullPath)
+            osHelper.addXToUser(fullPath)
             return True
         return False
 
     def installConfig(self)->None:
-        mySetting = setting.Setting()
-        if os.path.isdir(mySetting.configDirPath) is False:
-            os.mkdir(mySetting.configDirPath)
+        
+        if os.path.isdir(self.mySetting.configDirPath) is False:
+            os.mkdir(self.mySetting.configDirPath)
         # setting.json
-        if self.copyConfigIfNotExist(mySetting.settingPath):
-            print("\n\ntransmission 연결정보를 "+ mySetting.settingPath+"에 설정해주세요\n")
-        mySetting.loadJson()
+        if self.copyConfigIfNotExist(self.mySetting.settingPath):
+            print("\n\ntransmission 연결정보를 "+ self.mySetting.settingPath+"에 설정해주세요\n")
+        self.mySetting.loadJson()
 
         # Movie.txt
-        movieListPath = mySetting.configDirPath + mySetting.json['movie']['list']
+        movieListPath = self.mySetting.configDirPath + self.mySetting.json['movie']['list']
         if self.copyConfigIfNotExist(movieListPath):
             print("다운로드할 영화를 "+movieListPath+"에 추가하세요.\n")
         # TvShow.json
-        tvShowListPath = mySetting.configDirPath + mySetting.json["tvshow"]["list"]
+        tvShowListPath = self.mySetting.configDirPath + self.mySetting.json["tvshow"]["list"]
         if self.copyConfigIfNotExist(tvShowListPath) :
             print("다운로드할 tv프로그램을 "+tvShowListPath+"에 추가하세요.\n")
 
@@ -56,7 +53,7 @@ class ScraperInstaller:
         if os.path.isdir(mySetting.transmissionScriptDirPath) is False:
             os.mkdir(mySetting.transmissionScriptDirPath)
         if self.copyConfigIfNotExist(mySetting.torrentDoneSHPath):
-            addUserX(mySetting.torrentDoneSHPath)
+            osHelper.addXToUser(mySetting.torrentDoneSHPath)
         self.copyPythonFileIfNotExist(mySetting.renameSeasonTransmissionPYPath)
         self.copyPythonFileIfNotExist(mySetting.scraperLibraryPYPath)
         self.copyPythonFileIfNotExist(mySetting.settingPYPath)

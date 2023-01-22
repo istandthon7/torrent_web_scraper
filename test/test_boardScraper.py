@@ -17,6 +17,26 @@ class BoardScraperTest(unittest.TestCase):
         boardItems = myBoardScraper.getBoardItemInfos("test/test.html", 1, "div", "wr-subject")
         self.assertTrue(boardItems)
 
+    def test_첫번째_사이트_첫번째_카테고리_리스트받기(self):
+        # arrange
+        mySetting = setting.Setting()
+        site = mySetting.json["sites"][0]
+        firstBoard = site["categories"][0]
+        firstBoard["history"] = 0
+        # act
+        myBoardScraper = boardScraper.BoardScraper()
+        boardItems = myBoardScraper.getBoardItemInfos(site["mainUrl"]+firstBoard["url"], 1
+            , firstBoard["title"]["tag"], firstBoard["title"]["class"])
+        
+        # assert
+        title = boardItems[0].title
+        url = boardItems[0].url
+        id = boardItems[0].id
+        print(f"title: {title}, url: {url}, id: {id}")
+        self.assertGreater(len(title), 0)
+        self.assertGreater(len(url), 0)
+        self.assertGreater(id, 0)
+
     def test_getID(self):
         myBoardScraper = boardScraper.BoardScraper()
         id = 999333
@@ -56,7 +76,6 @@ class BoardScraperTest(unittest.TestCase):
         id = 999377
         url = "https://xxxxxxx62.com/bbs/board.php?bo_table=netflix&wr_id="+str(id)+"&sca=%EB%84%B7%ED%94%8C%EB%A6%AD%EC%8A%A4"
         self.assertEqual(myBoardScraper.getID(url), id)
-
 
     def test_getMagnet(self):
         mySetting = setting.Setting()

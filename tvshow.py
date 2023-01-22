@@ -1,9 +1,9 @@
 import json
-import configHelper
+import stringHelper
 import setting
 import logging
 
-class TVShow(configHelper.ConfigHelper):
+class TVShow(stringHelper.StringHelper):
     def __init__(self, mySetting: setting.Setting):
         self.fileName = mySetting.configDirPath + mySetting.json["tvshow"]["list"]
         with open(self.fileName,"r", encoding='utf-8') as jsonFile:

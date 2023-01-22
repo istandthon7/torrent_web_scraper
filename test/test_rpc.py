@@ -1,0 +1,24 @@
+import unittest
+import rpc
+import setting
+
+# 51413 -> 41413 isp등에 의해 막힌 경우
+# docker run -d --name=transmission -e TZ=Asia/Seoul -p 9091:9091 -p 41413:41413 -p 41413:41413/udp -e PUID=1000 -e PGID=1000 lscr.io/linuxserver/transmission:latest
+
+class RpcTest(unittest.TestCase):
+    def test_sessionID(self):
+        mySetting = setting.Setting()
+        mySetting.json["transmission"]["host"] = "555.168.0.1"
+        mySetting.json["transmission"]["port"] = 9091
+        mySetting.json["transmission"]["id"] = "transmission"
+        mySetting.json["transmission"]["pw"] = "transmission"
+        sessionId = rpc.getSessionIdTransRpc(mySetting.getRPCUrl())
+        self.assertIsNone(sessionId)
+
+    def test_sessionIDOfConfigFile(self):
+        mySetting = setting.Setting()
+        sessionId = rpc.getSessionIdTransRpc(mySetting.getRPCUrl())
+        self.assertIsNotNone(sessionId)
+
+if __name__ == '__main__':  
+    unittest.main()
