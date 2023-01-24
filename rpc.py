@@ -133,4 +133,4 @@ if __name__ == '__main__':
     parser.add_argument("downloadPath", help="다운로드 경로")
     args = parser.parse_args()
     mySetting = setting.Setting()
-    addMagnet(args.magnet, args.downloadPath, mySetting.getRPCUrl())
+    addMagnet(args.magnet, args.downloadPath, mySetting.getRpcUrl())

@@ -12,12 +12,12 @@ class RpcTest(unittest.TestCase):
         mySetting.json["transmission"]["port"] = 9091
         mySetting.json["transmission"]["id"] = "transmission"
         mySetting.json["transmission"]["pw"] = "transmission"
-        sessionId = rpc.getSessionIdTransRpc(mySetting.getRPCUrl())
+        sessionId = rpc.getSessionIdTransRpc(mySetting.getRpcUrl())
         self.assertIsNone(sessionId)
 
     def test_sessionIDOfConfigFile(self):
         mySetting = setting.Setting()
-        sessionId = rpc.getSessionIdTransRpc(mySetting.getRPCUrl())
+        sessionId = rpc.getSessionIdTransRpc(mySetting.getRpcUrl())
         self.assertIsNotNone(sessionId)
 
 if __name__ == '__main__':  

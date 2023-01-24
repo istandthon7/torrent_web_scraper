@@ -38,11 +38,11 @@ class ScraperHelpersTest(unittest.TestCase):
 
     def test_transmissionSetting(self):
         mySetting = setting.Setting()
-        self.assertIsNotNone(rpc.getSessionIdTransRpc(mySetting.getRPCUrl()))
+        self.assertIsNotNone(rpc.getSessionIdTransRpc(mySetting.getRpcUrl()))
 
     def test_rpc_다운로드_경로를_가져올수_있나(self):
         mySetting = setting.Setting()
-        dir = rpc.getDownloadDir(mySetting.getRPCUrl())
+        dir = rpc.getDownloadDir(mySetting.getRpcUrl())
         
         self.assertIsNotNone(dir)
 

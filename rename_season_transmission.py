@@ -51,7 +51,7 @@ if __name__ == '__main__':
             if tvshowTitleName in torrentTitle and len(tvshowTitle) >= 4:
 
               print("info, main program name = "+torrentTitle+", season = "+tvshowTitle['season'])
-              setSeasonTorrentFile(setting.getRPCUrl(), torrentTitle, tvshowTitle['season'])
+              setSeasonTorrentFile(setting.getRpcUrl(), torrentTitle, tvshowTitle['season'])
             #else:
             #  print("not equal")
     sys.exit()

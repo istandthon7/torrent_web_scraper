@@ -57,7 +57,7 @@ class Setting:
         with open(self.settingPath, 'w', encoding='utf-8') as dataFile:
             json.dump(self.json, dataFile, sort_keys = True, ensure_ascii=False, indent = 2)
 
-    def getRPCUrl(self)->str:
+    def getRpcUrl(self)->str:
         transmissionSetting = self.json['transmission']
         url = "http"
         if transmissionSetting['port'] == 443:

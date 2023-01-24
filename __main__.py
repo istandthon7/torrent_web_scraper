@@ -27,8 +27,21 @@ if __name__ == '__main__':
     parser.add_argument("--transPass", help="트랜스미션 접속 비밀번호")
     args = parser.parse_args()
     mySetting.transPass = args.transPass
-    url = mySetting.getRPCUrl()
+    url = mySetting.getRpcUrl()
     
+    downloadPath = mySetting.json["movie"]["download"]
+    if len(downloadPath) > 0 and osHelper.isPermission(downloadPath, stat.S_IRWXO|stat.S_IRWXU|stat.S_IRWXG) is False:
+        # 777
+        osHelper.appendPermisson(downloadPath, stat.S_IRWXO|stat.S_IRWXU|stat.S_IRWXG)
+        # 755
+        osHelper.appendPermisson(Path(downloadPath).parent.absolute(), stat.S_IRWXU|stat.S_IRGRP|stat.S_IXGRP|stat.S_IROTH|stat.S_IXOTH)
+    downloadPath = mySetting.json["tvshow"]["download"]
+    if len(downloadPath) > 0 and osHelper.isPermission(downloadPath, stat.S_IRWXO|stat.S_IRWXU|stat.S_IRWXG) is False:
+        # 777
+        osHelper.appendPermisson(downloadPath, stat.S_IRWXO|stat.S_IRWXU|stat.S_IRWXG)
+        # 755
+        osHelper.appendPermisson(Path(downloadPath).parent.absolute(), stat.S_IRWXU|stat.S_IRGRP|stat.S_IXGRP|stat.S_IROTH|stat.S_IXOTH)
+        
     for siteIndex, site in enumerate(mySetting.json["sites"]):
         logging.info(f'사이트 스크랩을 시작합니다. {site["name"]}')
         #Step 1.  test for access with main url
@@ -53,11 +66,6 @@ if __name__ == '__main__':
 
             if "영화" in category['name']:
                 downloadPath = mySetting.json["movie"]["download"]
-                if len(downloadPath) > 0:
-                    # 777
-                    osHelper.setPermisson(downloadPath, stat.S_IRWXO|stat.S_IRWXU|stat.S_IRWXG)
-                    # 755
-                    osHelper.setPermisson(Path(downloadPath).parent.absolute(), stat.S_IRWXU|stat.S_IRGRP|stat.S_IXGRP|stat.S_IROTH|stat.S_IXOTH)
 
             #Step 4.  iterate page (up to 10) for this site/this category
             for pageNumber in range(1, mySetting.json['scrapPage']+1):
@@ -106,14 +114,7 @@ if __name__ == '__main__':
                     if not "영화" in category['name']:
                         downloadPath = mySetting.json["tvshow"]["download"]
                         if len(downloadPath) > 0:
-                            # 777
-                            osHelper.setPermisson(downloadPath, stat.S_IRWXO|stat.S_IRWXU|stat.S_IRWXG)
-                            # 755
-                            osHelper.setPermisson(Path(downloadPath).parent.absolute(), stat.S_IRWXU|stat.S_IRGRP|stat.S_IXGRP|stat.S_IROTH|stat.S_IXOTH)
                             downloadPath = downloadPath + "/" + regKeyword
-                            #initTvFolder(downloadPath, mySetting.json["transmission"]["PUID"], mySetting.json["transmission"]["PGID"])
-                            # 777
-                            #setPermisson(downloadPath, stat.S_IRWXU|stat.S_IRGRP|stat.S_IXGRP|stat.S_IROTH|stat.S_IXOTH)
                             
                     if not magnet:
                         history.addTorrentFailToFile(mySetting, site['name'], boardItem.title, boardItem.url, regKeyword, downloadPath)
@@ -133,13 +134,13 @@ if __name__ == '__main__':
                         logging.critical(msg)
                         print(msg, file=sys.stderr)
                         sys.exit()
-                    rpc.addMagnetTransmissionRemote(magnet, mySetting.getRPCUrl(), downloadPath, sessionId)
+                    rpc.addMagnetTransmissionRemote(magnet, mySetting.getRpcUrl(), downloadPath, sessionId)
 
                     if "영화" in category['name']:
                         myMovie.removeLineInMovie(regKeyword)
                         logging.info(f'영화 리스트에서 삭제했습니다. {regKeyword}')
                     else:
-                        rpc.removeTransmissionRemote(mySetting.getRPCUrl(), sessionId, regKeyword)
+                        rpc.removeTransmissionRemote(mySetting.getRpcUrl(), sessionId, regKeyword)
                         logging.info(f'tvshow 이전 에피소드를 Transmission에서 삭제했습니다. {regKeyword}')
                     history.addMagnetToHistory(mySetting, site['name'], boardItem.title, magnet, regKeyword)
                     logging.info(f'Transmission에 추가하였습니다. {regKeyword}, {magnet}')
