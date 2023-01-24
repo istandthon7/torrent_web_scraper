@@ -29,18 +29,18 @@ if __name__ == '__main__':
     mySetting.transPass = args.transPass
     url = mySetting.getRpcUrl()
     
-    downloadPath = mySetting.json["movie"]["download"]
-    if len(downloadPath) > 0 and osHelper.isPermission(downloadPath, stat.S_IRWXO|stat.S_IRWXU|stat.S_IRWXG) is False:
+    movieDownloadPath = mySetting.json["movie"]["download"]
+    if len(movieDownloadPath) > 0 and osHelper.isPermission(movieDownloadPath, stat.S_IRWXO|stat.S_IRWXU|stat.S_IRWXG) is False:
         # 777
-        osHelper.appendPermisson(downloadPath, stat.S_IRWXO|stat.S_IRWXU|stat.S_IRWXG)
+        osHelper.appendPermisson(movieDownloadPath, stat.S_IRWXO|stat.S_IRWXU|stat.S_IRWXG)
         # 755
-        osHelper.appendPermisson(Path(downloadPath).parent.absolute(), stat.S_IRWXU|stat.S_IRGRP|stat.S_IXGRP|stat.S_IROTH|stat.S_IXOTH)
-    downloadPath = mySetting.json["tvshow"]["download"]
-    if len(downloadPath) > 0 and osHelper.isPermission(downloadPath, stat.S_IRWXO|stat.S_IRWXU|stat.S_IRWXG) is False:
+        osHelper.appendPermisson(Path(movieDownloadPath).parent.absolute(), stat.S_IRWXU|stat.S_IRGRP|stat.S_IXGRP|stat.S_IROTH|stat.S_IXOTH)
+    tvshowDownloadPath = mySetting.json["tvshow"]["download"]
+    if len(tvshowDownloadPath) > 0 and osHelper.isPermission(tvshowDownloadPath, stat.S_IRWXO|stat.S_IRWXU|stat.S_IRWXG) is False:
         # 777
-        osHelper.appendPermisson(downloadPath, stat.S_IRWXO|stat.S_IRWXU|stat.S_IRWXG)
+        osHelper.appendPermisson(tvshowDownloadPath, stat.S_IRWXO|stat.S_IRWXU|stat.S_IRWXG)
         # 755
-        osHelper.appendPermisson(Path(downloadPath).parent.absolute(), stat.S_IRWXU|stat.S_IRGRP|stat.S_IXGRP|stat.S_IROTH|stat.S_IXOTH)
+        osHelper.appendPermisson(Path(tvshowDownloadPath).parent.absolute(), stat.S_IRWXU|stat.S_IRGRP|stat.S_IXGRP|stat.S_IROTH|stat.S_IXOTH)
         
     for siteIndex, site in enumerate(mySetting.json["sites"]):
         logging.info(f'사이트 스크랩을 시작합니다. {site["name"]}')
@@ -64,9 +64,6 @@ if __name__ == '__main__':
             isNextPageScrap = True
             toSaveBoardItemNum = None
 
-            if "영화" in category['name']:
-                downloadPath = mySetting.json["movie"]["download"]
-
             #Step 4.  iterate page (up to 10) for this site/this category
             for pageNumber in range(1, mySetting.json['scrapPage']+1):
                 logging.info(f'페이지 스크랩을 시작합니다. page: {pageNumber}')
@@ -89,7 +86,6 @@ if __name__ == '__main__':
                     logging.info(f'모든 게시물을 검색하였으므로 다음 게시판으로 넘어갑니다. history: {category["history"]}')
                     break;
 
-                #for board in boardList:
                 for boardItemIndex, boardItem in enumerate(boardItems, start=1):
                     if boardItem.url.startswith("http") is False:
                         boardItem.url = (str(site["mainUrl"])[:-1])+boardItem.url
@@ -111,10 +107,11 @@ if __name__ == '__main__':
 
                     magnet = myBoardScraper.getMagnet(boardItem.url)
 
-                    if not "영화" in category['name']:
-                        downloadPath = mySetting.json["tvshow"]["download"]
-                        if len(downloadPath) > 0:
-                            downloadPath = downloadPath + "/" + regKeyword
+                    downloadPath = ""
+                    if "영화" in category['name']:
+                        downloadPath += movieDownloadPath
+                    else:
+                        downloadPath += tvshowDownloadPath + "/" + regKeyword
                             
                     if not magnet:
                         history.addTorrentFailToFile(mySetting, site['name'], boardItem.title, boardItem.url, regKeyword, downloadPath)
