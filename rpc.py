@@ -1,5 +1,6 @@
 import argparse
 import json
+import logging
 import requests
 from bs4 import BeautifulSoup
 import setting
@@ -9,6 +10,10 @@ def getSessionIdTransRpc(url:str):
     
     try:
         res = requests.get(url)
+        if res.status_code != 409 and res.status_code > 400:
+            logging.error(f"트랜스미션에 접속할 수 없어요. {res.status_code} {res.reason}")
+            logging.debug(f"접속 url: {url}")
+            return;
         bs = BeautifulSoup(res.text, "html.parser")
         code_text = bs.find('code').text
         # CSRF protection
@@ -19,7 +24,8 @@ def getSessionIdTransRpc(url:str):
             session_id = { array[0].replace(":", "") : array[1]}
             return session_id
     except requests.exceptions.ConnectionError:
-        print("transmission이 실행중인 아닌 것으로 보입니다. " + url)
+        logging.error(f"transmission이 실행중인 아니거나 네트워크 등의 문제로 접속할 수 없어요.")
+        logging.debug(f"접속 url: {url}")
 
 def addMagnetTransmissionRemote(magnetAddr: str, url: str, downloadDir: str, sessionId)->None:
     payload = {
