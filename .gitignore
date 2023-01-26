@@ -113,4 +113,5 @@ transmission_script
 
 # for vscode
 .vscode
-env34
+
+venv
