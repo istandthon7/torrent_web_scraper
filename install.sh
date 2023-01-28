@@ -11,4 +11,4 @@ sudo apt install -y python3-pip python3-testresources curl
 
 pip3 install -r requirements.txt
 
-./scraperInstaller.py
+python3 ./scraperInstaller.py
