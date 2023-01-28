@@ -17,43 +17,16 @@
     {
       "categories": [
         {
-          "history": 0,
-          "name": "해외영화",
-          "url": "topic/index?category1=1&category2=10",
+          "history": 227254,
+          "name": "영화",
+          "url": "topic/index?category1=1",
           "title": {
             "tag": "li",
             "class": "tit"
           }
         },
         {
-          "history": 0,
-          "name": "한국영화",
-          "url": "topic/index?category1=1&category2=11",
-          "title": {
-            "tag": "li",
-            "class": "tit"
-          }
-        },
-        {
-          "history": 0,
-          "name": "해외드라마",
-          "url": "topic/index?category1=2&category2=12",
-          "title": {
-            "tag": "li",
-            "class": "tit"
-          }
-        },
-        {
-          "history": 0,
-          "name": "한국드라마",
-          "url": "topic/index?category1=2&category2=13",
-          "title": {
-            "tag": "li",
-            "class": "tit"
-          }
-        },
-        {
-          "history": 163322,
+          "history": 227084,
           "name": "넷플릭스 영화",
           "url": "topic/index?category1=3&category2=14",
           "title": {
@@ -62,7 +35,7 @@
           }
         },
         {
-          "history": 0,
+          "history": 227051,
           "name": "넷플릭스 시리즈",
           "url": "topic/index?category1=3&category2=15",
           "title": {
@@ -71,7 +44,7 @@
           }
         },
         {
-          "history": 0,
+          "history": 226364,
           "name": "디플 영화",
           "url": "topic/index?category1=102&category2=103",
           "title": {
@@ -80,7 +53,16 @@
           }
         },
         {
-          "history": 0,
+          "history": 227258,
+          "name": "한국드라마",
+          "url": "topic/index?category1=2&category2=13",
+          "title": {
+            "tag": "li",
+            "class": "tit"
+          }
+        },
+        {
+          "history": 227253,
           "name": "예능·오락",
           "url": "topic/index?category1=4&category2=16",
           "title": {
@@ -89,7 +71,7 @@
           }
         },
         {
-          "history": 0,
+          "history": 227250,
           "name": "다큐·교양",
           "url": "topic/index?category1=4&category2=17",
           "title": {
@@ -99,8 +81,8 @@
         }
       ],
       "enable": true,
-      "mainUrl": "https://torrentsee148.com/",
-      "name": "토렌트씨"
+      "mainUrl": "https://torrentbot66.com/",
+      "name": "토렌트봇"
     }
   ],
   "scrapPage": 3,

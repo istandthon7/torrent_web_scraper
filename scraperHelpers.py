@@ -1,5 +1,6 @@
 # 스크래핑에 사용하는 함수들
 from urllib.request import Request, urlopen
+from urllib.error import HTTPError
 from bs4 import BeautifulSoup
 import subprocess
 import time
@@ -9,6 +10,7 @@ import random
 import os
 import setting
 import ssl
+import logging
 
 def getSoup(url: str):
     try:
@@ -26,11 +28,18 @@ def getHtml(url: str)->str:
         print("Exception getHtml url: "+url+" , error: " + str(e))
 
 def getResponse(url):
-    request = Request(url, headers={"User-Agent": "Mozilla/5.0"})
+    try:
+        request = Request(url, headers={"User-Agent": "Mozilla/5.0"})
         # python 3.6이상에서
-    context = ssl._create_unverified_context()
+        context = ssl._create_unverified_context()
         # urlopen(request, context=context) as response
-    return urlopen(request, context=context)
+        return urlopen(request, context=context)
+    except HTTPError as er:
+        if er.code > 400:
+            logging.error(f"사이트가 정상적으로 작동하지 않거나 사이트보안이 강화되었거나 url이 잘못되었습니다. 에러코드: {er.code}, url: {url}")
+            return;
+        else:
+            raise
 
 def getSoupFromFile(filePath: str):
     try:
