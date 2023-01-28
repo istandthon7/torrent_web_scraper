@@ -45,10 +45,11 @@ Movie.txt 파일에 추가할 수 있습니다. 코덱과 해상도는 config/se
 # 1.4 실행
 실행시키면 게시판을 읽어와서 TVShow.json와 Movie.txt에 등록한 키워드를 검색하여 transmission에 추가됩니다. 웹사이트에서 데이터를 가지고 오는 것은 많은 시간이 걸릴 수 있습니다. 
 
-    $ python3 .
+    torrent_web_scraper$ python3 .
 
 비밀번호를 지정할 수 있습니다. 
-    $ python3 . --transPass 비밀번호
+
+    torrent_web_scraper$ python3 . --transPass 비밀번호
 
 # 1.5 스케줄러 등록
 주기적으로 실행하게 설정해두면, 토렌트 사이트를 방문하여 새로 등록된 마그넷 파일이 있는지 확인하고, 자동으로 추가해줍니다. 
