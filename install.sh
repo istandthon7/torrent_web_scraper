@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# sudo: command not found ==> apt install sudo
 # ubuntu or debian
 sudo apt update
 sudo apt install -y python3-pip python3-testresources curl
