@@ -107,7 +107,8 @@ if __name__ == '__main__':
         url = parse.unquote(args.urlOrFilePath)
         print(myBoardScraper.getMagnet(url))
     else:
-        logging.debug(f'스크랩 테스트를 시작합니다. [{args.urlOrFilePath}], [{args.titleTag}], [{args.titleClass}]')
+        logging.info(f'스크랩 테스트를 시작합니다. [{args.urlOrFilePath}], [{args.titleTag}], [{args.titleClass}]')
         boardItems = myBoardScraper.getBoardItemInfos(args.urlOrFilePath, 1
                         , args.titleTag, args.titleClass)
         print(json.dumps(boardItems, default=lambda x: x.__dict__))
+        logging.info("스크랩 테스트를 마쳤습니다.")
