@@ -10,6 +10,8 @@ def checkMagnetHistory(csvFileName: str, magnet: str)->bool:
     with open(csvFileName, 'r', encoding="utf-8") as f:
         ff = csv.reader(f)
         for row in ff:
+            if len(row) == 0:
+                continue;
             if magnet == row[3]:
                 return True
     return False
