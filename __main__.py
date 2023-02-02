@@ -65,7 +65,7 @@ if __name__ == '__main__':
             toSaveBoardItemNum = None
 
             #Step 4.  iterate page (up to 10) for this site/this category
-            for pageNumber in range(1, mySetting.json['scrapPage']+1):
+            for pageNumber in range(1, category['scrapPage']+1):
                 logging.info(f'페이지 스크랩을 시작합니다. page: {pageNumber}')
                 if isNextPageScrap == False:
                     logging.info(f'페이지 스크랩을 마칩니다.')

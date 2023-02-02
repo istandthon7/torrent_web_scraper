@@ -117,10 +117,6 @@
         "history"
       ]
     },
-    "scrapPage": {
-      "type": "integer",
-      "minimum": 1
-    },
     "torrentHistory": {
       "type":"string",
       "const": "torrentHistory.csv"
@@ -148,8 +144,7 @@
       "required": [
         "host",
         "port",
-        "id",
-        "pw"
+        "id"
       ]
     },
     "logging":{
@@ -173,6 +168,10 @@
     "category": {
       "type": "object",
       "properties": {
+        "scrapPage": {
+          "type": "integer",
+          "minimum": 1
+        },
         "history": {
           "type": "integer"
         },
