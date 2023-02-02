@@ -62,7 +62,8 @@ if __name__ == '__main__':
         for categoryIndex, category in enumerate(site["categories"]):
             logging.info(f'게시판 스크랩을 시작합니다. {category["name"]}')
             isNextPageScrap = True
-            toSaveBoardItemNum = None
+            toSaveBoardId = None
+            toSaveBoardNumber = None
 
             #Step 4.  iterate page (up to 10) for this site/this category
             for pageNumber in range(1, category['scrapPage']+1):
@@ -97,7 +98,8 @@ if __name__ == '__main__':
                         regKeyword = myTvShow.getRegKeyword(boardItem.title)
 
                     if boardItemIndex == 1 and pageNumber == 1:
-                        toSaveBoardItemNum = boardItem.id
+                        toSaveBoardId = boardItem.id
+                        toSaveBoardNumber = boardItem.number
 
                     if not regKeyword:
                         scraperHelpers.executeNotiScript(mySetting , site['name'], boardItem.title)
@@ -147,9 +149,10 @@ if __name__ == '__main__':
                     logging.info(f'다음 페이지는 검색할 필요없음. 현재 페이지: {pageNumber}')
                     break;
             #값이 있는 경우만 갱신
-            if toSaveBoardItemNum is not None:
-                mySetting.json["sites"][siteIndex]["categories"][categoryIndex]["history"] = toSaveBoardItemNum
-                logging.info(f'history를 변경했습니다. {toSaveBoardItemNum}')
+            if toSaveBoardId is not None:
+                mySetting.json["sites"][siteIndex]["categories"][categoryIndex]["history"] = toSaveBoardId
+                mySetting.json["sites"][siteIndex]["categories"][categoryIndex]["number"] = toSaveBoardNumber
+                logging.info(f'history를 변경했습니다. {toSaveBoardId}')
         #Step 5.  save scrap ID
         mySetting.saveJson()
         logging.info(f'설정파일을 저장했습니다.')

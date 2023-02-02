@@ -175,6 +175,9 @@
         "history": {
           "type": "integer"
         },
+        "number": {
+          "type": "integer"
+        },
         "name": {
           "type": "string"
         },

@@ -8,10 +8,11 @@ import setting
 from urllib import parse
 
 class BoardItemInfo:
-    def __init__(self, title: str, url: str, ID: int) -> None:
+    def __init__(self, title: str, url: str, ID: int, number: int) -> None:
         self.title = title
         self.url = url
         self.id = ID
+        self.number = number
 
 class BoardScraper():
     def getScrapUrl(self, url: str, page: int)->str:
@@ -37,17 +38,20 @@ class BoardScraper():
         if titles is None or not any(titles):
             logging.error(f"게시판에서 제목리스트 얻기에 실패하였습니다. {urlOrFilePath}, tag: {titleTag}, class: {titleClass}")
             return [];
-        items = []
-        for title in titles:
-            items.extend(title.find_all('a'))
-        items = list(filter(lambda x: len(x.text.strip())>0 and x.get('href') != "#", items))
         results = []
-        for item in items:
-            boardItemInfo = self.GetBoardItemInfo(item)
+        for title in titles:
+            aTag = title.a
+            if len(aTag.text.strip()) == 0 or aTag.get('href') == "#":
+                continue;
+        
+            title.parent.contents.remove('\n')
+            boardNumber = title.parent.contents[0].string.strip()
+            boardItemInfo = self.GetBoardItemInfo(aTag, int(boardNumber))
             if boardItemInfo.id > 10:
                 results.append(boardItemInfo)
             elif boardItemInfo.id == -1:
                 logging.info(f"게시물 아이디를 확인할 수 없습니다. title: {boardItemInfo.title}")
+
         return results
  
     #게시판 아이디 파싱, url을 기반으로 wr_id text를 뒤의 id parsing
@@ -71,9 +75,9 @@ class BoardScraper():
         #print("게시물 아이디 얻기에 실패하였습니다. "+url)
         return -1
 
-    def GetBoardItemInfo(self, boardItem: bs4.element.Tag) -> BoardItemInfo:
-        url = boardItem.get('href')
-        boardItemInfo = BoardItemInfo(boardItem.text.strip(), url, self.getID(url))
+    def GetBoardItemInfo(self, aTag: bs4.element.Tag, boardNumber: int) -> BoardItemInfo:
+        url = aTag.get('href')
+        boardItemInfo = BoardItemInfo(aTag.text.strip(), url, self.getID(url), boardNumber)
         return boardItemInfo
 
     def getMagnet(self, url: str)->str:
