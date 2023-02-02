@@ -195,7 +195,7 @@
               "type": "string",
               "examples":["list-subject", "wr-subject", "tit", "movie-title"
                   , "list-desc", "td-subject", "list-item", "td-lf", "td_subject"
-                  , "topic-item", "ml-2", "flex-grow truncate", "list_subject"
+                  , "topic-item", "ml-2", "flex-grow truncate", "list_subject", "title_head", "flex-auto px-2 truncate"
                 ]
             }
           },

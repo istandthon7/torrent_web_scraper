@@ -51,7 +51,9 @@ if __name__ == '__main__':
         response = scraperHelpers.getResponse(site["mainUrl"])
         if response is None:
             #site['mainUrl'] = scraperLibrary.updateUrl(site['mainUrl'])
-            logging.critical(f'[{site["name"]}] 접속할 수 없습니다. {site["mainUrl"]}')
+            msg = f'[{site["name"]}] 접속할 수 없습니다. {site["mainUrl"]}'
+            logging.critical(msg)
+            print(msg, file=sys.stderr)
             continue;
         if response.url != site["mainUrl"]:
             logging.info(f'url을 갱신합니다. {site["mainUrl"]}->{response.url}')

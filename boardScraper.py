@@ -44,8 +44,18 @@ class BoardScraper():
             if len(aTag.text.strip()) == 0 or aTag.get('href') == "#":
                 continue;
         
-            title.parent.contents.remove('\n')
-            boardNumber = title.parent.contents[0].string.strip()
+            parentContents = list(filter(lambda a: a != '\n', title.parent.contents))
+            numberString = parentContents[0].string
+            if numberString == None:
+                parentContents = list(filter(lambda a: a != '\n', title.parent.parent.contents))
+                numberString = parentContents[0].string
+            if numberString != None:
+                boardNumber = numberString.strip()
+                if boardNumber == "AD" or boardNumber == "광고":
+                    continue;
+            else:
+                logging.debug("게시물 번호를 찾을 수 없어요.")
+                boardNumber = 0
             boardItemInfo = self.GetBoardItemInfo(aTag, int(boardNumber))
             if boardItemInfo.id > 10:
                 results.append(boardItemInfo)
@@ -77,7 +87,10 @@ class BoardScraper():
 
     def GetBoardItemInfo(self, aTag: bs4.element.Tag, boardNumber: int) -> BoardItemInfo:
         url = aTag.get('href')
-        boardItemInfo = BoardItemInfo(aTag.text.strip(), url, self.getID(url), boardNumber)
+        id = self.getID(url)
+        if id == -1:
+            id = boardNumber
+        boardItemInfo = BoardItemInfo(aTag.text.replace('\n', ''), url, id, boardNumber)
         return boardItemInfo
 
     def getMagnet(self, url: str)->str:

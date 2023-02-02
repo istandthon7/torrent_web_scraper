@@ -1,6 +1,6 @@
 # 스크래핑에 사용하는 함수들
 from urllib.request import Request, urlopen
-from urllib.error import HTTPError
+from urllib.error import HTTPError, URLError
 from bs4 import BeautifulSoup
 import subprocess
 import time
@@ -40,6 +40,9 @@ def getResponse(url):
             return;
         else:
             raise
+    except URLError as er:
+        logging.error(f"사이트 주소가 변경등으로 정상적으로 작동하지 않아요. 원인: {er.reason}, url: {url}")
+        return;
 
 def getSoupFromFile(filePath: str):
     try:
