@@ -162,15 +162,15 @@
       "required":["logLevel", "logFile"]
     }
   },
-  "required": ["tvshow", "movie", "sites", "scrapPage", "transmission"
-    , "torrentHistory", "logging"],
+  "required": ["tvshow", "movie", "sites", "transmission", "torrentHistory", "logging"],
   "$defs":{
     "category": {
       "type": "object",
       "properties": {
         "scrapPage": {
           "type": "integer",
-          "minimum": 1
+          "minimum": 1,
+          "maximum": 1000
         },
         "history": {
           "type": "integer"
@@ -199,12 +199,7 @@
           "required":["tag", "class"]
         }
       },
-      "required": [
-        "history",
-        "name",
-        "url",
-        "title"
-      ]
+      "required": ["history", "name", "url", "title", "scrapPage"]
     }
   }
 }

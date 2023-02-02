@@ -17,7 +17,7 @@
     {
       "categories": [
         {
-          "history": 227254,
+          "history": 0,
           "name": "영화",
           "scrapPage": 3,
           "url": "topic/index?category1=1",
@@ -27,7 +27,7 @@
           }
         },
         {
-          "history": 227084,
+          "history": 0,
           "name": "넷플릭스 영화",
           "scrapPage": 3,
           "url": "topic/index?category1=3&category2=14",
@@ -37,7 +37,7 @@
           }
         },
         {
-          "history": 227051,
+          "history": 0,
           "name": "넷플릭스 시리즈",
           "scrapPage": 3,
           "url": "topic/index?category1=3&category2=15",
@@ -47,7 +47,7 @@
           }
         },
         {
-          "history": 226364,
+          "history": 0,
           "name": "디플 영화",
           "scrapPage": 3,
           "url": "topic/index?category1=102&category2=103",
@@ -57,7 +57,7 @@
           }
         },
         {
-          "history": 227258,
+          "history": 0,
           "name": "한국드라마",
           "scrapPage": 3,
           "url": "topic/index?category1=2&category2=13",
@@ -67,7 +67,7 @@
           }
         },
         {
-          "history": 227253,
+          "history": 0,
           "name": "예능·오락",
           "scrapPage": 3,
           "url": "topic/index?category1=4&category2=16",
@@ -77,7 +77,7 @@
           }
         },
         {
-          "history": 227250,
+          "history": 0,
           "name": "다큐·교양",
           "scrapPage": 3,
           "url": "topic/index?category1=4&category2=17",
