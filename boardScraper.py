@@ -41,18 +41,37 @@ class BoardScraper():
         results = []
         for title in titles:
             aTag = title.a
+            if aTag == None:
+                continue;
             if len(aTag.text.strip()) == 0 or aTag.get('href') == "#":
                 continue;
         
             parentContents = list(filter(lambda a: a != '\n', title.parent.contents))
-            numberString = parentContents[0].string
+            numberString = parentContents[0].text.replace('\n', '')
             if numberString == None:
                 parentContents = list(filter(lambda a: a != '\n', title.parent.parent.contents))
-                numberString = parentContents[0].string
+                numberString = parentContents[0].text.replace('\n', '')
+            if numberString == None:
+                parentContents = list(filter(lambda a: a != '\n', title.parent.parent.parent.contents))
+                numberString = parentContents[0].text.replace('\n', '')
             if numberString != None:
-                boardNumber = numberString.strip()
-                if boardNumber == "AD" or boardNumber == "광고":
+                numberString = numberString.strip()
+                if numberString == "AD" or numberString == "광고" or numberString == "공지":
                     continue;
+                elif numberString.lower() == "new":
+                    logging.debug("게시물 번호가 NEW입니다.")
+                    boardNumber = 0
+                else:
+                    boardNumber = self.intTryParse(numberString)
+                    if boardNumber == None:
+                        parentContents = list(filter(lambda a: a != '\n', title.parent.parent.contents))
+                        numberString = parentContents[0].text.replace('\n', '')
+                        if numberString != None:
+                            numberString = numberString.strip()
+                            boardNumber = self.intTryParse(numberString)
+                        if boardNumber == None:
+                            logging.debug("게시물 번호를 찾을 수 없어요.2")
+                            boardNumber = 0
             else:
                 logging.debug("게시물 번호를 찾을 수 없어요.")
                 boardNumber = 0
@@ -64,9 +83,14 @@ class BoardScraper():
 
         return results
  
-    #게시판 아이디 파싱, url을 기반으로 wr_id text를 뒤의 id parsing
-    def getID(self, url: str)->int:
+    def intTryParse(self, value):
+        try:
+            return int(value)
+        except ValueError:
+            return ;
 
+    def getID(self, url: str)->int:
+        """게시판 아이디 파싱, url을 기반으로 wr_id text를 뒤의 id parsing"""
         match = re.search(r"wr_id=[^&?\n]+", url)
         if match:
             return int(match.group().replace("wr_id=", ""))
@@ -124,6 +148,7 @@ if __name__ == '__main__':
         url = parse.unquote(args.urlOrFilePath)
         print(myBoardScraper.getMagnet(url))
     else:
+        #args.titleClass = args.titleClass.replace("'", "")
         logging.info(f'스크랩 테스트를 시작합니다. [{args.urlOrFilePath}], [{args.titleTag}], [{args.titleClass}]')
         boardItems = myBoardScraper.getBoardItemInfos(args.urlOrFilePath, 1
                         , args.titleTag, args.titleClass)

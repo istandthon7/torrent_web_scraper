@@ -189,13 +189,15 @@
           "properties": {
             "tag": {
               "type": "string",
-              "examples":["td", "div", "li"]
+              "examples":["td", "div", "li", "h2", "dd"]
             },
             "class": {
               "type": "string",
               "examples":["list-subject", "wr-subject", "tit", "movie-title"
                   , "list-desc", "td-subject", "list-item", "td-lf", "td_subject"
-                  , "topic-item", "ml-2", "flex-grow truncate", "list_subject", "title_head", "flex-auto px-2 truncate"
+                  , "topic-item", "ml-2", "flex-grow truncate", "list_subject", "title_head", "flex-auto"
+                  , "text-13px py-2 text-black border-b border-dashed mt-2", "flex-grow truncate text-13px", "media-heading"
+                  , "list_cut", "py-2"
                 ]
             }
           },
