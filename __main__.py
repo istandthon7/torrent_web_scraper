@@ -142,7 +142,7 @@ if __name__ == '__main__':
                         logging.info(f'영화 리스트에서 삭제했습니다. {regKeyword}')
                     else:
                         rpc.removeTransmissionRemote(mySetting.getRpcUrl(), sessionId, regKeyword)
-                        logging.info(f'tvshow 이전 에피소드를 Transmission에서 삭제했습니다. {regKeyword}')
+                        
                     history.addMagnetToHistory(mySetting, site['name'], boardItem.title, magnet, regKeyword)
                     logging.info(f'Transmission에 추가하였습니다. {regKeyword}, {magnet}')
                 # --> 현재 페이지의 게시물 검색 완료
