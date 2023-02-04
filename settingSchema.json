@@ -199,9 +199,12 @@
                   , "text-13px py-2 text-black border-b border-dashed mt-2", "flex-grow truncate text-13px", "media-heading"
                   , "list_cut", "py-2"
                 ]
+            },
+            "selector": {
+              "type": "string",
+              "examples":["ul.customer_table > li > ul > li.tit"]
             }
-          },
-          "required":["tag", "class"]
+          }
         }
       },
       "required": ["history", "name", "url", "title", "scrapPage"]

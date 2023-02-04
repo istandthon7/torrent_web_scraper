@@ -23,18 +23,20 @@ class BoardScraper():
         else:
             return url
 
-    def getBoardItemInfos(self, urlOrFilePath: str, page: int, titleTag: str, titleClass: str)->list:
+    def getBoardItemInfos(self, urlOrFilePath: str, page: int, titleTag: str, titleClass: str, titleSelector: str)->list:
         """
         게시판에서 제목리스트 얻기
         """
-        logging.debug(f'게시판에서 제목리스트를 추출합니다. {urlOrFilePath}, tag: {titleTag}, class: {titleClass}')
+        logging.debug(f'게시판에서 제목리스트를 추출합니다. {urlOrFilePath}, tag: {titleTag}, class: {titleClass}, selecotr: {titleSelector}')
         if urlOrFilePath.startswith("http"):
             urlOrFilePath = self.getScrapUrl(urlOrFilePath, page)
             soup = scraperHelpers.getSoup(urlOrFilePath)
         else:
             soup = scraperHelpers.getSoupFromFile(urlOrFilePath)
-        
-        titles = soup.find_all(titleTag, class_=titleClass)
+        if titleSelector == None:
+            titles = soup.find_all(titleTag, class_=titleClass)
+        else:
+            titles = soup.select(titleSelector)
         if titles is None or not any(titles):
             logging.error(f"게시판에서 제목리스트 얻기에 실패하였습니다. {urlOrFilePath}, tag: {titleTag}, class: {titleClass}")
             return [];
@@ -140,17 +142,17 @@ if __name__ == '__main__':
     parser.add_argument("urlOrFilePath", help="스크랩할 url이나 html파일경로")
     parser.add_argument("--titleTag", help="제목 태그")
     parser.add_argument("--titleClass", help="제목 클래스")
+    parser.add_argument("--titleSelector", help="제목 selector")
     args = parser.parse_args()
     # 로그파일 초기화용
     mySetting = setting.Setting()
     myBoardScraper = BoardScraper()
-    if args.titleTag is None:
-        url = parse.unquote(args.urlOrFilePath)
-        print(myBoardScraper.getMagnet(url))
-    else:
-        #args.titleClass = args.titleClass.replace("'", "")
-        logging.info(f'스크랩 테스트를 시작합니다. [{args.urlOrFilePath}], [{args.titleTag}], [{args.titleClass}]')
-        boardItems = myBoardScraper.getBoardItemInfos(args.urlOrFilePath, 1
-                        , args.titleTag, args.titleClass)
+    # 매그넷 구하기
+    if args.titleTag is not None or args.titleSelector is not None:
+        logging.info(f'스크랩 테스트를 시작합니다. [{args.urlOrFilePath}], [{args.titleTag}], [{args.titleClass}], [{args.titleSelector}]')
+        boardItems = myBoardScraper.getBoardItemInfos(args.urlOrFilePath, 1, args.titleTag, args.titleClass, args.titleSelector)
         print(json.dumps(boardItems, default=lambda x: x.__dict__))
         logging.info("스크랩 테스트를 마쳤습니다.")
+    if args.titleTag is None:
+        url = parse.unquote(args.urlOrFilePath)
+        print(myBoardScraper.getMagnet(url))        

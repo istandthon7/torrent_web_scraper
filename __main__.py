@@ -73,8 +73,9 @@ if __name__ == '__main__':
                 if isNextPageScrap == False:
                     logging.info(f'페이지 스크랩을 마칩니다.')
                     break;
+
                 boardItems = myBoardScraper.getBoardItemInfos(site["mainUrl"]+category["url"], pageNumber
-                                , category["title"]["tag"], category["title"]["class"])
+                                , category["title"].get("tag"), category["title"].get("class"), category["title"].get("selector"))
 
                 if not boardItems:
                     logging.warning(f'게시물 목록을 스크랩하지 못했습니다.')
