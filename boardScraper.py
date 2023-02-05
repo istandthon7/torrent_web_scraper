@@ -33,12 +33,12 @@ class BoardScraper():
             soup = scraperHelpers.getSoup(urlOrFilePath)
         else:
             soup = scraperHelpers.getSoupFromFile(urlOrFilePath)
-        if titleSelector == None:
+        if titleSelector == None or titleSelector == "":
             titles = soup.find_all(titleTag, class_=titleClass)
         else:
             titles = soup.select(titleSelector)
         if titles is None or not any(titles):
-            logging.error(f"게시판에서 제목리스트 얻기에 실패하였습니다. {urlOrFilePath}, tag: {titleTag}, class: {titleClass}")
+            logging.error(f"게시판에서 제목리스트 얻기에 실패하였습니다. {urlOrFilePath}, tag: {titleTag}, class: {titleClass}, selector: {titleSelector}")
             return [];
         results = []
         for title in titles:
