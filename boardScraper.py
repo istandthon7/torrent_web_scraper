@@ -45,6 +45,11 @@ class BoardScraper():
             aTag = title.a
             if aTag == None:
                 continue;
+            # category link
+            if len(aTag.text.strip()) < 8:
+                aTag = title.a.next_sibling
+            if aTag == None:
+                continue;
             if len(aTag.text.strip()) == 0 or aTag.get('href') == "#":
                 continue;
         
@@ -153,6 +158,6 @@ if __name__ == '__main__':
         boardItems = myBoardScraper.getBoardItemInfos(args.urlOrFilePath, 1, args.titleTag, args.titleClass, args.titleSelector)
         print(json.dumps(boardItems, default=lambda x: x.__dict__))
         logging.info("스크랩 테스트를 마쳤습니다.")
-    if args.titleTag is None:
+    else:
         url = parse.unquote(args.urlOrFilePath)
         print(myBoardScraper.getMagnet(url))        
