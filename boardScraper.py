@@ -135,7 +135,7 @@ class BoardScraper():
         match = re.search(r"[^\w]([A-Za-z0-9]){40}[^\w]", html)
         if match:
             return "magnet:?xt=urn:btih:"+ match.group()[1:-1]
-        f = open("/tmp/magnet.html", 'w')
+        f = open("/tmp/magnet_fail.html", 'w')
         f.write(html)
         f.close()
         logging.error(f'html에서 magnet을 찾지 못했어요. url: {url}')
