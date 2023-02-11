@@ -94,7 +94,7 @@ def removeTransmissionRemote(url: str, sessionId, containName: str)->None:
                 "arguments":{"ids":[torrent["id"]]}
             }
             res = rpc(url, payload, sessionId)
-            logging.info(f'tvshow 이전 에피소드를 Transmission에서 삭제했습니다. {containName}')
+            logging.info(f'tvshow 이전 에피소드를 Transmission에서 삭제했습니다. {torrent["name"]}')
 
 def rpc(url:str, payload, sessionId):
     

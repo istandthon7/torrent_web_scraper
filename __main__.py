@@ -93,7 +93,7 @@ if __name__ == '__main__':
                 for boardItemIndex, boardItem in enumerate(boardItems, start=1):
                     if boardItem.url.startswith("http") is False:
                         boardItem.url = (str(site["mainUrl"])[:-1])+boardItem.url
-                    logging.debug(f'게시물 제목검색을 시작합니다. {boardItem.id}, {boardItem.title}, {boardItem.url}')
+                    logging.debug(f'게시물 제목검색을 시작합니다. id: {boardItem.id}, {boardItem.title}, {boardItem.url}')
 
                     if "영화" in category['name']:
                         regKeyword = myMovie.getRegKeyword(boardItem.title)
@@ -137,7 +137,7 @@ if __name__ == '__main__':
                         print(msg, file=sys.stderr)
                         sys.exit()
                     rpc.addMagnetTransmissionRemote(magnet, mySetting.getRpcUrl(), downloadPath, sessionId)
-
+                    logging.info(f'Transmission에 추가하였습니다. {regKeyword}, {magnet}')
                     if "영화" in category['name']:
                         myMovie.removeLineInMovie(regKeyword)
                         logging.info(f'영화 리스트에서 삭제했습니다. {regKeyword}')
@@ -145,7 +145,7 @@ if __name__ == '__main__':
                         rpc.removeTransmissionRemote(mySetting.getRpcUrl(), sessionId, regKeyword)
                         
                     history.addMagnetToHistory(mySetting, site['name'], boardItem.title, magnet, regKeyword)
-                    logging.info(f'Transmission에 추가하였습니다. {regKeyword}, {magnet}')
+                    
                 # --> 현재 페이지의 게시물 검색 완료
                 # 필터링 한 후의 아이디가 필터링 전 아이디보다 더 크다면 다음 페이지는 갈 필요없음
                 if boardItems[-1].id > lastID:
