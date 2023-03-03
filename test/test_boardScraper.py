@@ -9,7 +9,7 @@ class BoardScraperTest(unittest.TestCase):
         category = site["categories"][0]
         myBoardScraper = boardScraper.BoardScraper()
         boardItems = myBoardScraper.getBoardItemInfos(site["mainUrl"]+category["url"], 1
-                        , category["title"]["tag"], category["title"]["class"])
+                        , category["title"]["tag"], category["title"]["class"], category["title"]["selector"])
         self.assertTrue(boardItems)
 
     def test_getBoardListFromFile(self):
@@ -26,7 +26,7 @@ class BoardScraperTest(unittest.TestCase):
         # act
         myBoardScraper = boardScraper.BoardScraper()
         boardItems = myBoardScraper.getBoardItemInfos(site["mainUrl"]+firstBoard["url"], 1
-            , firstBoard["title"]["tag"], firstBoard["title"]["class"])
+            , firstBoard["title"]["tag"], firstBoard["title"]["class"], firstBoard["title"]["selector"])
         
         # assert
         title = boardItems[0].title
@@ -83,7 +83,7 @@ class BoardScraperTest(unittest.TestCase):
         category = site["categories"][0]
         myBoardScraper = boardScraper.BoardScraper()
         boardItems = myBoardScraper.getBoardItemInfos(site["mainUrl"]+category["url"], 1
-                        , category["title"]["tag"], category["title"]["class"])
+                        , category["title"]["tag"], category["title"]["class"], category["title"]["selector"])
         magnet = myBoardScraper.getMagnet(boardItems[0].url)
 
         self.assertGreater(len(magnet), 0)

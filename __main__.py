@@ -50,15 +50,14 @@ if __name__ == '__main__':
             continue;
         response = scraperHelpers.getResponse(site["mainUrl"])
         if response is None:
-            #site['mainUrl'] = scraperLibrary.updateUrl(site['mainUrl'])
             msg = f'[{site["name"]}] 접속할 수 없습니다. {site["mainUrl"]}'
             logging.critical(msg)
             print(msg, file=sys.stderr)
             continue;
         if response.url != site["mainUrl"]:
-            logging.info(f'url을 갱신합니다. {site["mainUrl"]}->{response.url}')
-            mySetting.json["sites"][siteIndex]["mainUrl"] = response.url
+            logging.info(f'url이 변경되었네요. {site["mainUrl"]}->{response.url}')
             site["mainUrl"] = response.url
+        isScrapSuccess = False
         myBoardScraper = boardScraper.BoardScraper()
         #Step 2.  Iterate categories for this site
         for categoryIndex, category in enumerate(site["categories"]):
@@ -67,7 +66,7 @@ if __name__ == '__main__':
             toSaveBoardId = None
             toSaveBoardNumber = None
 
-            #Step 4.  iterate page (up to 10) for this site/this category
+            #Step 3.  iterate page for this site/this category
             for pageNumber in range(1, category['scrapPage']+1):
                 logging.info(f'페이지 스크랩을 시작합니다. page: {pageNumber}')
                 if isNextPageScrap == False:
@@ -80,6 +79,7 @@ if __name__ == '__main__':
                 if not boardItems:
                     logging.warning(f'게시물 목록을 스크랩하지 못했습니다.')
                     continue;
+                isScrapSuccess = True
                 # 필터링 하기 전의 마지막 아이디. 
                 # 필터링 한 후의 아이디가 더 커진다면 다음 페이지는 갈 필요없음.
                 lastID = boardItems[-1].id
@@ -151,12 +151,17 @@ if __name__ == '__main__':
                 if boardItems[-1].id > lastID:
                     logging.info(f'다음 페이지는 검색할 필요없음. 현재 페이지: {pageNumber}')
                     break;
-            #값이 있는 경우만 갱신
+            # pageNumber 완료
             if toSaveBoardId is not None:
                 mySetting.json["sites"][siteIndex]["categories"][categoryIndex]["history"] = toSaveBoardId
                 mySetting.json["sites"][siteIndex]["categories"][categoryIndex]["number"] = toSaveBoardNumber
                 logging.info(f'history를 변경했습니다. {toSaveBoardId}')
-        #Step 5.  save scrap ID
+        # category 완료
+        # 스크랩을 완료하고 사이트 주소가 변경되었으면 변경.
+        if isScrapSuccess and site["mainUrl"] != mySetting.json["sites"][siteIndex]["mainUrl"]:
+            mySetting.json["sites"][siteIndex]["mainUrl"] = site["mainUrl"]
+            logging.info(f'url이 변경했어요. {site["mainUrl"]}')
+        #Step 4.  save json
         mySetting.saveJson()
         logging.info(f'설정파일을 저장했습니다.')
 logging.info(f'--------------------------------------------------------')

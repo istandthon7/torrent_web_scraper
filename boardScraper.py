@@ -33,6 +33,8 @@ class BoardScraper():
             soup = scraperHelpers.getSoup(urlOrFilePath)
         else:
             soup = scraperHelpers.getSoupFromFile(urlOrFilePath)
+        if soup is None:
+            return [];
         if titleSelector == None or titleSelector == "":
             titles = soup.find_all(titleTag, class_=titleClass)
         else:
