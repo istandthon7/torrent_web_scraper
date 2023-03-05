@@ -33,14 +33,14 @@ def getPermission(path:str):
         logging.warn(f'폴더가 없네요. {path}')
         return;
     stat = os.lstat(path)
-    logging.info(f'[{path}]의 소유자 PUID: {stat.st_uid}, PGID: {stat.st_gid}]')
+    logging.debug(f'[{path}]의 소유자 PUID: {stat.st_uid}, PGID: {stat.st_gid}]')
     return stat.st_mode
 
 def isPermission(path:str, mode):
     currentMode = getPermission(path)
     if currentMode is None:
         return False;
-    logging.info(f'폴더에 권한을 체크합니다. [{path}] 폴더권한: {stat.filemode(currentMode)}, 체크권한: {stat.filemode(mode)}')
+    logging.debug(f'폴더에 권한을 체크합니다. [{path}] 폴더권한: {stat.filemode(currentMode)}, 체크권한: {stat.filemode(mode)}')
     return (currentMode & mode)==mode
 
 def addXToUser(path: str):
