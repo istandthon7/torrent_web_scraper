@@ -30,24 +30,14 @@ if __name__ == '__main__':
     url = mySetting.getRpcUrl()
     
     movieDownloadPath = mySetting.json["movie"]["download"]
-    if len(movieDownloadPath) > 0 and osHelper.isPermission(movieDownloadPath, stat.S_IRWXO|stat.S_IRWXU|stat.S_IRWXG) is False:
-        # 777
-        osHelper.appendPermisson(movieDownloadPath, stat.S_IRWXO|stat.S_IRWXU|stat.S_IRWXG)
-        # 755
-        osHelper.appendPermisson(Path(movieDownloadPath).parent.absolute(), stat.S_IRWXU|stat.S_IRGRP|stat.S_IXGRP|stat.S_IROTH|stat.S_IXOTH)
     tvshowDownloadPath = mySetting.json["tvshow"]["download"]
-    if len(tvshowDownloadPath) > 0 and osHelper.isPermission(tvshowDownloadPath, stat.S_IRWXO|stat.S_IRWXU|stat.S_IRWXG) is False:
-        # 777
-        osHelper.appendPermisson(tvshowDownloadPath, stat.S_IRWXO|stat.S_IRWXU|stat.S_IRWXG)
-        # 755
-        osHelper.appendPermisson(Path(tvshowDownloadPath).parent.absolute(), stat.S_IRWXU|stat.S_IRGRP|stat.S_IXGRP|stat.S_IROTH|stat.S_IXOTH)
         
     for siteIndex, site in enumerate(mySetting.json["sites"]):
-        logging.info(f'사이트 스크랩을 시작합니다. {site["name"]}')
         #Step 1.  test for access with main url
         if site['enable'] is False:
             logging.info(f'[{site["name"]}] 비활성화되어 있습니다.')
             continue;
+        logging.info(f'사이트 스크랩을 시작합니다. [{site["name"]}]')
         response = scraperHelpers.getResponse(site["mainUrl"])
         if response is None:
             msg = f'[{site["name"]}] 접속할 수 없습니다. {site["mainUrl"]}'
@@ -116,7 +106,13 @@ if __name__ == '__main__':
                     if "영화" in category['name']:
                         downloadPath += movieDownloadPath
                     else:
-                        downloadPath += tvshowDownloadPath + "/" + regKeyword
+                        if len(tvshowDownloadPath) > 0:
+                            downloadPath += tvshowDownloadPath + "/" + regKeyword
+                    if len(downloadPath) > 0 and osHelper.isPermission(downloadPath, stat.S_IRWXO|stat.S_IRWXU|stat.S_IRWXG) is False:
+                        # 777
+                        osHelper.appendPermisson(downloadPath, stat.S_IRWXO|stat.S_IRWXU|stat.S_IRWXG)
+                        # 755
+                        osHelper.appendPermisson(Path(downloadPath).parent.absolute(), stat.S_IRWXU|stat.S_IRGRP|stat.S_IXGRP|stat.S_IROTH|stat.S_IXOTH)
                             
                     if not magnet:
                         history.addTorrentFailToFile(mySetting, site['name'], boardItem.title, boardItem.url, regKeyword, downloadPath)
@@ -137,7 +133,7 @@ if __name__ == '__main__':
                         print(msg, file=sys.stderr)
                         sys.exit()
                     rpc.addMagnetTransmissionRemote(magnet, mySetting.getRpcUrl(), downloadPath, sessionId)
-                    logging.info(f'Transmission에 추가하였습니다. {regKeyword}, {magnet}')
+                    logging.info(f'Transmission에 추가하였습니다. {regKeyword}, {magnet}, 폴더: [{downloadPath}]')
                     if "영화" in category['name']:
                         myMovie.removeLineInMovie(regKeyword)
                         logging.info(f'영화 리스트에서 삭제했습니다. {regKeyword}')

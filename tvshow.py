@@ -16,10 +16,10 @@ class TVShow(stringHelper.StringHelper):
                 logging.debug(f'tvshow 키워드에 해당하지 않습니다.')
                 continue
             if self.IsContainAllWordsInBoardTitle(tvShow['option'], boardTitle) is False:
-                logging.info(f"option이 달라요. option: {tvShow['option']}")
+                logging.info(f"{tvShow['name']} option이 달라요. option: {tvShow['option']}")
                 continue
             if self.IsContainAllWordsInBoardTitle(tvShow['option2'], boardTitle) is False:
-                logging.info(f"option2가 달라요. option2: {tvShow['option2']}")
+                logging.info(f"{tvShow['name']} option2가 달라요. option2: {tvShow['option2']}")
                 continue
             return tvShow['name']
         return "" 
