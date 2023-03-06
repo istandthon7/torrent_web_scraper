@@ -67,7 +67,7 @@ if __name__ == '__main__':
                                 , category["title"].get("tag"), category["title"].get("class"), category["title"].get("selector"))
 
                 if not boardItems:
-                    logging.warning(f'게시물 목록을 스크랩하지 못했습니다.')
+                    logging.error(f"[{site['name']}] 사이트 '{category['name']}' 게시판에서 제목리스트 얻기에 실패하였습니다.")
                     continue;
                 isScrapSuccess = True
                 # 필터링 하기 전의 마지막 아이디. 

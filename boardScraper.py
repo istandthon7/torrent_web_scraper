@@ -40,7 +40,6 @@ class BoardScraper():
         else:
             titles = soup.select(titleSelector)
         if titles is None or not any(titles):
-            logging.error(f"게시판에서 제목리스트 얻기에 실패하였습니다. {urlOrFilePath}, tag: {titleTag}, class: {titleClass}, selector: {titleSelector}")
             return [];
         results = []
         for title in titles:
@@ -157,10 +156,12 @@ if __name__ == '__main__':
     myBoardScraper = BoardScraper()
     # 매그넷 구하기
     if args.titleTag is not None or args.titleSelector is not None:
-        logging.info(f'스크랩 테스트를 시작합니다. [{args.urlOrFilePath}], [{args.titleTag}], [{args.titleClass}], [{args.titleSelector}]')
+        logging.info(f'스크랩 테스트를 시작합니다. [{args.urlOrFilePath}], selector: [{args.titleSelector}], tag: [{args.titleTag}], class: [{args.titleClass}]')
         boardItems = myBoardScraper.getBoardItemInfos(args.urlOrFilePath, 1, args.titleTag, args.titleClass, args.titleSelector)
+        if not boardItems:
+            logging.error(f"게시판에서 제목리스트 얻기에 실패하였습니다.")
         print(json.dumps(boardItems, default=lambda x: x.__dict__))
         logging.info("스크랩 테스트를 마쳤습니다.")
     else:
         url = parse.unquote(args.urlOrFilePath)
-        print(myBoardScraper.getMagnet(url))        
+        print(myBoardScraper.getMagnet(url))
