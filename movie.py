@@ -29,10 +29,10 @@ class Movie(stringHelper.StringHelper):
                 logging.debug(f'Movie 키워드에 해당하지 않습니다.')
                 continue
             if self.IsContainAllWordsInBoardTitle(str(self.movieSetting['resolution']), boardTitle) is False:
-                logging.info(f"해상도가 달라요. 설정된 해상도: {self.movieSetting['resolution']}")
+                logging.info(f"해상도가 달라요. 설정된 해상도: {self.movieSetting['resolution']} {boardTitle}")
                 continue
             if self.IsContainAllWordsInBoardTitle(self.movieSetting['videoCodec'], boardTitle) is False:
-                logging.info(f"코덱이 달라요. 설정된 코덱: {self.movieSetting['videoCodec']}")
+                logging.info(f"코덱이 달라요. 설정된 코덱: {self.movieSetting['videoCodec']} {boardTitle}")
                 continue
             return keyword
         return ""
