@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import argparse
+import os
 import setting
 import movie
 import tvshow
@@ -108,11 +109,14 @@ if __name__ == '__main__':
                     else:
                         if len(tvshowDownloadPath) > 0:
                             downloadPath += tvshowDownloadPath + "/" + regKeyword
-                    if len(downloadPath) > 0 and osHelper.isPermission(downloadPath, stat.S_IRWXO|stat.S_IRWXU|stat.S_IRWXG) is False:
-                        # 777
-                        osHelper.appendPermisson(downloadPath, stat.S_IRWXO|stat.S_IRWXU|stat.S_IRWXG)
-                        # 755
-                        osHelper.appendPermisson(Path(downloadPath).parent.absolute(), stat.S_IRWXU|stat.S_IRGRP|stat.S_IXGRP|stat.S_IROTH|stat.S_IXOTH)
+                            if os.path.exists(downloadPath) is False:
+                                os.mkdir(downloadPath)
+                                logging.info(f'폴더를 만들었어요. {downloadPath}')
+                    if len(downloadPath) > 0:
+                        if osHelper.isOwner(downloadPath, mySetting.json["transmission"]["puid"], mySetting.json["transmission"]["pgid"]) is False:
+                            osHelper.changeOwner(downloadPath, mySetting.json["transmission"]["puid"], mySetting.json["transmission"]["pgid"])
+                        if osHelper.isPermission(downloadPath, stat.S_IRWXU) is False:
+                            osHelper.appendPermisson(downloadPath, stat.S_IRWXU)
                             
                     if not magnet:
                         history.addTorrentFailToFile(mySetting, site['name'], boardItem.title, boardItem.url, regKeyword, downloadPath)
@@ -125,7 +129,7 @@ if __name__ == '__main__':
                         logging.info(f'이미 다운로드 받은 파일입니다. {regKeyword}, {magnet}')
                         continue;
 
-                    sessionId = rpc.getSessionIdTransRpc(url)
+                    sessionId = rpc.getSessionIdTransRpc(mySetting.getRpcUrl())
 
                     if sessionId == None:
                         msg = f'Transmission 세션아이디를 구하지 못했습니다. {url}'

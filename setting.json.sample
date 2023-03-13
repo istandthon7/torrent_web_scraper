@@ -88,7 +88,7 @@
         }
       ],
       "enable": true,
-      "mainUrl": "https://torrentbot71.com/",
+      "mainUrl": "https://torrentbot72.com/",
       "name": "토렌트봇"
     }
   ],
@@ -106,7 +106,9 @@
     "host": "127.0.0.1",
     "port": 9091,
     "id": "transmission",
-    "pw": "transmission"
+    "pw": "transmission",
+    "puid": 1000,
+    "pgid": 1000
   },
   "logging": {
     "logLevel": "ERROR",

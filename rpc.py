@@ -4,12 +4,14 @@ import logging
 import requests
 from bs4 import BeautifulSoup
 import setting
+#from requests.auth import HTTPBasicAuth
 
 #X-Transmission-Session-Id
 def getSessionIdTransRpc(url:str):
     
     try:
-        res = requests.get(url)
+        #basic = HTTPBasicAuth(id, pw)
+        res = requests.get(url)#, auth=basic)
         if res.status_code != 409 and res.status_code > 400:
             logging.error(f"트랜스미션에 접속할 수 없어요. {res.status_code} {res.reason}")
             logging.debug(f"접속 url: {url}")
