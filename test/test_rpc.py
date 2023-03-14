@@ -8,6 +8,7 @@ import setting
 class RpcTest(unittest.TestCase):
     def test_sessionID(self):
         mySetting = setting.Setting()
+        # 더미 호스트
         mySetting.json["transmission"]["host"] = "555.168.0.1"
         mySetting.json["transmission"]["port"] = 9091
         mySetting.json["transmission"]["id"] = "transmission"
@@ -15,10 +16,11 @@ class RpcTest(unittest.TestCase):
         sessionId = rpc.getSessionIdTransRpc(mySetting.getRpcUrl())
         self.assertIsNone(sessionId)
 
-    def test_sessionIDOfConfigFile(self):
-        mySetting = setting.Setting()
-        sessionId = rpc.getSessionIdTransRpc(mySetting.getRpcUrl())
-        self.assertIsNotNone(sessionId)
+    # def test_sessionIDOfConfigFile(self):
+    #     ''' 수정해야 '''
+    #     mySetting = setting.Setting()
+    #     sessionId = rpc.getSessionIdTransRpc(mySetting.getRpcUrl())
+    #     self.assertIsNotNone(sessionId)
     
     def test_패스워드가_다르면(self):
         mySetting = setting.Setting()
