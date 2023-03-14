@@ -36,15 +36,16 @@ class OsHelperTest(unittest.TestCase):
 
     def test_폴더_퍼미션이_그룹_읽기쓰기_권한이_있는지_구하기(self):
         dir = "dirtest"
+        # 폴더를 만들면 기본 755
         os.mkdir(dir)
         print(Path(dir).resolve())
         mode = osHelper.getPermission(dir)
         print(stat.filemode(mode))
         self.assertTrue(osHelper.isPermission(dir, stat.S_IRGRP))
-        self.assertTrue(osHelper.isPermission(dir, stat.S_IWGRP))
-        self.assertTrue(osHelper.isPermission(dir, stat.S_IRGRP | stat.S_IWGRP))
-        self.assertTrue(osHelper.isPermission(dir, stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP))
-        self.assertTrue(osHelper.isPermission(dir, stat.S_IRWXG))
+        self.assertFalse(osHelper.isPermission(dir, stat.S_IWGRP))
+        self.assertFalse(osHelper.isPermission(dir, stat.S_IRGRP | stat.S_IWGRP))
+        self.assertFalse(osHelper.isPermission(dir, stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP))
+        self.assertFalse(osHelper.isPermission(dir, stat.S_IRWXG))
         os.rmdir(dir)
 
     def test_폴더_퍼미션이_other_읽기실행_권한이_있는지_구하기(self):
