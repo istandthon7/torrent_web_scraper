@@ -6,7 +6,8 @@ from bs4 import BeautifulSoup
 import setting
 #from requests.auth import HTTPBasicAuth
 
-#X-Transmission-Session-Id
+# https://github.com/transmission/transmission/blob/main/docs/rpc-spec.md
+
 def getSessionIdTransRpc(url:str):
     
     try:
@@ -17,14 +18,13 @@ def getSessionIdTransRpc(url:str):
             logging.debug(f"접속 url: {url}")
             return;
         bs = BeautifulSoup(res.text, "html.parser")
-        code_text = bs.find('code').text
         # CSRF protection
-        #X-Transmission-Session-Id:
-        #YeUFW7rotzuLHrx4TfmWCRUF6qVlPd9DcPCEUHzlBcFMXZUd
+        # <code>X-Transmission-Session-Id: pI8na8XboVoe04bDOo1F0bVE5t89al766MJd3eWXa59kLYKp</code>
+        code_text = bs.find('code').text
         array = code_text.split()
+        logging.debug(f"array: {array}")
         if len(array) == 2 and array[0] == "X-Transmission-Session-Id:":
-            session_id = { array[0].replace(":", "") : array[1]}
-            return session_id
+            return array[1]
     except requests.exceptions.ConnectionError:
         logging.error(f"transmission이 실행중인 아니거나 네트워크 등의 문제로 접속할 수 없어요.")
         logging.debug(f"접속 url: {url}")
@@ -50,7 +50,6 @@ def getIdTransmissionRemote(url:str, sessionId, torrentTitle: str):
     }
 
     res = rpc(url, payload, sessionId)
-    #print("info, get_id_transmission_remote res\n", res)
     for torrent in res["arguments"]["torrents"]:
         if torrent["name"] == torrentTitle:
             return torrent["id"]
@@ -98,24 +97,18 @@ def removeTransmissionRemote(url: str, sessionId, containName: str)->None:
             res = rpc(url, payload, sessionId)
             logging.info(f'tvshow 이전 에피소드를 Transmission에서 삭제했습니다. {torrent["name"]}')
 
-def rpc(url:str, payload, sessionId):
+def rpc(url:str, payload, sessionId: str):
     
     headers = {'content-type': 'application/json'}
-    headers.update(sessionId)
-    #print("info, rpc header = ", headers)
+    # {'X-Transmission-Session-Id': 'pI8na8XboVoe04bDOo1F0bVE5t89al766MJd3eWXa59kLYKp'}
+    headers.update({'X-Transmission-Session-Id': sessionId})
 
-    #print("info, rpc payload = \n", json.dumps(payload, indent=4))
-    response = requests.post(url, data=json.dumps(payload), headers=headers).json()
+    json = requests.post(url, data=json.dumps(payload), headers=headers).json()
 
-    #print("info, rpc resonse =", response.text)
+    if json["result"] != "success":
+        logging.error("error입니다. rpc response = \n", json.dumps(json, indent=4))
 
-    #print("info, rpc response = \n", json.dumps(response, indent=4))
-    if response["result"] != "success":
-        print("error입니다. rpc response = \n", json.dumps(response, indent=4))
-    #assert response["jsonrpc"]
-    #assert response["id"] == 0
-
-    return response
+    return json
 
 def getDownloadDir(url:str)->str:
     payload = {
@@ -124,14 +117,13 @@ def getDownloadDir(url:str)->str:
 		},
 		"method": "session-get"
     }
-
     res = rpc(url, payload, getSessionIdTransRpc(url))
-    #print("info, get_id_transmission_remote res\n", res)
-    return res["arguments"]["download-dir"]
+    download_dir = res["arguments"]["download-dir"]
+    logging.debug(f"다운로드 디렉토리를 구했어요.{download_dir}")
+    return download_dir
 
 def addMagnet(magnet: str, downloadPath: str, url: str):
-    sessionId = getSessionIdTransRpc(url)
-    addMagnetTransmissionRemote(magnet, url, downloadPath, sessionId)
+    addMagnetTransmissionRemote(magnet, url, downloadPath, getSessionIdTransRpc(url))
 
 
 
