@@ -99,6 +99,8 @@ class BoardScraper():
 
     def getID(self, url: str)->int:
         """게시판 아이디 파싱, url을 기반으로 wr_id text를 뒤의 id parsing"""
+        logging.debug(f'게시판 아이디를 구하려고 합니다. {url}')
+        
         match = re.search(r"wr_id=[^&?\n]+", url)
         if match:
             return int(match.group().replace("wr_id=", ""))
@@ -114,14 +116,16 @@ class BoardScraper():
         match = re.search(r"([0-9]){6,}", url)
         if match:
             return int(match.group())
-        #print("게시물 아이디 얻기에 실패하였습니다. "+url)
         return -1
 
     def GetBoardItemInfo(self, aTag: bs4.element.Tag, boardNumber: int) -> BoardItemInfo:
         url = aTag.get('href')
-        id = self.getID(url)
-        if id == -1:
-            id = boardNumber
+        if url is None:
+            id = -1
+        else:
+            id = self.getID(url)
+            if id == -1:
+                id = boardNumber
         boardItemInfo = BoardItemInfo(aTag.text.replace('\n', ''), url, id, boardNumber)
         return boardItemInfo
 
