@@ -1,3 +1,4 @@
+import json
 import unittest
 from unittest.mock import MagicMock, patch
 import rpc
@@ -50,12 +51,12 @@ class RpcTest(unittest.TestCase):
          self.addCleanup(patcher.stop)
          return thing
     
-    def test_rpc_다운로드_경로를_가져올수_있나(self): #
+    def test_rpc_다운로드_경로를_가져올수_있나(self):
         mock_sessionId = self.create_patch('rpc.getSessionIdTransRpc')
         mock_sessionId.return_value = "pI8na8XboVoe04bDOo1F0bVE5t89al766MJd3eWXa59kLYKp"
 
-        download_dir = "/downloads_test"
         mock_rpc = self.create_patch('rpc.rpc')
+        download_dir = "/downloads_test"
         mock_rpc.return_value = {
             "arguments":{
 			    "download-dir": download_dir
@@ -66,6 +67,20 @@ class RpcTest(unittest.TestCase):
         dir = rpc.getDownloadDir(mySetting.getRpcUrl())
         logging.debug(f'download dir: {dir}')
         self.assertEqual(download_dir, dir)
+
+    def test_addMagnet(self):
+        mock_sessionId = self.create_patch('rpc.getSessionIdTransRpc')
+        mock_sessionId.return_value = "pI8na8XboVoe04bDOo1F0bVE5t89al766MJd3eWXa59kLYKp"
+        mock_requestPost = self.create_patch('requests.post')
+        mockResponse = MagicMock()
+        mock_requestPost.return_value = mockResponse
+        mockResponse.status_code = 200
+        mockResponse.json.return_value = {"result":"success"}
+
+        mySetting = setting.Setting()
+        mySetting.transPass = "testPassword"
+        # 목업
+        rpc.addMagnet("magnet:?xt=urn:btih:65f8977142095868204447f7b16430c750bfaced", "", mySetting.getRpcUrl())
 
 
 if __name__ == '__main__':  

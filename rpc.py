@@ -103,12 +103,12 @@ def rpc(url:str, payload, sessionId: str):
     # {'X-Transmission-Session-Id': 'pI8na8XboVoe04bDOo1F0bVE5t89al766MJd3eWXa59kLYKp'}
     headers.update({'X-Transmission-Session-Id': sessionId})
 
-    json = requests.post(url, data=json.dumps(payload), headers=headers).json()
+    jsonObject = requests.post(url, data=json.dumps(payload), headers=headers).json()
 
-    if json["result"] != "success":
-        logging.error("error입니다. rpc response = \n", json.dumps(json, indent=4))
+    if jsonObject["result"] != "success":
+        logging.error("error입니다. rpc response = \n", json.dumps(jsonObject, indent=4))
 
-    return json
+    return jsonObject
 
 def getDownloadDir(url:str)->str:
     payload = {
@@ -123,15 +123,18 @@ def getDownloadDir(url:str)->str:
     return download_dir
 
 def addMagnet(magnet: str, downloadPath: str, url: str):
+    """매그넷으로 바로 다운받기"""
+    logging.info(f"magnet을 추가합니다. {magnet}, download: [{downloadPath}]")
     addMagnetTransmissionRemote(magnet, url, downloadPath, getSessionIdTransRpc(url))
 
 
 
 if __name__ == '__main__':
-    """매그넷으로 바로 다운받기"""
     parser = argparse.ArgumentParser()
     parser.add_argument("magnet", help="magnet")
     parser.add_argument("downloadPath", help="다운로드 경로")
+    parser.add_argument("--transPass", help="트랜스미션 접속 비밀번호")
     args = parser.parse_args()
     mySetting = setting.Setting()
+    mySetting.transPass = args.transPass
     addMagnet(args.magnet, args.downloadPath, mySetting.getRpcUrl())
