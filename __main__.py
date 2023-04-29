@@ -48,7 +48,7 @@ if __name__ == '__main__':
         if response.url != site["mainUrl"]:
             logging.info(f'url이 변경되었네요. {site["mainUrl"]}->{response.url}')
             site["mainUrl"] = response.url
-        isScrapSuccess = False
+        isScrapFail = False
         myBoardScraper = boardScraper.BoardScraper()
         #Step 2.  Iterate categories for this site
         for categoryIndex, category in enumerate(site["categories"]):
@@ -68,9 +68,11 @@ if __name__ == '__main__':
                                 , category["title"].get("tag"), category["title"].get("class"), category["title"].get("selector"))
 
                 if not boardItems:
-                    logging.error(f"[{site['name']}] 사이트 '{category['name']}' 게시판에서 제목리스트 얻기에 실패하였습니다.")
+                    isScrapFail = True
+                    msg = f"[{site['name']}] 사이트 '{category['name']}' 게시판에서 제목리스트 얻기에 실패하였습니다."
+                    logging.error(msg)
+                    print(msg, file=sys.stderr)
                     continue;
-                isScrapSuccess = True
                 # 필터링 하기 전의 마지막 아이디. 
                 # 필터링 한 후의 아이디가 더 커진다면 다음 페이지는 갈 필요없음.
                 lastID = boardItems[-1].id
@@ -158,7 +160,7 @@ if __name__ == '__main__':
                 logging.info(f'history를 변경했습니다. {toSaveBoardId}')
         # category 완료
         # 스크랩을 완료하고 사이트 주소가 변경되었으면 변경.
-        if isScrapSuccess and site["mainUrl"] != mySetting.json["sites"][siteIndex]["mainUrl"]:
+        if isScrapFail == False and site["mainUrl"] != mySetting.json["sites"][siteIndex]["mainUrl"]:
             mySetting.json["sites"][siteIndex]["mainUrl"] = site["mainUrl"]
             logging.info(f'url이 변경했어요. {site["mainUrl"]}')
         #Step 4.  save json
