@@ -64,7 +64,7 @@ if __name__ == '__main__':
                     logging.info(f'페이지 스크랩을 마칩니다.')
                     break;
 
-                boardItems = myBoardScraper.getBoardItemInfos(site["mainUrl"]+category["url"], pageNumber
+                boardItems = myBoardScraper.getBoardItems(site["mainUrl"]+category["url"], pageNumber
                                 , category["title"].get("tag"), category["title"].get("class"), category["title"].get("selector"))
 
                 if not boardItems:
