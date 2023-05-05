@@ -144,7 +144,7 @@ if __name__ == '__main__':
                         myMovie.removeLineInMovie(regKeyword)
                         logging.info(f'영화 리스트에서 삭제했습니다. {regKeyword}')
                     else:
-                        rpc.removeTransmissionRemote(mySetting.getRpcUrl(), sessionId, regKeyword)
+                        rpc.removeTransmissionRemote(mySetting.getRpcUrl(), sessionId, regKeyword, boardItem.getEpisode())
                         
                     history.addMagnetToHistory(mySetting, site['name'], boardItem.title, magnet, regKeyword)
                     
