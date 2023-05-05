@@ -85,6 +85,7 @@ class BoardScraperTest(unittest.TestCase):
         myBoardScraper = boardScraper.BoardScraper()
         boardItems = myBoardScraper.getBoardItems(site["mainUrl"]+category["url"], 1
                         , category["title"]["tag"], category["title"]["class"], category["title"].get("selector"))
+        boardItems = list(filter(lambda x: "예고편" not in x.title, boardItems))
         magnet = myBoardScraper.getMagnet(urllib.parse.urljoin(site["mainUrl"], boardItems[0].url))
 
         self.assertGreater(len(magnet), 0)
