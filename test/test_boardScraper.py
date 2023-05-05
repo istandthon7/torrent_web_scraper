@@ -9,13 +9,13 @@ class BoardScraperTest(unittest.TestCase):
         site = mySetting.json["sites"][0]
         category = site["categories"][0]
         myBoardScraper = boardScraper.BoardScraper()
-        boardItems = myBoardScraper.getBoardItemInfos(site["mainUrl"]+category["url"], 1
+        boardItems = myBoardScraper.getBoardItems(site["mainUrl"]+category["url"], 1
                         , category["title"]["tag"], category["title"]["class"], category["title"].get("selector"))
         self.assertTrue(boardItems)
 
     def test_getBoardListFromFile(self):
         myBoardScraper = boardScraper.BoardScraper()
-        boardItems = myBoardScraper.getBoardItemInfos("test/test.html", 1, "div", "wr-subject", "")
+        boardItems = myBoardScraper.getBoardItems("test/test.html", 1, "div", "wr-subject", "")
         self.assertTrue(boardItems)
 
     def test_첫번째_사이트_첫번째_카테고리_리스트받기(self):
@@ -26,7 +26,7 @@ class BoardScraperTest(unittest.TestCase):
         firstBoard["history"] = 0
         # act
         myBoardScraper = boardScraper.BoardScraper()
-        boardItems = myBoardScraper.getBoardItemInfos(site["mainUrl"]+firstBoard["url"], 1
+        boardItems = myBoardScraper.getBoardItems(site["mainUrl"]+firstBoard["url"], 1
             , firstBoard["title"]["tag"], firstBoard["title"]["class"], firstBoard["title"].get("selector"))
         
         # assert
@@ -83,8 +83,9 @@ class BoardScraperTest(unittest.TestCase):
         site = mySetting.json["sites"][0]
         category = site["categories"][0]
         myBoardScraper = boardScraper.BoardScraper()
-        boardItems = myBoardScraper.getBoardItemInfos(site["mainUrl"]+category["url"], 1
+        boardItems = myBoardScraper.getBoardItems(site["mainUrl"]+category["url"], 1
                         , category["title"]["tag"], category["title"]["class"], category["title"].get("selector"))
+        boardItems = list(filter(lambda x: "예고편" not in x.title, boardItems))
         magnet = myBoardScraper.getMagnet(urllib.parse.urljoin(site["mainUrl"], boardItems[0].url))
 
         self.assertGreater(len(magnet), 0)

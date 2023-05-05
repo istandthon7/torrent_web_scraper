@@ -64,7 +64,7 @@ if __name__ == '__main__':
                     logging.info(f'페이지 스크랩을 마칩니다.')
                     break;
 
-                boardItems = myBoardScraper.getBoardItemInfos(site["mainUrl"]+category["url"], pageNumber
+                boardItems = myBoardScraper.getBoardItems(site["mainUrl"]+category["url"], pageNumber
                                 , category["title"].get("tag"), category["title"].get("class"), category["title"].get("selector"))
 
                 if not boardItems:
@@ -144,7 +144,7 @@ if __name__ == '__main__':
                         myMovie.removeLineInMovie(regKeyword)
                         logging.info(f'영화 리스트에서 삭제했습니다. {regKeyword}')
                     else:
-                        rpc.removeTransmissionRemote(mySetting.getRpcUrl(), sessionId, regKeyword)
+                        rpc.removeTransmissionRemote(mySetting.getRpcUrl(), sessionId, regKeyword, boardItem.getEpisode())
                         
                     history.addMagnetToHistory(mySetting, site['name'], boardItem.title, magnet, regKeyword)
                     

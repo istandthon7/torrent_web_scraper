@@ -88,7 +88,7 @@
         }
       ],
       "enable": true,
-      "mainUrl": "https://torrentbot74.com/",
+      "mainUrl": "https://torrentbot80.com/",
       "name": "토렌트봇"
     }
   ],
@@ -112,6 +112,6 @@
   },
   "logging": {
     "logLevel": "ERROR",
-    "logFile": "scraper.log"
+    "logFile": "config/scraper.log"
   }
 }

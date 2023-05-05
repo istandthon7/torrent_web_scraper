@@ -3,6 +3,7 @@ import json
 import logging
 import requests
 from bs4 import BeautifulSoup
+from model.BoardItem import BoardItem
 import setting
 #from requests.auth import HTTPBasicAuth
 
@@ -76,7 +77,7 @@ def renameFileTorrentRpc(url:str, torrentId, sessionId, srcFile: str, destFile: 
 
     rpc(url, json_input, sessionId)
 
-def removeTransmissionRemote(url: str, sessionId, containName: str)->None:
+def removeTransmissionRemote(url: str, sessionId, regKeyword: str, episode: int)->None:
     """ 상태가 Finished 이고 containName 인 토렌트 id를 구해서 삭제 (리스트에 남아있지 않도록 자동삭제되도록 하는
     기능이다.) """
     payload = {
@@ -89,7 +90,9 @@ def removeTransmissionRemote(url: str, sessionId, containName: str)->None:
     res = rpc(url, payload, sessionId)
 
     for torrent in res["arguments"]["torrents"]:
-        if containName in torrent["name"] and torrent["isFinished"]:
+        # 에피소드를 파싱하기 위해 boardItem활용
+        torrentItem = BoardItem(torrent["name"], "url", 0, 0)
+        if regKeyword in torrent["name"] and torrent["isFinished"] and torrentItem.getEpisode()<episode:
             payload = {
                 "method": "torrent-remove",
                 "arguments":{"ids":[torrent["id"]]}

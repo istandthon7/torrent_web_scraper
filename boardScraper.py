@@ -3,16 +3,10 @@ import json
 import logging
 import re
 import bs4
+from model.BoardItem import BoardItem
 import scraperHelpers
 import setting
 from urllib import parse
-
-class BoardItemInfo:
-    def __init__(self, title: str, url: str, ID: int, number: int) -> None:
-        self.title = title
-        self.url = url
-        self.id = ID
-        self.number = number
 
 class BoardScraper():
     def getScrapUrl(self, url: str, page: int)->str:
@@ -23,7 +17,7 @@ class BoardScraper():
         else:
             return url
 
-    def getBoardItemInfos(self, urlOrFilePath: str, page: int, titleTag: str, titleClass: str, titleSelector: str)->list:
+    def getBoardItems(self, urlOrFilePath: str, page: int, titleTag: str, titleClass: str, titleSelector: str)->list:
         """
         게시판에서 제목리스트 얻기
         """
@@ -83,11 +77,11 @@ class BoardScraper():
             else:
                 logging.debug("게시물 번호를 찾을 수 없어요.")
                 boardNumber = 0
-            boardItemInfo = self.GetBoardItemInfo(aTag, int(boardNumber))
-            if boardItemInfo.id > 10:
-                results.append(boardItemInfo)
-            elif boardItemInfo.id == -1:
-                logging.info(f"게시물 아이디를 확인할 수 없습니다. title: {boardItemInfo.title}")
+            boardItem = self.GetBoardItem(aTag, int(boardNumber))
+            if boardItem.id > 10:
+                results.append(boardItem)
+            elif boardItem.id == -1:
+                logging.info(f"게시물 아이디를 확인할 수 없습니다. title: {boardItem.title}")
 
         return results
  
@@ -118,7 +112,7 @@ class BoardScraper():
             return int(match.group())
         return -1
 
-    def GetBoardItemInfo(self, aTag: bs4.element.Tag, boardNumber: int) -> BoardItemInfo:
+    def GetBoardItem(self, aTag: bs4.element.Tag, boardNumber: int) -> BoardItem:
         url = aTag.get('href')
         if url is None:
             id = -1
@@ -126,8 +120,8 @@ class BoardScraper():
             id = self.getID(url)
             if id == -1:
                 id = boardNumber
-        boardItemInfo = BoardItemInfo(aTag.text.replace('\n', ''), url, id, boardNumber)
-        return boardItemInfo
+        boardItem = BoardItem(aTag.text.replace('\n', '').replace('\r', '').strip(), url, id, boardNumber)
+        return boardItem
 
     def getMagnet(self, url: str)->str:
         logging.debug(f'magnet을 검색합니다. url: {url}')
@@ -161,7 +155,7 @@ if __name__ == '__main__':
     # 매그넷 구하기
     if args.titleTag is not None or args.titleSelector is not None:
         logging.info(f'스크랩 테스트를 시작합니다. [{args.urlOrFilePath}], selector: [{args.titleSelector}], tag: [{args.titleTag}], class: [{args.titleClass}]')
-        boardItems = myBoardScraper.getBoardItemInfos(args.urlOrFilePath, 1, args.titleTag, args.titleClass, args.titleSelector)
+        boardItems = myBoardScraper.getBoardItems(args.urlOrFilePath, 1, args.titleTag, args.titleClass, args.titleSelector)
         if not boardItems:
             logging.error(f"게시판에서 제목리스트 얻기에 실패하였습니다.")
         print(json.dumps(boardItems, default=lambda x: x.__dict__))
