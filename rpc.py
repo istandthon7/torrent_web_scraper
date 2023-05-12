@@ -10,7 +10,7 @@ import setting
 # https://github.com/transmission/transmission/blob/main/docs/rpc-spec.md
 
 def getSessionIdTransRpc(url:str):
-    
+
     try:
         #basic = HTTPBasicAuth(id, pw)
         res = requests.get(url)#, auth=basic)
@@ -38,7 +38,7 @@ def addMagnetTransmissionRemote(magnetAddr: str, url: str, downloadDir: str, ses
 		"method": "torrent-add"
     }
 
-    if len(downloadDir) > 0:
+    if downloadDir is not None and len(downloadDir) > 0:
         payload["arguments"]["download-dir"] = downloadDir
     rpc(url, payload, sessionId)
 
@@ -133,11 +133,13 @@ def addMagnet(magnet: str, downloadPath: str, url: str):
 
 
 if __name__ == '__main__':
+    logging.debug(f'magnet 추가 시작.')
     parser = argparse.ArgumentParser()
     parser.add_argument("magnet", help="magnet")
-    parser.add_argument("downloadPath", help="다운로드 경로")
+    parser.add_argument("--downloadPath", help="다운로드 경로")
     parser.add_argument("--transPass", help="트랜스미션 접속 비밀번호")
     args = parser.parse_args()
+    logging.debug(f'폴더: {args.downloadPath}')
     mySetting = setting.Setting()
     mySetting.transPass = args.transPass
     addMagnet(args.magnet, args.downloadPath, mySetting.getRpcUrl())
