@@ -100,11 +100,19 @@ def removeTransmissionRemote(url: str, sessionId, regKeyword: str, episode: int)
             res = rpc(url, payload, sessionId)
             logging.info(f'tvshow 이전 에피소드를 Transmission에서 삭제했습니다. {torrent["name"]}')
 
-def rpc(url:str, payload, sessionId: str):
-    
-    headers = {'content-type': 'application/json'}
-    # {'X-Transmission-Session-Id': 'pI8na8XboVoe04bDOo1F0bVE5t89al766MJd3eWXa59kLYKp'}
-    headers.update({'X-Transmission-Session-Id': sessionId})
+def rpc(url:str, payload: dict, sessionId: str):
+    """지정된 URL에 RPC 호출을 합니다.
+
+    Args:
+        url: RPC 서비스의 URL입니다.
+        payload: RPC 호출의 페이로드입니다.
+        sessionId: RPC 호출의 세션 ID입니다.
+
+    """
+    headers = {
+        'content-type': 'application/json',
+        'X-Transmission-Session-Id': sessionId,
+    }
 
     jsonObject = requests.post(url, data=json.dumps(payload), headers=headers).json()
 
