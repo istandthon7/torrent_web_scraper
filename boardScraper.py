@@ -9,11 +9,11 @@ import setting
 from urllib import parse
 
 class BoardScraper():
-    def getScrapUrl(self, url: str, page: int)->str:
+    def getScrapUrl(self, url: str, page: int) -> str:
         if page > 1:
             if not "?" in url:
                 url += "?"
-            return url + "&page="+str(page)
+            return f"{url}&page={page}"
         else:
             return url
 
