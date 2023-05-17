@@ -112,6 +112,8 @@ def rpc(url:str, payload: dict, sessionId: str):
         payload: RPC 호출의 페이로드입니다.
         sessionId: RPC 호출의 세션 ID입니다.
 
+    return: result json
+
     """
     headers = {
         'content-type': 'application/json',
@@ -137,14 +139,8 @@ def getDownloadDir(url:str)->str:
     logging.debug(f"다운로드 디렉토리를 구했어요.{downloadDir}")
     return downloadDir
 
-def addMagnet(magnet: str, downloadPath: str, url: str):
-    """매그넷으로 바로 다운받기"""
-    logging.info(f"magnet을 추가합니다. {magnet}, download: [{downloadPath}]")
-    addMagnetTransmissionRemote(magnet, url, downloadPath, getSessionIdTransRpc(url))
 
-
-
-if __name__ == '__main__':
+def main():
     logging.debug(f'magnet 추가 시작.')
     parser = argparse.ArgumentParser()
     parser.add_argument("magnet", help="magnet")
@@ -154,4 +150,9 @@ if __name__ == '__main__':
     logging.debug(f'폴더: {args.downloadPath}')
     mySetting = setting.Setting()
     mySetting.transPass = args.transPass
-    addMagnet(args.magnet, args.downloadPath, mySetting.getRpcUrl())
+    logging.info(f"magnet을 추가합니다. {args.magnet}, download: [{args.downloadPath}]")
+    url = mySetting.getRpcUrl()
+    addMagnetTransmissionRemote(args.magnet, url, args.downloadPath, getSessionIdTransRpc(url))
+
+if __name__ == '__main__':
+    main()
