@@ -43,18 +43,10 @@ class RpcTest(unittest.TestCase):
         mySetting.transPass = "5555"
         sessionId = rpc.getSessionIdTransRpc(mySetting.getRpcUrl())
         self.assertIsNone(sessionId)
-    
-    def create_patch(self, name):
-         patcher = patch(name)
-         mock = patcher.start()
-         self.addCleanup(patcher.stop)
-         return mock
-    
-    def test_rpc_다운로드_경로를_가져올수_있나(self):
-        mock_sessionId = self.create_patch('rpc.getSessionIdTransRpc')
-        mock_sessionId.return_value = "pI8na8XboVoe04bDOo1F0bVE5t89al766MJd3eWXa59kLYKp"
 
-        mock_rpc = self.create_patch('rpc.rpc')
+    @patch('rpc.rpc')
+    def test_rpc_다운로드_경로를_가져올수_있나(self, mock_rpc):
+
         download_dir = "/downloads_test"
         mock_rpc.return_value = {
             "arguments":{
@@ -67,12 +59,12 @@ class RpcTest(unittest.TestCase):
         logging.debug(f'download dir: {dir}')
         self.assertEqual(download_dir, dir)
 
-    def test_addMagnet(self):
-        mock_sessionId = self.create_patch('rpc.getSessionIdTransRpc')
-        mock_sessionId.return_value = "pI8na8XboVoe04bDOo1F0bVE5t89al766MJd3eWXa59kLYKp"
-        mock_requestPost = self.create_patch('requests.post')
+    @patch('rpc.getSessionIdTransRpc')
+    @patch('requests.post')
+    def test_addMagnet(self, mock_post, mock_get_session_id):
+        mock_get_session_id.return_value = 'mock_session_id'
         mockResponse = MagicMock()
-        mock_requestPost.return_value = mockResponse
+        mock_post.return_value = mockResponse
         mockResponse.status_code = 200
         mockResponse.json.return_value = {"result":"success"}
 
@@ -98,6 +90,18 @@ class RpcTest(unittest.TestCase):
         # Check that the addMagnetTransmissionRemote function was called with the correct arguments
         mock_add_magnet.assert_called_once_with('test_magnet', 'mock_url', 'test_download_path', 'mock_session_id')
 
+    @patch('requests.post')
+    @patch('rpc.getSessionIdTransRpc')
+    def test_getEncryption(self,  mock_get_session_id, mock_post):
+        mySetting = setting.Setting()
+        mock_get_session_id.return_value = 'mock_session_id'
+        mockResponse = MagicMock()
+        mock_post.return_value = mockResponse
+        mockResponse.status_code = 200
+        encryption = "preferred"
+        mockResponse.json.return_value = {"arguments":{"encryption": encryption},"result":"success"}
+
+        self.assertEqual(encryption, rpc.getEncryption(mySetting.getRpcUrl()))
 
 if __name__ == '__main__':  
     unittest.main()

@@ -10,7 +10,9 @@ import setting
 # https://github.com/transmission/transmission/blob/main/docs/rpc-spec.md
 
 def getSessionIdTransRpc(url:str):
-
+    """
+    :param url: The URL of the Transmission RPC.('http://localhost:9091/transmission/rpc')
+    """
     try:
         #basic = HTTPBasicAuth(id, pw)
         res = requests.get(url)#, auth=basic)
@@ -139,6 +141,15 @@ def getDownloadDir(url:str)->str:
     logging.debug(f"다운로드 디렉토리를 구했어요.{downloadDir}")
     return downloadDir
 
+def getEncryption(url: str) -> str:
+    payload = {
+        "arguments": {
+            "fields": ["encryption"]
+        },
+        "method": "session-get"
+    }
+    res = rpc(url, payload, getSessionIdTransRpc(url))
+    return res['arguments']['encryption']
 
 def main():
     logging.debug(f'magnet 추가 시작.')
