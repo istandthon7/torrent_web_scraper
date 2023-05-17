@@ -71,9 +71,13 @@ def getFilesTorrentRemote(url:str, sessionId, torrentId):
 
 def renameFileTorrentRpc(url:str, torrentId, sessionId, srcFile: str, destFile: str)->None:
     json_input = {
-        "method": "torrent-rename-path"
+        "method": "torrent-rename-path",
+        "arguments": {
+            "ids": [int(torrentId)],
+            "path": srcFile,
+            "name": destFile
+        }
     }
-    json_input["arguments"] = {"ids": [int(torrentId)], "path": srcFile, "name": destFile}
 
     rpc(url, json_input, sessionId)
 
@@ -129,9 +133,9 @@ def getDownloadDir(url:str)->str:
 		"method": "session-get"
     }
     res = rpc(url, payload, getSessionIdTransRpc(url))
-    download_dir = res["arguments"]["download-dir"]
-    logging.debug(f"다운로드 디렉토리를 구했어요.{download_dir}")
-    return download_dir
+    downloadDir = res["arguments"]["download-dir"]
+    logging.debug(f"다운로드 디렉토리를 구했어요.{downloadDir}")
+    return downloadDir
 
 def addMagnet(magnet: str, downloadPath: str, url: str):
     """매그넷으로 바로 다운받기"""
