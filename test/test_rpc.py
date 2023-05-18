@@ -90,18 +90,6 @@ class RpcTest(unittest.TestCase):
         # Check that the addMagnetTransmissionRemote function was called with the correct arguments
         mock_add_magnet.assert_called_once_with('test_magnet', 'mock_url', 'test_download_path', 'mock_session_id')
 
-    @patch('requests.post')
-    @patch('rpc.getSessionIdTransRpc')
-    def test_getEncryption(self,  mock_get_session_id, mock_post):
-        mySetting = setting.Setting()
-        mock_get_session_id.return_value = 'mock_session_id'
-        mockResponse = MagicMock()
-        mock_post.return_value = mockResponse
-        mockResponse.status_code = 200
-        encryption = "preferred"
-        mockResponse.json.return_value = {"arguments":{"encryption": encryption},"result":"success"}
-
-        self.assertEqual(encryption, rpc.getEncryption(mySetting.getRpcUrl()))
 
 if __name__ == '__main__':  
     unittest.main()

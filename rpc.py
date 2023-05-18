@@ -126,7 +126,7 @@ def rpc(url:str, payload: dict, sessionId: str):
 
     if jsonObject["result"] != "success":
         logging.error("error입니다. rpc response = \n", json.dumps(jsonObject, indent=4))
-
+    logging.debug(f"rpc result==> \n{json.dumps(jsonObject, indent=4)}")
     return jsonObject
 
 def getDownloadDir(url:str)->str:
@@ -141,15 +141,6 @@ def getDownloadDir(url:str)->str:
     logging.debug(f"다운로드 디렉토리를 구했어요.{downloadDir}")
     return downloadDir
 
-def getEncryption(url: str) -> str:
-    payload = {
-        "arguments": {
-            "fields": ["encryption"]
-        },
-        "method": "session-get"
-    }
-    res = rpc(url, payload, getSessionIdTransRpc(url))
-    return res['arguments']['encryption']
 
 def main():
     logging.debug(f'magnet 추가 시작.')
