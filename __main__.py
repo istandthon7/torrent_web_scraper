@@ -10,7 +10,6 @@ import stat
 import sys
 import boardScraper
 import scraperHelpers
-from pathlib import Path
 import history
 import osHelper
 import rpc

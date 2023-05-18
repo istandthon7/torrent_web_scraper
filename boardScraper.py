@@ -9,11 +9,11 @@ import setting
 from urllib import parse
 
 class BoardScraper():
-    def getScrapUrl(self, url: str, page: int)->str:
+    def getScrapUrl(self, url: str, page: int) -> str:
         if page > 1:
             if not "?" in url:
                 url += "?"
-            return url + "&page="+str(page)
+            return f"{url}&page={page}"
         else:
             return url
 
@@ -29,49 +29,49 @@ class BoardScraper():
             soup = scraperHelpers.getSoupFromFile(urlOrFilePath)
         if soup is None:
             return [];
-        if titleSelector == None or titleSelector == "":
+        if not titleSelector:
             titles = soup.find_all(titleTag, class_=titleClass)
         else:
             titles = soup.select(titleSelector)
-        if titles is None or not any(titles):
+        if not titles:
             return [];
         results = []
         for title in titles:
             aTag = title.a
-            if aTag == None:
-                continue;
+            if not aTag:
+                continue
             # category link
             if len(aTag.text.strip()) < 8:
                 aTag = title.a.next_sibling
-            if aTag == None:
-                continue;
+                if not aTag:
+                    continue
             if len(aTag.text.strip()) == 0 or aTag.get('href') == "#":
-                continue;
-        
+                continue
+            
             parentContents = list(filter(lambda a: a != '\n', title.parent.contents))
             numberString = parentContents[0].text.replace('\n', '')
-            if numberString == None:
+            if not numberString:
                 parentContents = list(filter(lambda a: a != '\n', title.parent.parent.contents))
                 numberString = parentContents[0].text.replace('\n', '')
-            if numberString == None:
-                parentContents = list(filter(lambda a: a != '\n', title.parent.parent.parent.contents))
-                numberString = parentContents[0].text.replace('\n', '')
-            if numberString != None:
+                if not numberString:
+                    parentContents = list(filter(lambda a: a != '\n', title.parent.parent.parent.contents))
+                    numberString = parentContents[0].text.replace('\n', '')
+            if numberString:
                 numberString = numberString.strip()
                 if numberString == "AD" or numberString == "광고" or numberString == "공지":
-                    continue;
+                    continue
                 elif numberString.lower() == "new":
                     logging.debug("게시물 번호가 NEW입니다.")
                     boardNumber = 0
                 else:
                     boardNumber = self.intTryParse(numberString)
-                    if boardNumber == None:
+                    if not boardNumber:
                         parentContents = list(filter(lambda a: a != '\n', title.parent.parent.contents))
                         numberString = parentContents[0].text.replace('\n', '')
-                        if numberString != None:
+                        if numberString:
                             numberString = numberString.strip()
                             boardNumber = self.intTryParse(numberString)
-                        if boardNumber == None:
+                        if not boardNumber:
                             logging.debug("게시물 번호를 찾을 수 없어요.2")
                             boardNumber = 0
             else:
@@ -99,13 +99,13 @@ class BoardScraper():
         if match:
             return int(match.group().replace("wr_id=", ""))
 
-        match = re.search(r"[&?](id)=[0-9]+", url)
+        match = re.search(r"[&?](id)=([0-9]+)", url)
         if match:
-            return int(match.group().replace("&", "").replace("?","").replace("id=", ""))
+            return int(match.group(2))
 
-        match = re.search(r"[/][0-9]{6,}", url)
+        match = re.search(r"[/]([0-9]{6,})", url)
         if match:
-            return int(match.group().replace("/",""))
+            return int(match.group(1))
 
         match = re.search(r"([0-9]){6,}", url)
         if match:
@@ -127,7 +127,7 @@ class BoardScraper():
         logging.debug(f'magnet을 검색합니다. url: {url}')
         html = scraperHelpers.getHtml(url)
 
-        if html is None:
+        if not html:
             logging.error(f'url로부터 html을 얻지 못했어요. url: {url}')
             return ""
         

@@ -10,7 +10,9 @@ import setting
 # https://github.com/transmission/transmission/blob/main/docs/rpc-spec.md
 
 def getSessionIdTransRpc(url:str):
-
+    """
+    :param url: The URL of the Transmission RPC.('http://localhost:9091/transmission/rpc')
+    """
     try:
         #basic = HTTPBasicAuth(id, pw)
         res = requests.get(url)#, auth=basic)
@@ -71,9 +73,13 @@ def getFilesTorrentRemote(url:str, sessionId, torrentId):
 
 def renameFileTorrentRpc(url:str, torrentId, sessionId, srcFile: str, destFile: str)->None:
     json_input = {
-        "method": "torrent-rename-path"
+        "method": "torrent-rename-path",
+        "arguments": {
+            "ids": [int(torrentId)],
+            "path": srcFile,
+            "name": destFile
+        }
     }
-    json_input["arguments"] = {"ids": [int(torrentId)], "path": srcFile, "name": destFile}
 
     rpc(url, json_input, sessionId)
 
@@ -100,17 +106,27 @@ def removeTransmissionRemote(url: str, sessionId, regKeyword: str, episode: int)
             res = rpc(url, payload, sessionId)
             logging.info(f'tvshow 이전 에피소드를 Transmission에서 삭제했습니다. {torrent["name"]}')
 
-def rpc(url:str, payload, sessionId: str):
-    
-    headers = {'content-type': 'application/json'}
-    # {'X-Transmission-Session-Id': 'pI8na8XboVoe04bDOo1F0bVE5t89al766MJd3eWXa59kLYKp'}
-    headers.update({'X-Transmission-Session-Id': sessionId})
+def rpc(url:str, payload: dict, sessionId: str):
+    """지정된 URL에 RPC 호출을 합니다.
+
+    Args:
+        url: RPC 서비스의 URL입니다.
+        payload: RPC 호출의 페이로드입니다.
+        sessionId: RPC 호출의 세션 ID입니다.
+
+    return: result json
+
+    """
+    headers = {
+        'content-type': 'application/json',
+        'X-Transmission-Session-Id': sessionId,
+    }
 
     jsonObject = requests.post(url, data=json.dumps(payload), headers=headers).json()
 
     if jsonObject["result"] != "success":
         logging.error("error입니다. rpc response = \n", json.dumps(jsonObject, indent=4))
-
+    logging.debug(f"rpc result==> \n{json.dumps(jsonObject, indent=4)}")
     return jsonObject
 
 def getDownloadDir(url:str)->str:
@@ -121,18 +137,12 @@ def getDownloadDir(url:str)->str:
 		"method": "session-get"
     }
     res = rpc(url, payload, getSessionIdTransRpc(url))
-    download_dir = res["arguments"]["download-dir"]
-    logging.debug(f"다운로드 디렉토리를 구했어요.{download_dir}")
-    return download_dir
-
-def addMagnet(magnet: str, downloadPath: str, url: str):
-    """매그넷으로 바로 다운받기"""
-    logging.info(f"magnet을 추가합니다. {magnet}, download: [{downloadPath}]")
-    addMagnetTransmissionRemote(magnet, url, downloadPath, getSessionIdTransRpc(url))
+    downloadDir = res["arguments"]["download-dir"]
+    logging.debug(f"다운로드 디렉토리를 구했어요.{downloadDir}")
+    return downloadDir
 
 
-
-if __name__ == '__main__':
+def main():
     logging.debug(f'magnet 추가 시작.')
     parser = argparse.ArgumentParser()
     parser.add_argument("magnet", help="magnet")
@@ -142,4 +152,9 @@ if __name__ == '__main__':
     logging.debug(f'폴더: {args.downloadPath}')
     mySetting = setting.Setting()
     mySetting.transPass = args.transPass
-    addMagnet(args.magnet, args.downloadPath, mySetting.getRpcUrl())
+    logging.info(f"magnet을 추가합니다. {args.magnet}, download: [{args.downloadPath}]")
+    url = mySetting.getRpcUrl()
+    addMagnetTransmissionRemote(args.magnet, url, args.downloadPath, getSessionIdTransRpc(url))
+
+if __name__ == '__main__':
+    main()

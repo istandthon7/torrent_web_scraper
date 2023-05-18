@@ -1,4 +1,3 @@
-import json
 import unittest
 from unittest.mock import MagicMock, patch
 import rpc
@@ -44,18 +43,10 @@ class RpcTest(unittest.TestCase):
         mySetting.transPass = "5555"
         sessionId = rpc.getSessionIdTransRpc(mySetting.getRpcUrl())
         self.assertIsNone(sessionId)
-    
-    def create_patch(self, name):
-         patcher = patch(name)
-         thing = patcher.start()
-         self.addCleanup(patcher.stop)
-         return thing
-    
-    def test_rpc_다운로드_경로를_가져올수_있나(self):
-        mock_sessionId = self.create_patch('rpc.getSessionIdTransRpc')
-        mock_sessionId.return_value = "pI8na8XboVoe04bDOo1F0bVE5t89al766MJd3eWXa59kLYKp"
 
-        mock_rpc = self.create_patch('rpc.rpc')
+    @patch('rpc.rpc')
+    def test_rpc_다운로드_경로를_가져올수_있나(self, mock_rpc):
+
         download_dir = "/downloads_test"
         mock_rpc.return_value = {
             "arguments":{
@@ -68,19 +59,36 @@ class RpcTest(unittest.TestCase):
         logging.debug(f'download dir: {dir}')
         self.assertEqual(download_dir, dir)
 
-    def test_addMagnet(self):
-        mock_sessionId = self.create_patch('rpc.getSessionIdTransRpc')
-        mock_sessionId.return_value = "pI8na8XboVoe04bDOo1F0bVE5t89al766MJd3eWXa59kLYKp"
-        mock_requestPost = self.create_patch('requests.post')
+    @patch('rpc.getSessionIdTransRpc')
+    @patch('requests.post')
+    def test_addMagnet(self, mock_post, mock_get_session_id):
+        mock_get_session_id.return_value = 'mock_session_id'
         mockResponse = MagicMock()
-        mock_requestPost.return_value = mockResponse
+        mock_post.return_value = mockResponse
         mockResponse.status_code = 200
         mockResponse.json.return_value = {"result":"success"}
 
-        mySetting = setting.Setting()
-        mySetting.transPass = "testPassword"
         # 목업
-        rpc.addMagnet("magnet:?xt=urn:btih:65f8977142095868204447f7b16430c750bfaced", "", mySetting.getRpcUrl())
+        test_args = ["magnet:?xt=urn:btih:65f8977142095868204447f7b16430c750bfaced",
+                      '--downloadPath', 'test_download_path', '--transPass', 'test_trans_pass']
+        with patch('sys.argv', ['rpc.py'] + test_args):
+            rpc.main()
+
+    @patch('rpc.addMagnetTransmissionRemote')
+    @patch('rpc.getSessionIdTransRpc')
+    @patch('rpc.setting.Setting')
+    def test_add_magnet(self, mock_setting, mock_get_session_id, mock_add_magnet):
+        # Set up mock objects
+        mock_setting.return_value.getRpcUrl.return_value = 'mock_url'
+        mock_get_session_id.return_value = 'mock_session_id'
+        
+        # Call the main function with test arguments
+        test_args = ['test_magnet', '--downloadPath', 'test_download_path', '--transPass', 'test_trans_pass']
+        with patch('sys.argv', ['rpc.py'] + test_args):
+            rpc.main()
+        
+        # Check that the addMagnetTransmissionRemote function was called with the correct arguments
+        mock_add_magnet.assert_called_once_with('test_magnet', 'mock_url', 'test_download_path', 'mock_session_id')
 
 
 if __name__ == '__main__':  

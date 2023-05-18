@@ -63,7 +63,7 @@ class Setting:
         if transmissionSetting['port'] == 443:
             url += "s"
         url += "://"
-        if self.transPass is None:
+        if not self.transPass:
             self.transPass = transmissionSetting['pw']
         if len(transmissionSetting['id']) > 0:
             url += transmissionSetting['id']+":"+self.transPass+"@"
