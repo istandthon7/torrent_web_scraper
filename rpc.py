@@ -125,7 +125,8 @@ def rpc(url:str, payload: dict, sessionId: str):
     jsonObject = requests.post(url, data=json.dumps(payload), headers=headers).json()
 
     if jsonObject["result"] != "success":
-        logging.error("error입니다. rpc response = \n", json.dumps(jsonObject, indent=4))
+        logging.error(f"error입니다. rpc response ==>\n{json.dumps(jsonObject, indent=4)}")
+    logging.debug(f"rpc payload==> \n{json.dumps(payload, indent=4)}")
     logging.debug(f"rpc result==> \n{json.dumps(jsonObject, indent=4)}")
     return jsonObject
 
@@ -143,6 +144,7 @@ def getDownloadDir(url:str)->str:
 
 
 def main():
+    mySetting = setting.Setting()
     logging.debug(f'magnet 추가 시작.')
     parser = argparse.ArgumentParser()
     parser.add_argument("magnet", help="magnet")
@@ -150,7 +152,7 @@ def main():
     parser.add_argument("--transPass", help="트랜스미션 접속 비밀번호")
     args = parser.parse_args()
     logging.debug(f'폴더: {args.downloadPath}')
-    mySetting = setting.Setting()
+    
     mySetting.transPass = args.transPass
     logging.info(f"magnet을 추가합니다. {args.magnet}, download: [{args.downloadPath}]")
     url = mySetting.getRpcUrl()
