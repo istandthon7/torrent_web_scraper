@@ -89,7 +89,12 @@ class BoardScraperTest(unittest.TestCase):
         url = "https://xxxxxxx62.com/bbs/board.php?bo_table=netflix&wr_id="+str(id)+"&sca=%EB%84%B7%ED%94%8C%EB%A6%AD%EC%8A%A4"
         self.assertEqual(myBoardScraper.getID(url), id)
 
-    def test_getMagnet(self):
+    @patch('scraperHelpers.getResponse')
+    def test_getMagnet(self, mock_getResponse):
+        file_path = os.path.join(os.path.dirname(__file__), 'test_board.html')
+        with open(file_path, 'rb') as f:
+            mock_response = f.read()
+            mock_getResponse.return_value.read.return_value = mock_response
         mySetting = setting.Setting()
         site = mySetting.json["sites"][0]
         category = site["categories"][0]
@@ -97,6 +102,10 @@ class BoardScraperTest(unittest.TestCase):
         boardItems = myBoardScraper.getBoardItems(site["mainUrl"]+category["url"], 1
                         , category["title"]["tag"], category["title"]["class"], category["title"].get("selector"))
         boardItems = list(filter(lambda x: "예고편" not in x.title, boardItems))
+        file_path = os.path.join(os.path.dirname(__file__), 'test_magnet.html')
+        with open(file_path, 'rb') as f:
+            mock_response = f.read()
+            mock_getResponse.return_value.read.return_value = mock_response
         magnet = myBoardScraper.getMagnet(urllib.parse.urljoin(site["mainUrl"], boardItems[0].url))
 
         self.assertGreater(len(magnet), 0)
