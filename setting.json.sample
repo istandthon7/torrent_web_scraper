@@ -18,78 +18,32 @@
       "categories": [
         {
           "history": 0,
+          "number": 0,
           "name": "영화",
           "scrapPage": 3,
-          "url": "topic/index?category1=1",
+          "url": "torrent/mov.html",
           "title": {
-            "tag": "li",
-            "class": "tit"
+            "tag": "",
+            "class": "",
+            "selector": "ul.list-body > li.list-item > div.wr-subject"
           }
         },
         {
           "history": 0,
-          "name": "넷플릭스 영화",
+          "number": 0,
+          "name": "방송",
           "scrapPage": 3,
-          "url": "topic/index?category1=3&category2=14",
+          "url": "torrent/med.html",
           "title": {
-            "tag": "li",
-            "class": "tit"
-          }
-        },
-        {
-          "history": 0,
-          "name": "넷플릭스 시리즈",
-          "scrapPage": 3,
-          "url": "topic/index?category1=3&category2=15",
-          "title": {
-            "tag": "li",
-            "class": "tit"
-          }
-        },
-        {
-          "history": 0,
-          "name": "디플 영화",
-          "scrapPage": 3,
-          "url": "topic/index?category1=102&category2=103",
-          "title": {
-            "tag": "li",
-            "class": "tit"
-          }
-        },
-        {
-          "history": 0,
-          "name": "한국드라마",
-          "scrapPage": 3,
-          "url": "topic/index?category1=2&category2=13",
-          "title": {
-            "tag": "li",
-            "class": "tit"
-          }
-        },
-        {
-          "history": 0,
-          "name": "예능·오락",
-          "scrapPage": 3,
-          "url": "topic/index?category1=4&category2=16",
-          "title": {
-            "tag": "li",
-            "class": "tit"
-          }
-        },
-        {
-          "history": 0,
-          "name": "다큐·교양",
-          "scrapPage": 3,
-          "url": "topic/index?category1=4&category2=17",
-          "title": {
-            "tag": "li",
-            "class": "tit"
+            "tag": "",
+            "class": "",
+            "selector": "ul.list-body > li.list-item > div.wr-subject"
           }
         }
       ],
       "enable": true,
-      "mainUrl": "https://torrentbot82.com/",
-      "name": "토렌트봇"
+      "mainUrl": "https://torrentqq258.com/",
+      "name": "토렌트큐큐"
     }
   ],
   "torrentHistory":"torrentHistory.csv",

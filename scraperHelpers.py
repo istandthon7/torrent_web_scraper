@@ -1,4 +1,3 @@
-# 스크래핑에 사용하는 함수들
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError, URLError
 from bs4 import BeautifulSoup
@@ -19,13 +18,15 @@ def getSoup(url: str):
         return soup
     except Exception as e:
         print(f"Exception getSoup url: {url} , error: {str(e)}")
+    return None
 
-def getHtml(url: str)->str:
+def getHtml(url: str):
     try:
         time.sleep(random.randrange(1, 4))
         return getResponse(url).read().decode('utf-8','replace')
     except Exception as e:
         print("Exception getHtml url: "+url+" , error: " + str(e))
+    return None
 
 def getResponse(url):
     try:
