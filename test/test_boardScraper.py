@@ -1,10 +1,17 @@
+import os
 import unittest
 import boardScraper
 import setting
 import urllib.parse
+from unittest.mock import patch
 
 class BoardScraperTest(unittest.TestCase):
-    def test_getBoardList(self):
+    @patch('scraperHelpers.getResponse')
+    def test_getBoardList(self, mock_getResponse):
+        file_path = os.path.join(os.path.dirname(__file__), 'test_board.html')
+        with open(file_path, 'rb') as f:
+            mock_response = f.read()
+            mock_getResponse.return_value.read.return_value = mock_response
         mySetting = setting.Setting()
         site = mySetting.json["sites"][0]
         category = site["categories"][0]
@@ -17,8 +24,12 @@ class BoardScraperTest(unittest.TestCase):
         myBoardScraper = boardScraper.BoardScraper()
         boardItems = myBoardScraper.getBoardItems("test/test.html", 1, "div", "wr-subject", "")
         self.assertTrue(boardItems)
-
-    def test_첫번째_사이트_첫번째_카테고리_리스트받기(self):
+    @patch('scraperHelpers.getResponse')
+    def test_첫번째_사이트_첫번째_카테고리_리스트받기(self, mock_getResponse):
+        file_path = os.path.join(os.path.dirname(__file__), 'test_board.html')
+        with open(file_path, 'rb') as f:
+            mock_response = f.read()
+            mock_getResponse.return_value.read.return_value = mock_response
         # arrange
         mySetting = setting.Setting()
         site = mySetting.json["sites"][0]
