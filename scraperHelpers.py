@@ -38,12 +38,12 @@ def getResponse(url):
     except HTTPError as er:
         if er.code > 400:
             logging.error(f"사이트가 정상적으로 작동하지 않거나 사이트보안이 강화되었거나 url이 잘못되었습니다. 에러코드: {er.code}, url: {url}")
-            return;
         else:
             raise
     except URLError as er:
         logging.error(f"사이트 주소가 변경등으로 정상적으로 작동하지 않아요. 원인: {er.reason}, url: {url}")
-        return;
+    except ConnectionResetError as er:
+        logging.error(f"서버가 연결을 종료했습니다. 원인: {er.strerror}, url: {url}")
 
 def getSoupFromFile(filePath: str):
     try:
