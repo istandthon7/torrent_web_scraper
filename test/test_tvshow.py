@@ -68,5 +68,17 @@ class TvShowTest(unittest.TestCase):
         regKeyword = myTvShow.getRegKeyword("Star Trek Picard 720p x264")
         self.assertGreater(len(regKeyword), 0)
 
+    def test_getRegKeyword_exclude_keyword_is_empty_string(self):
+        myTvShow = TVShow()
+        myTvShow.json = {'title_list': [{"name": "Star Trek Picard", "option": "","option2":"", "exclude": "" }]}
+        regKeyword = myTvShow.getRegKeyword("Star Trek Picard exclude1")
+        self.assertGreater(len(regKeyword), 0)
+
+    def test_getRegKeyword_exclude_keyword2(self):
+        myTvShow = TVShow()
+        myTvShow.json = {'title_list': [{"name": "Star Trek Picard", "option": "","option2":"", "exclude": "exclude" },
+                                        {"name": "second title", "option": "","option2":"", "exclude": "" }]}
+        regKeyword = myTvShow.getRegKeyword("second title")
+        self.assertGreater(len(regKeyword), 0)
 if __name__ == '__main__':  
     unittest.main()

@@ -11,7 +11,7 @@ class TVShow(stringHelper.StringHelper):
 
     def getRegKeyword(self, boardTitle: str)->str:
         for tvShow in self.json['title_list']:
-            if 'exclude' in tvShow and self.IsContainAnyCommaSeparatedWordsInBoardTitle(tvShow['exclude'], boardTitle):
+            if 'exclude' in tvShow and tvShow['exclude'] and self.IsContainAnyCommaSeparatedWordsInBoardTitle(tvShow['exclude'], boardTitle):
                 logging.info(f"[{tvShow['name']}] 제외 키워드가 포함되어 있어요. [{tvShow['exclude']}]")
                 continue;
             if self.IsContainAllWordsInBoardTitle(tvShow['name'], boardTitle) is False:
