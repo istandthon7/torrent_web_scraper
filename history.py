@@ -1,35 +1,48 @@
-
+import datetime
 import os
 import csv
-import setting
+from tvshow import TVShow
 
-def checkMagnetHistory(csvFileName: str, magnet: str)->bool:
-    if not os.path.isfile(csvFileName):
-        return False
 
-    with open(csvFileName, 'r', encoding="utf-8") as f:
-        ff = csv.reader(f)
-        for row in ff:
-            if len(row) == 0:
-                continue;
+class MagnetHistory:
+    def __init__(self, historyFileName: str, failFileName: str):
+        self.failFileName = failFileName
+        self.historyFileName = historyFileName
+        self.data = []
+        if os.path.isfile(historyFileName):
+            with open(historyFileName, 'r', encoding="utf-8") as f:
+                ff = csv.reader(f)
+                for row in ff:
+                    if len(row) != 0:
+                        self.data.append(row)
+
+    def checkMagnetHistory(self, magnet: str) -> bool:
+        for row in self.data:
             if magnet == row[3]:
                 return True
-    return False
+        return False
 
-def addMagnetToHistory(mySetting: setting.Setting, siteName: str, boardTitle: str
-    , magnet: str, keyword: str)->None:
-    runtime = mySetting.runTime
-    magnetInfo = [runtime, siteName, boardTitle, magnet, keyword]
-    with open(mySetting.torrentHistoryPath, 'a', newline = '\n', encoding="utf-8") as f:
-        writer = csv.writer(f)
-        writer.writerow(magnetInfo)
-    f.close()
+    def addMagnetToHistory(self, siteName: str, boardTitle: str, magnet: str, keyword: str) -> None:
+        runtime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        magnetInfo = [runtime, siteName, boardTitle, magnet, keyword]
+        self.data.append(magnetInfo)
+        with open(self.historyFileName, 'a', newline='\n', encoding="utf-8") as f:
+            writer = csv.writer(f)
+            writer.writerow(magnetInfo)
 
-def addTorrentFailToFile(mySetting: setting.Setting, siteName: str, boardTitle: str
-    , boardUrl: str, keyword: str, downloadDir: str)->None:
-    runtime = mySetting.runTime
-    torrentFailInfo = [runtime, siteName, boardTitle, boardUrl, keyword, downloadDir]
-    with open(mySetting.torrentFailPath, 'a', newline = '\n', encoding="utf-8") as f:
-        writer = csv.writer(f)
-        writer.writerow(torrentFailInfo)
-    f.close()
+    def addTorrentFailToFile(self, siteName: str, boardTitle: str, boardUrl: str, keyword: str, downloadDir: str) -> None:
+        runtime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        torrentFailInfo = [runtime, siteName, boardTitle, boardUrl, keyword, downloadDir]
+        with open(self.failFileName, 'a', newline='\n', encoding="utf-8") as f:
+            writer = csv.writer(f)
+            writer.writerow(torrentFailInfo)
+
+    def checkSameEpisode(self, keyword: str, episodeNumber: int) -> bool:
+        if episodeNumber is None:
+            return False
+        for row in self.data:
+            if row[4] == keyword:
+                myTvShow = TVShow()
+                if myTvShow.getEpisodeNumber(row[2]) == episodeNumber:
+                    return True
+        return False

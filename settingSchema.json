@@ -11,6 +11,10 @@
         },
         "list": {
           "type": "string"
+        },
+        "checkEpisodeNubmer": {
+          "type":"boolean",
+          "default": false
         }
       },
       "required": [
