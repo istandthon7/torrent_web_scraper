@@ -31,6 +31,8 @@ if __name__ == '__main__':
     
     movieDownloadPath = mySetting.json["movie"]["download"]
     tvshowDownloadPath = mySetting.json["tvshow"]["download"]
+
+    magnetHistory = history.MagnetHistory(mySetting.torrentHistoryPath, mySetting.torrentFailPath)
         
     for siteIndex, site in enumerate(mySetting.json["sites"]):
         #Step 1.  test for access with main url
@@ -120,13 +122,13 @@ if __name__ == '__main__':
                             osHelper.appendPermisson(downloadPath, stat.S_IRWXU)
                             
                     if not magnet:
-                        history.addTorrentFailToFile(mySetting, site['name'], boardItem.title, boardItem.url, regKeyword, downloadPath)
+                        magnetHistory.addTorrentFailToFile(site['name'], boardItem.title, boardItem.url, regKeyword, downloadPath)
                         msg = f"매그넷 검색에 실패하였습니다. {regKeyword}  {boardItem.title} {boardItem.url}  {downloadPath}"
                         print(msg)
                         logging.error(msg)
                         continue;
                     #magnet was already downloaded.
-                    if history.checkMagnetHistory(mySetting.torrentHistoryPath, magnet):
+                    if magnetHistory.checkMagnetHistory(magnet):
                         logging.info(f'이미 다운로드 받은 파일입니다. {regKeyword}, {magnet}')
                         continue;
 
@@ -145,7 +147,7 @@ if __name__ == '__main__':
                     else:
                         rpc.removeTransmissionRemote(mySetting.getRpcUrl(), sessionId, regKeyword, boardItem.getEpisode())
                         
-                    history.addMagnetToHistory(mySetting, site['name'], boardItem.title, magnet, regKeyword)
+                    magnetHistory.addMagnetToHistory(site['name'], boardItem.title, magnet, regKeyword)
                     
                 # --> 현재 페이지의 게시물 검색 완료
                 # 필터링 한 후의 아이디가 필터링 전 아이디보다 더 크다면 다음 페이지는 갈 필요없음

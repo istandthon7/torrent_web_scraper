@@ -1,6 +1,5 @@
 import os
 import sys
-import datetime
 import json
 import logging
 
@@ -15,7 +14,6 @@ class Setting:
     configDirPath = currentPath + "/config/"
     settingPath = configDirPath + "setting.json"
 
-    runTime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     transmissionScriptDirPath = currentPath + "/transmission_script/"
     torrentDoneSHPath = transmissionScriptDirPath + "torrent_done.sh"
     renameSeasonTransmissionPYPath = transmissionScriptDirPath + "rename_season_transmission.py"
