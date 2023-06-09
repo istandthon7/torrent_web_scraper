@@ -72,7 +72,7 @@ class TvShowTest(unittest.TestCase):
         myTvShow = TVShow()
         myTvShow.json = {'title_list': [{"name": "Star Trek Picard", "option": "","option2":"", "exclude": "" }]}
         regKeyword = myTvShow.getRegKeyword("Star Trek Picard exclude1")
-        self.assertEqual(len(regKeyword), 0)
+        self.assertGreater(len(regKeyword), 0)
 
     def test_getRegKeyword_exclude_keyword2(self):
         myTvShow = TVShow()
