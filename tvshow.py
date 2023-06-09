@@ -1,12 +1,11 @@
 import json
 import stringHelper
-import setting
 import logging
+import re
 
 class TVShow(stringHelper.StringHelper):
-    def __init__(self, mySetting: setting.Setting):
-        self.fileName = mySetting.configDirPath + mySetting.json["tvshow"]["list"]
-        with open(self.fileName,"r", encoding='utf-8') as jsonFile:
+    def load(self, listFileName: str):
+        with open(listFileName,"r", encoding='utf-8') as jsonFile:
             self.json = json.load(jsonFile)
         jsonFile.close()
 
@@ -23,3 +22,10 @@ class TVShow(stringHelper.StringHelper):
                 continue
             return tvShow['name']
         return "" 
+
+    def getEpisodeNumber(self, boardTitle: str) -> int:
+        match = re.search(r'\.E(\d+)\.', boardTitle)
+        if match:
+            return int(match.group(1))
+        else:
+            return None

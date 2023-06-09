@@ -1,6 +1,8 @@
 import datetime
 import os
 import csv
+from tvshow import TVShow
+
 
 class MagnetHistory:
     def __init__(self, historyFileName: str, failFileName: str):
@@ -34,3 +36,13 @@ class MagnetHistory:
         with open(self.failFileName, 'a', newline='\n', encoding="utf-8") as f:
             writer = csv.writer(f)
             writer.writerow(torrentFailInfo)
+
+    def checkSameEpisode(self, keyword: str, episodeNumber: int) -> bool:
+        if episodeNumber is None:
+            return False
+        for row in self.data:
+            if row[4] == keyword:
+                myTvShow = TVShow()
+                if myTvShow.getEpisodeNumber(row[2]) == episodeNumber:
+                    return True
+        return False

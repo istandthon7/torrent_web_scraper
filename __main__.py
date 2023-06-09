@@ -18,7 +18,8 @@ if __name__ == '__main__':
 
     mySetting = setting.Setting()
     myMovie = movie.Movie(mySetting)
-    myTvShow = tvshow.TVShow(mySetting)
+    myTvShow = tvshow.TVShow()
+    myTvShow.load(mySetting.configDirPath + mySetting.json["tvshow"]["list"])
 
     logging.info(f'--------------------------------------------------------')
     logging.info('Started.')
@@ -124,13 +125,18 @@ if __name__ == '__main__':
                     if not magnet:
                         magnetHistory.addTorrentFailToFile(site['name'], boardItem.title, boardItem.url, regKeyword, downloadPath)
                         msg = f"매그넷 검색에 실패하였습니다. {regKeyword}  {boardItem.title} {boardItem.url}  {downloadPath}"
-                        print(msg)
                         logging.error(msg)
                         continue;
                     #magnet was already downloaded.
                     if magnetHistory.checkMagnetHistory(magnet):
                         logging.info(f'이미 다운로드 받은 파일입니다. {regKeyword}, {magnet}')
                         continue;
+
+                    if not "영화" in category['name'] and mySetting.json["tvshow"]["checkEpisodeNubmer"]:
+                        episodeNumber = myTvShow.getEpisodeNumber(boardItem.title)
+                        if magnetHistory.checkSameEpisode(regKeyword, episodeNumber):
+                            logging.info(f"이미 다운로드 받은 회차입니다. {regKeyword}, {boardItem.title}")
+                            continue;
 
                     sessionId = rpc.getSessionIdTransRpc(mySetting.getRpcUrl())
 
