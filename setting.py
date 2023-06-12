@@ -29,7 +29,6 @@ class Setting:
             self.loadJson()
             self.torrentHistoryPath = self.configDirPath + self.json["torrentHistory"]
             self.torrentFailPath = self.configDirPath + self.json["torrentFail"]
-            self.notiHistoryPath = self.configDirPath + self.json["notification"]["history"]
             # 로그 초기화
             loglevel = self.json["logging"]["logLevel"]
             #getattr(logging, loglevel.upper())

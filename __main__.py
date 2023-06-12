@@ -2,6 +2,7 @@
 
 import argparse
 import os
+from notification import Notification
 import setting
 import movie
 import tvshow
@@ -20,7 +21,8 @@ if __name__ == '__main__':
     myMovie = movie.Movie(mySetting)
     myTvShow = tvshow.TVShow()
     myTvShow.load(mySetting.configDirPath + mySetting.json["tvshow"]["list"])
-
+    myNoti = Notification(mySetting.json["notification"])
+    
     logging.info(f'--------------------------------------------------------')
     logging.info('Started.')
 
@@ -100,7 +102,7 @@ if __name__ == '__main__':
                         toSaveBoardNumber = boardItem.number
 
                     if not regKeyword:
-                        scraperHelpers.executeNotiScript(mySetting , site['name'], boardItem.title)
+                        myNoti.executeNotiScript(site['name'], boardItem.title)
                         continue;
 
                     logging.info(f'게시물을 검색하였습니다. {boardItem.title}')
