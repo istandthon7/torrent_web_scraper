@@ -27,15 +27,14 @@ class Setting:
     def __init__(self) -> None:
         if os.path.isfile(self.settingPath):
             self.loadJson()
-            self.torrentHistoryPath = self.configDirPath + self.json["torrentHistory"]
-            self.torrentFailPath = self.configDirPath + self.json["torrentFail"]
+            
             # 로그 초기화
             loglevel = self.json["logging"]["logLevel"]
             #getattr(logging, loglevel.upper())
             numericLevel = getattr(logging, loglevel.upper(), None)
             if not isinstance(numericLevel, int):
                 raise ValueError('Invalid log level: %s' % loglevel)
-            logging.basicConfig(level=numericLevel, filename=self.json["logging"]["logFile"]
+            logging.basicConfig(level=numericLevel, filename=self.currentPath+"/"+self.json["logging"]["logFile"]
                 , format='%(asctime)s %(levelname)s:%(message)s')
 
     def loadJson(self)->None:
