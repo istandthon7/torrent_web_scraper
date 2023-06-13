@@ -11,7 +11,8 @@
     "titleScrap": {
       "ranking": 8,
       "url": "https://movie.daum.net/ranking/boxoffice/monthly"
-    }
+    },
+    "exclude":""
   },
   "sites": [
     {
@@ -42,7 +43,7 @@
         }
       ],
       "enable": true,
-      "mainUrl": "https://torrentqq260.com/",
+      "mainUrl": "https://torrentqq261.com/",
       "name": "토렌트큐큐"
     }
   ],

@@ -34,7 +34,9 @@ class Movie(stringHelper.StringHelper):
             if searchKeyword == "":
                 continue
             searchKeyword = searchKeyword.replace(":", " ")
-            
+            if 'exclude' in self.movieSetting and self.movieSetting['exclude'] and self.IsContainAnyCommaSeparatedWordsInBoardTitle(self.movieSetting['exclude'], boardTitle):
+                logging.info(f"[{keyword}] 제외 키워드가 포함되어 있어요. [{self.movieSetting['exclude']}]")
+                continue
             if not self.IsContainAllWordsInBoardTitle(searchKeyword, boardTitle):
                 logging.debug(f'Movie 키워드에 해당하지 않습니다.')
                 continue

@@ -141,6 +141,79 @@ class MovieTest(unittest.TestCase):
         self.assertFalse(myMovie.keywords)
         self.assertFalse(myMovie.keywords)
 
+    def test_getRegKeyword_exclude_keyword(self):
+        # arrange
+        mySetting = setting.Setting()
+        myMovie = movie.Movie(mySetting.configDirPath, mySetting.json['movie'])
+        boardTitle = "영화제목"
+        myMovie.keywords.append(boardTitle)
+        myMovie.movieSetting['exclude'] = "제외"
+
+        # action
+        result = myMovie.getRegKeyword(boardTitle + " 제외")
+
+        # assert
+        self.assertEqual(result, "")
+
+    def test_getRegKeyword_exclude_keywords(self):
+        # arrange
+        mySetting = setting.Setting()
+        myMovie = movie.Movie(mySetting.configDirPath, mySetting.json['movie'])
+        boardTitle = "영화제목"
+        myMovie.keywords.append(boardTitle)
+        myMovie.movieSetting['exclude'] = "제외, 너도"
+
+        # action
+        result = myMovie.getRegKeyword(boardTitle + " 너도")
+
+        # assert
+        self.assertEqual(result, "")
+
+    def test_getRegKeyword_exclude_keyword_not_contain(self):
+        # arrange
+        mySetting = setting.Setting()
+        myMovie = movie.Movie(mySetting.configDirPath, mySetting.json['movie'])
+        myMovie.movieSetting["resolution"] = 1080
+        myMovie.movieSetting["videoCodec"] = ''
+        movieTitle = "영화제목"
+        boardTitle = f"{movieTitle} 1080"
+        myMovie.keywords.append(movieTitle)
+        myMovie.movieSetting['exclude'] = "제외, 너도"
+
+        # action
+        result = myMovie.getRegKeyword(boardTitle)
+
+        # assert
+        self.assertEqual(result, movieTitle)
+
+    def test_getRegKeyword_exclude_keywords_space(self):
+        # arrange
+        mySetting = setting.Setting()
+        myMovie = movie.Movie(mySetting.configDirPath, mySetting.json['movie'])
+        boardTitle = "영화제목너도"
+        myMovie.keywords.append(boardTitle)
+        myMovie.movieSetting['exclude'] = "제외, 너도"
+
+        # action
+        result = myMovie.getRegKeyword(boardTitle)
+
+        # assert
+        self.assertEqual(result, "")
+
+    def test_getRegKeyword_exclude_keywords_space_word(self):
+        # arrange
+        mySetting = setting.Setting()
+        myMovie = movie.Movie(mySetting.configDirPath, mySetting.json['movie'])
+        boardTitle = "영화제목 너도"
+        myMovie.keywords.append(boardTitle)
+        myMovie.movieSetting['exclude'] = "제외, 너도"
+
+        # action
+        result = myMovie.getRegKeyword(boardTitle)
+
+        # assert
+        self.assertEqual(result, "")
+
 if __name__ == '__main__':  
     unittest.main()
     

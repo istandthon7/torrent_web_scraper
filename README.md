@@ -64,9 +64,11 @@ transmission의 비밀번호를 지정할 수 있습니다.
 
 
 # 변경이력
+## 2.2.03.1
+* 제외 키워드 추가(setting.json: movie)
 ## 2.2.03
-* 에피소드 체크 추가 (settin.json: tvshow의 checkEpisodeNubmer이 true인 경우에 작동)
-* 제외 키워드 추가
+* 에피소드 체크 추가 (setting.json: tvshow의 checkEpisodeNubmer이 true인 경우에 작동)
+* 제외 키워드 추가(TVShow.json)
 ## 2.2.02
 * requests 업그레이드(취약점은 Proxy-Authorization 헤더가 목적지 서버로 유출될 수 있는 문제)
 * 샘플 사이트 변경

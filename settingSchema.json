@@ -39,6 +39,11 @@
         "videoCodec": {
           "type": "string"
         },
+        "exclude": {
+          "type": "string",
+          "pattern": "^(\\s*\\w+\\s*,\\s*\\w+\\s*)|(\\s*\\w+\\s*)$",
+          "description": "제외, 단어, 쉼표로, 구분"
+        },
         "titleScrap": {
           "type": "object",
           "properties": {
