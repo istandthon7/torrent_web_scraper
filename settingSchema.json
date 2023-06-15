@@ -220,13 +220,16 @@
             },
             "selector": {
               "type": "string",
-              "examples":["ul.customer_table > li > ul > li.tit", "table.list-pc > tbody > tr > td.list-subject"
+              "description": "a tag 위까지",
+              "examples":[
+                "ul.customer_table > li > ul > li.tit", "table.list-pc > tbody > tr > td.list-subject"
                 , "ul.list-body > li.list-item > div.wr-subject", "table > tbody > tr > td.td_subject"
                 , "div.flex-row > div.content-center > div.py-2", "ul.page-list > li > div.flex-row > div.flex-col"
                 , "ul.page-list > li > div.flex-row > div.flex-grow", "ul.page-list > li > div.flex-grow"
                 , "div.list-item > div.media-body", "ul.tables_td > li.pa_subject > div.pa_conn"
                 , "div.list-container > div.list-row > div.list-item > strong", "table > tbody > tr > td.td_subject > div.bo_tit"
                 , "div.px-2 > div.topic-item > div.px-2", "div.flex-grow > div.topic-item > div.px-2"
+                , "#fboardlist > div.list-webzine > div > div > div.media-body > h2"
               ]
             }
           }

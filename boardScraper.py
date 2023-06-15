@@ -107,9 +107,10 @@ class BoardScraper():
         if match:
             return int(match.group(1))
 
-        match = re.search(r"([0-9]){6,}", url)
+        match = re.search(r"[/]([0-9]+)[.]html", url)
         if match:
-            return int(match.group())
+            return int(match.group(1))
+
         return -1
 
     def GetBoardItem(self, aTag: bs4.element.Tag, boardNumber: int) -> BoardItem:
