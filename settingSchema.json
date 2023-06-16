@@ -230,6 +230,7 @@
                 , "div.list-container > div.list-row > div.list-item > strong", "table > tbody > tr > td.td_subject > div.bo_tit"
                 , "div.px-2 > div.topic-item > div.px-2", "div.flex-grow > div.topic-item > div.px-2"
                 , "#fboardlist > div.list-webzine > div > div > div.media-body > h2"
+                , "#fboardlist > div.list-wrap > div.list-board > ul > li > div.wr-subject.ellipsis"
               ]
             }
           }
