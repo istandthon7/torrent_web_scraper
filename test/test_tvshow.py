@@ -80,5 +80,6 @@ class TvShowTest(unittest.TestCase):
                                         {"name": "second title", "option": "","option2":"", "exclude": "" }]}
         regKeyword = myTvShow.getRegKeyword("second title")
         self.assertGreater(len(regKeyword), 0)
+        
 if __name__ == '__main__':  
     unittest.main()

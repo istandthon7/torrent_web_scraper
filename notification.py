@@ -28,9 +28,9 @@ class Notification:
             if keyword in boardTitle:
                 if self.checkNotiHistory(boardTitle):
                     return False
-                cmd = self.notiSetting["cmd"]
-                cmd = cmd.replace("$board_title", f'[{siteName}]{boardTitle.replace("'", "`")}')
                 try:
+                    cmd = self.notiSetting["cmd"]
+                    cmd = cmd.replace("$board_title", "[" + siteName + "]" + boardTitle.replace("'", "`"))
                     # check가 참이고, 프로세스가 0이 아닌 종료 코드로 종료되면, CalledProcessError 예외가 발생합니다.
                     subprocess.run(cmd, shell=True, check=True)
                     self.addNotiHistory(siteName, boardTitle, keyword)
