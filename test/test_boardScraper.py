@@ -24,6 +24,7 @@ class BoardScraperTest(unittest.TestCase):
         myBoardScraper = boardScraper.BoardScraper()
         boardItems = myBoardScraper.getBoardItems("test/test.html", 1, "div", "wr-subject", "")
         self.assertTrue(boardItems)
+        
     @patch('scraperHelpers.getResponse')
     def test_첫번째_사이트_첫번째_카테고리_리스트받기(self, mock_getResponse):
         file_path = os.path.join(os.path.dirname(__file__), 'test_board.html')
@@ -61,13 +62,11 @@ class BoardScraperTest(unittest.TestCase):
         url = "https://xxx22.com/bbs/board.php?bo_table=torrent_movieko2&post_id="+str(id)
         self.assertEqual(myBoardScraper.getID(url), -1)
 
-
     def test_getID_id_로만_끝나는(self):
         myBoardScraper = boardScraper.BoardScraper()
         id = 999355
         url = "https://www.xxxxxxx89.top/view.php?b_id=tmovie&id="+str(id)
         self.assertEqual(myBoardScraper.getID(url), id)
-
 
     def test_getID_숫자_html(self):
         myBoardScraper = boardScraper.BoardScraper()
@@ -75,13 +74,17 @@ class BoardScraperTest(unittest.TestCase):
         url = "https://xxxx146.com/torrent/mov/"+str(id)+".html"
         self.assertEqual(myBoardScraper.getID(url), id)
 
-
     def test_getID_숫자(self):
         myBoardScraper = boardScraper.BoardScraper()
         id = 999365
         url = "https://xxxxxxxxx3333.com/komovie/"+str(id)
         self.assertEqual(myBoardScraper.getID(url), id)
 
+    def test_getID_숫자(self):
+        myBoardScraper = boardScraper.BoardScraper()
+        id = 2829
+        url = f"https://www.xxxx.com/movie/{str(id)}.html"
+        self.assertEqual(myBoardScraper.getID(url), id)
 
     def test_getID_wr_id_뒤에_더_있어(self):
         myBoardScraper = boardScraper.BoardScraper()

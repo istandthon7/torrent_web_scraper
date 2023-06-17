@@ -1,13 +1,9 @@
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError, URLError
 from bs4 import BeautifulSoup
-import subprocess
 import time
 import subprocess
-import csv
 import random
-import os
-import setting
 import ssl
 import logging
 
@@ -51,56 +47,3 @@ def getSoupFromFile(filePath: str):
         return soup
     except Exception as e:
         print("Exception getSoupFromFile path: "+filePath+" , error: " + str(e))
-
-
-def executeNotiScript(mySetting: setting.Setting, siteName: str, boardTitle: str)->bool:
-    """
-    스크립트를 실행했으면 true를 리턴하고
-    이미 실행한 경우나 실행하지 못한 경우는 false를 리턴한다.
-    """
-    notiSetting = mySetting.json["notification"]
-
-    if notiSetting == "":
-        return False
-
-    if notiSetting["cmd"] == "":
-        return False
-
-    for keyword in notiSetting["keywords"]:
-        
-        if keyword in boardTitle:
-            if checkNotiHistory(mySetting.notiHistoryPath, boardTitle):
-                return False
-            cmd = notiSetting["cmd"]
-            cmd = cmd.replace("$board_title", "["+siteName+"]" + boardTitle.replace("'", "`"))
-            try:
-                # check가 참이고, 프로세스가 0이 아닌 종료 코드로 종료되면, CalledProcessError 예외가 발생합니다.
-                subprocess.run(cmd, shell=True, check=True)
-
-            except Exception as e:
-                print("executeNotiScript error, message: "+str(e))
-                return False
-            else:
-                addNotiHistory(mySetting.notiHistoryPath, mySetting.runTime
-                                  , siteName, boardTitle, keyword)
-                return True
-
-def checkNotiHistory(csvFile: str, title: str)->bool:
-        if os.path.isfile(csvFile) is False:
-            return False
-
-        with open(csvFile, 'r', encoding="utf-8") as f:
-            ff = csv.reader(f)
-            for row in ff:
-                if title == row[2]:
-                    #print("\t\t-> magnet was already downloaded at
-                    #web_scraper_history.csv")
-                    return True
-        return False
-
-def addNotiHistory(csvFile: str, runtime: str, sitename: str, title: str, keyword: str)->None:
-    new = [runtime, sitename, title, keyword]
-    with open(csvFile, 'a', newline = '\n', encoding="utf-8") as f:
-        writer = csv.writer(f)
-        writer.writerow(new)
-    f.close()

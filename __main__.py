@@ -2,6 +2,7 @@
 
 import argparse
 import os
+from notification import Notification
 import setting
 import movie
 import tvshow
@@ -17,10 +18,11 @@ import rpc
 if __name__ == '__main__':
 
     mySetting = setting.Setting()
-    myMovie = movie.Movie(mySetting)
+    myMovie = movie.Movie(mySetting.configDirPath, mySetting.json['movie'])
     myTvShow = tvshow.TVShow()
     myTvShow.load(mySetting.configDirPath + mySetting.json["tvshow"]["list"])
-
+    myNoti = Notification(mySetting.json["notification"])
+    
     logging.info(f'--------------------------------------------------------')
     logging.info('Started.')
 
@@ -33,7 +35,9 @@ if __name__ == '__main__':
     movieDownloadPath = mySetting.json["movie"]["download"]
     tvshowDownloadPath = mySetting.json["tvshow"]["download"]
 
-    magnetHistory = history.MagnetHistory(mySetting.torrentHistoryPath, mySetting.torrentFailPath)
+    torrentHistoryPath = mySetting.configDirPath + mySetting.json["torrentHistory"]
+    torrentFailPath = mySetting.configDirPath + mySetting.json["torrentFail"]
+    magnetHistory = history.MagnetHistory(torrentHistoryPath, torrentFailPath)
         
     for siteIndex, site in enumerate(mySetting.json["sites"]):
         #Step 1.  test for access with main url
@@ -100,7 +104,7 @@ if __name__ == '__main__':
                         toSaveBoardNumber = boardItem.number
 
                     if not regKeyword:
-                        scraperHelpers.executeNotiScript(mySetting , site['name'], boardItem.title)
+                        myNoti.executeNotiScript(site['name'], boardItem.title)
                         continue;
 
                     logging.info(f'게시물을 검색하였습니다. {boardItem.title}')
@@ -148,7 +152,7 @@ if __name__ == '__main__':
                     rpc.addMagnetTransmissionRemote(magnet, mySetting.getRpcUrl(), downloadPath, sessionId)
                     logging.info(f'Transmission에 추가하였습니다. {regKeyword}, {magnet}, 폴더: [{downloadPath}]')
                     if "영화" in category['name']:
-                        myMovie.removeLineInMovie(regKeyword)
+                        myMovie.removeLineInMovieDotTxt(regKeyword)
                         logging.info(f'영화 리스트에서 삭제했습니다. {regKeyword}')
                     else:
                         rpc.removeTransmissionRemote(mySetting.getRpcUrl(), sessionId, regKeyword, boardItem.getEpisode())
