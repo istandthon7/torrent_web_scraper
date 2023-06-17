@@ -6,76 +6,86 @@ class MovieTest(unittest.TestCase):
     def test_getRegKeyword_대소문자_있으면(self):
         mySetting = setting.Setting()
         myMovie = movie.Movie(mySetting.configDirPath, mySetting.json['movie'])
-        myMovie.keywords.insert(0, "Title like this and that")
+        regKeywordOrg = "Title like this and that"
+        myMovie.keywords.insert(0, regKeywordOrg)
         regKeyword = myMovie.getRegKeyword("이런 저런 제목.Title like this and that,2022.1080p.KOR.FHDRip.H264.AAC.REEL")
-        self.assertGreater(len(regKeyword), 0)
+        self.assertEqual(regKeywordOrg, regKeyword)
 
     def test_getRegKeyword_소문자만_있으면(self):
         mySetting = setting.Setting()
         myMovie = movie.Movie(mySetting.configDirPath, mySetting.json['movie'])
-        myMovie.keywords.insert(0, "title like this and that")
+        regKeywordOrg = "title like this and that"
+        myMovie.keywords.insert(0, regKeywordOrg)
         regKeyword = myMovie.getRegKeyword("이런 저런 제목.Title like this and that,2022.1080p.KOR.FHDRip.H264.AAC.REEL")
-        self.assertGreater(len(regKeyword), 0)
+        self.assertEqual(regKeywordOrg, regKeyword)
 
     def test_getRegKeyword(self):
         mySetting = setting.Setting()
         myMovie = movie.Movie(mySetting.configDirPath, mySetting.json['movie'])
-        myMovie.keywords.insert(0, "이런 저런 제목 2022")
+        regKeywordOrg = "이런 저런 제목 2022"
+        myMovie.keywords.insert(0, regKeywordOrg)
         regKeyword = myMovie.getRegKeyword("이런 저런 제목.Title like this and that,2022.1080p.KOR.FHDRip.H264.AAC.REEL")
-        self.assertGreater(len(regKeyword), 0)
+        self.assertEqual(regKeywordOrg, regKeyword)
 
     def test_getRegKeyword_등록된것이_없으면(self):
         mySetting = setting.Setting()
         myMovie = movie.Movie(mySetting.configDirPath, mySetting.json['movie'])
-        myMovie.keywords.insert(0, "재미난 영화")
+        regKeywordOrg = "재미난 영화"
+        myMovie.keywords.insert(0, regKeywordOrg)
         regKeyword = myMovie.getRegKeyword("이런 저런 제목.Title like this and that,2022.1080p.KOR.FHDRip.H264.AAC.REEL")
-        self.assertEqual(len(regKeyword), 0)
+        self.assertEqual("", regKeyword)
         
     def test_getRegKeyword_년도가_없어도(self):
         mySetting = setting.Setting()
         myMovie = movie.Movie(mySetting.configDirPath, mySetting.json['movie'])
-        myMovie.keywords.insert(0, "이런 저런 제목")
+        regKeywordOrg = "이런 저런 제목"
+        myMovie.keywords.insert(0, regKeywordOrg)
         regKeyword = myMovie.getRegKeyword("이런 저런 제목.Title like this and that,2022.1080p.KOR.FHDRip.H264.AAC.REEL")
-        self.assertGreater(len(regKeyword), 0)
+        self.assertEqual(regKeywordOrg, regKeyword)
     
     def test_getRegKeyword_년도가_다르면(self):
         mySetting = setting.Setting()
         myMovie = movie.Movie(mySetting.configDirPath, mySetting.json['movie'])
-        myMovie.keywords.insert(0, "이런 저런 제목 2021")
+        regKeywordOrg = "이런 저런 제목 2021"
+        myMovie.keywords.insert(0, regKeywordOrg)
         regKeyword = myMovie.getRegKeyword("이런 저런 제목.Title like this and that,2022.1080p.KOR.FHDRip.H264.AAC.REEL")
-        self.assertEqual(len(regKeyword), 0)
+        self.assertEqual("", regKeyword)
 
     def test_getRegKeyword_해상도가_같으면(self):
         mySetting = setting.Setting()
         myMovie = movie.Movie(mySetting.configDirPath, mySetting.json['movie'])
         myMovie.movieSetting['resolution'] = 1080
-        myMovie.keywords.insert(0, "이런 저런 제목")
+        regKeywordOrg = "이런 저런 제목"
+        myMovie.keywords.insert(0, regKeywordOrg)
         regKeyword = myMovie.getRegKeyword("이런 저런 제목.Title like this and that,2022.1080p.KOR.FHDRip.H264.AAC.REEL")
-        self.assertGreater(len(regKeyword), 0)
+        self.assertEqual(regKeywordOrg, regKeyword)
 
     def test_getRegKeyword_해상도가_다르면(self):
         mySetting = setting.Setting()
         myMovie = movie.Movie(mySetting.configDirPath, mySetting.json['movie'])
         myMovie.movieSetting['resolution'] = 720
-        myMovie.keywords.insert(0, "이런 저런 제목")
+        regKeywordOrg = "이런 저런 제목"
+        myMovie.keywords.insert(0, regKeywordOrg)
         regKeyword = myMovie.getRegKeyword("이런 저런 제목.Title like this and that,2022.1080p.KOR.FHDRip.H264.AAC.REEL")
-        self.assertEqual(len(regKeyword), 0)
+        self.assertEqual("", regKeyword)
 
     def test_getRegKeyword_코덱이_같으면(self):
         mySetting = setting.Setting()
         myMovie = movie.Movie(mySetting.configDirPath, mySetting.json['movie'])
         myMovie.movieSetting['videoCodec'] = "264"
-        myMovie.keywords.insert(0, "이런 저런 제목")
+        regKeywordOrg = "이런 저런 제목"
+        myMovie.keywords.insert(0, regKeywordOrg)
         regKeyword = myMovie.getRegKeyword("이런 저런 제목.Title like this and that,2022.1080p.KOR.FHDRip.H264.AAC.REEL")
-        self.assertGreater(len(regKeyword), 0)
+        self.assertEqual(regKeywordOrg, regKeyword)
 
     def test_getRegKeyword_코덱이_다르면(self):
         mySetting = setting.Setting()
         myMovie = movie.Movie(mySetting.configDirPath, mySetting.json['movie'])
         myMovie.movieSetting['videoCodec'] = "265"
-        myMovie.keywords.insert(0, "이런 저런 제목")
+        regKeywordOrg = "이런 저런 제목"
+        myMovie.keywords.insert(0, regKeywordOrg)
         regKeyword = myMovie.getRegKeyword("이런 저런 제목.Title like this and that,2022.1080p.KOR.FHDRip.H264.AAC.REEL")
-        self.assertEqual(len(regKeyword), 0)
+        self.assertEqual("", regKeyword)
 
     def test_removeLineInMovie(self):
         # arrange
