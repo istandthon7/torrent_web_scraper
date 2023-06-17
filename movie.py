@@ -10,7 +10,8 @@ class Movie(stringHelper.StringHelper):
         self.listFileName = os.path.join(configDirPath, self.movieSetting['list'])
         if os.path.exists(self.listFileName):
             with open(self.listFileName, "r", encoding="utf-8") as f:
-                self.keywords = [line.rstrip("\r\n") for line in f if line.strip()]
+                self.keywords = [line.rstrip("\r\n") for line in f if line.strip() and line.rstrip("\r\n") != ""]
+
 
     def removeLineInMovieDotTxt(self, regKeyword: str) -> None:
         """Movie.txt에서 삭제하기"""
@@ -30,13 +31,14 @@ class Movie(stringHelper.StringHelper):
         게시판 제목에 등록된 키워드가 포함되어 있으면 키워드를 반환한다.
         등록되어 있지 않다면 빈문자열을 반환한다.
         """
-        filtered_keywords = filter(lambda keyword: keyword.rstrip("\r\n").replace(":", " ") != "", map(lambda keyword: keyword.lower(), self.keywords))
 
         if 'exclude' in self.movieSetting and self.movieSetting['exclude'] and self.IsContainAnyCommaSeparatedWordsInBoardTitle(self.movieSetting['exclude'], boardTitle):
             logging.info(f"[{boardTitle}] 제외 키워드가 포함되어 있어요. [{self.movieSetting['exclude']}]")
             return ""
-        for keyword in filtered_keywords:
-            if not self.IsContainAllWordsInBoardTitle(keyword, boardTitle):
+
+        for keyword in self.keywords:
+            searchKeyword = keyword.lower().replace(":", " ")
+            if not self.IsContainAllWordsInBoardTitle(searchKeyword, boardTitle):
                 logging.debug(f'Movie 키워드에 해당하지 않습니다.')
                 continue
             if not self.IsContainAllWordsInBoardTitle(str(self.movieSetting['resolution']), boardTitle):

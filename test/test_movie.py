@@ -139,7 +139,6 @@ class MovieTest(unittest.TestCase):
 
         # assert 
         self.assertFalse(myMovie.keywords)
-        self.assertFalse(myMovie.keywords)
 
     def test_getRegKeyword_exclude_keyword(self):
         # arrange
