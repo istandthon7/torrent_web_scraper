@@ -2,8 +2,8 @@ import argparse
 import json
 import logging
 import re
-import bs4
 from model.BoardItem import BoardItem
+
 import scraperHelpers
 import setting
 from urllib import parse
@@ -52,7 +52,9 @@ class BoardScraper():
                     boardNumber = child.text.strip()
                     break
             logging.debug(f"게시물 번호: {boardNumber}")
-            boardItem = self.GetBoardItem(aTag, int(boardNumber) if boardNumber else None)
+
+            boardItem = BoardItem()
+            boardItem.setItem(aTag, int(boardNumber) if boardNumber else None)
             if boardItem.id is None:
                 logging.info(f"게시물 아이디를 확인할 수 없습니다. title: {boardItem.title}")
             elif boardItem.id > 10:
@@ -65,50 +67,6 @@ class BoardScraper():
             return int(value)
         except ValueError:
             return ;
-
-    def getID(self, url: str)->int:
-        """게시물 아이디 파싱, url을 기반으로 wr_id text를 뒤의 id parsing"""
-        
-        match = re.search(r"wr_id=[^&?\n]+", url)
-        if match:
-            id = int(match.group().replace("wr_id=", ""))
-            logging.debug(f'[T1]게시물 아이디: {id}')
-            return id
-
-        match = re.search(r"[&?](id)=([0-9]+)", url)
-        if match:
-            id = int(match.group(2))
-            logging.debug(f'[T2]게시물 아이디: {id}')
-            return id
-
-        match = re.search(r"[/]([0-9]{6,})", url)
-        if match:
-            id = int(match.group(1))
-            logging.debug(f'[T3]게시물 아이디: {id}')
-            return id
-
-        match = re.search(r"[/]([0-9]+)[.]html", url)
-        if match:
-            id = int(match.group(1))
-            logging.debug(f'[T4]게시물 아이디: {id}')
-            return id
-        match = re.search(r"[/]([0-9]+)$", url)
-        if match:
-            id = int(match.group(1))
-            logging.debug(f'[T5]게시물 아이디: {id}')
-            return id
-        return -1
-
-    def GetBoardItem(self, aTag: bs4.element.Tag, boardNumber: int) -> BoardItem:
-        url = aTag.get('href')
-        if url is None:
-            id = -1
-        else:
-            id = self.getID(url)
-            if id == -1:
-                id = boardNumber
-        boardItem = BoardItem(re.sub(r'\s+', ' ', aTag.text).strip(), url, id, boardNumber)
-        return boardItem
 
     def getMagnet(self, url: str)->str:
         logging.debug(f'magnet을 검색합니다. url: {url}')
