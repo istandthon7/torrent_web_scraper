@@ -37,51 +37,26 @@ class BoardScraper():
             return [];
         results = []
         for title in titles:
-            aTag = title.a
+            aTags = [a for a in title.find_all('a') if len(a.text.strip()) >= 10]
+            aTag = aTags[-1] if aTags else None
             if not aTag:
+                logging.debug("게시물 제목을 찾을 수 없어요.")
                 continue
-            # category link
-            if len(aTag.text.strip()) < 8:
-                aTag = title.a.next_sibling
-                if not aTag:
-                    continue
-            if len(aTag.text.strip()) == 0 or aTag.get('href') == "#":
+            if aTag.get('href') == "#":
+                logging.debug("지원되지 않는 링크")
                 continue
             
-            parentContents = list(filter(lambda a: a != '\n', title.parent.contents))
-            numberString = parentContents[0].text.replace('\n', '')
-            if not numberString:
-                parentContents = list(filter(lambda a: a != '\n', title.parent.parent.contents))
-                numberString = parentContents[0].text.replace('\n', '')
-                if not numberString:
-                    parentContents = list(filter(lambda a: a != '\n', title.parent.parent.parent.contents))
-                    numberString = parentContents[0].text.replace('\n', '')
-            if numberString:
-                numberString = numberString.strip()
-                if numberString == "AD" or numberString == "광고" or numberString == "공지":
-                    continue
-                elif numberString.lower() == "new":
-                    logging.debug("게시물 번호가 NEW입니다.")
-                    boardNumber = 0
-                else:
-                    boardNumber = self.intTryParse(numberString)
-                    if not boardNumber:
-                        parentContents = list(filter(lambda a: a != '\n', title.parent.parent.contents))
-                        numberString = parentContents[0].text.replace('\n', '')
-                        if numberString:
-                            numberString = numberString.strip()
-                            boardNumber = self.intTryParse(numberString)
-                        if not boardNumber:
-                            logging.debug("게시물 번호를 찾을 수 없어요.2")
-                            boardNumber = 0
-            else:
-                logging.debug("게시물 번호를 찾을 수 없어요.")
-                boardNumber = 0
-            boardItem = self.GetBoardItem(aTag, int(boardNumber))
-            if boardItem.id > 10:
-                results.append(boardItem)
-            elif boardItem.id == -1:
+            boardNumber = None
+            for child in title.descendants:
+                if child.name and re.fullmatch(r'\d+', child.text.strip()):
+                    boardNumber = child.text.strip()
+                    break
+            logging.debug(f"게시물 번호: {boardNumber}")
+            boardItem = self.GetBoardItem(aTag, int(boardNumber) if boardNumber else None)
+            if boardItem.id is None:
                 logging.info(f"게시물 아이디를 확인할 수 없습니다. title: {boardItem.title}")
+            elif boardItem.id > 10:
+                results.append(boardItem)
 
         return results
  
@@ -92,25 +67,36 @@ class BoardScraper():
             return ;
 
     def getID(self, url: str)->int:
-        """게시판 아이디 파싱, url을 기반으로 wr_id text를 뒤의 id parsing"""
-        logging.debug(f'게시판 아이디를 구하려고 합니다. {url}')
+        """게시물 아이디 파싱, url을 기반으로 wr_id text를 뒤의 id parsing"""
         
         match = re.search(r"wr_id=[^&?\n]+", url)
         if match:
-            return int(match.group().replace("wr_id=", ""))
+            id = int(match.group().replace("wr_id=", ""))
+            logging.debug(f'[T1]게시물 아이디: {id}')
+            return id
 
         match = re.search(r"[&?](id)=([0-9]+)", url)
         if match:
-            return int(match.group(2))
+            id = int(match.group(2))
+            logging.debug(f'[T2]게시물 아이디: {id}')
+            return id
 
         match = re.search(r"[/]([0-9]{6,})", url)
         if match:
-            return int(match.group(1))
+            id = int(match.group(1))
+            logging.debug(f'[T3]게시물 아이디: {id}')
+            return id
 
         match = re.search(r"[/]([0-9]+)[.]html", url)
         if match:
-            return int(match.group(1))
-
+            id = int(match.group(1))
+            logging.debug(f'[T4]게시물 아이디: {id}')
+            return id
+        match = re.search(r"[/]([0-9]+)$", url)
+        if match:
+            id = int(match.group(1))
+            logging.debug(f'[T5]게시물 아이디: {id}')
+            return id
         return -1
 
     def GetBoardItem(self, aTag: bs4.element.Tag, boardNumber: int) -> BoardItem:
@@ -121,7 +107,7 @@ class BoardScraper():
             id = self.getID(url)
             if id == -1:
                 id = boardNumber
-        boardItem = BoardItem(aTag.text.replace('\n', '').replace('\r', '').strip(), url, id, boardNumber)
+        boardItem = BoardItem(re.sub(r'\s+', ' ', aTag.text).strip(), url, id, boardNumber)
         return boardItem
 
     def getMagnet(self, url: str)->str:

@@ -14,7 +14,7 @@ class TVShow(stringHelper.StringHelper):
                 logging.info(f"[{tvShow['name']}] 제외 키워드가 포함되어 있어요. [{tvShow['exclude']}]")
                 continue
             if not self.IsContainAllWordsInBoardTitle(tvShow['name'], boardTitle):
-                logging.debug(f'tvshow 키워드에 해당하지 않습니다.')
+                logging.debug(f'[{tvShow["name"]}] tvshow 키워드에 해당하지 않습니다. {boardTitle}')
                 continue
             if not self.IsContainAllWordsInBoardTitle(tvShow['option'], boardTitle):
                 logging.info(f"[{tvShow['name']}] option이 달라요. [{tvShow['option']}]")
