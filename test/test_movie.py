@@ -223,6 +223,20 @@ class MovieTest(unittest.TestCase):
         # assert
         self.assertEqual(result, "")
 
+    def test_getRegKeyword_exclude_keywords_endof_comma(self):
+        # arrange
+        mySetting = setting.Setting()
+        myMovie = movie.Movie(mySetting.configDirPath, mySetting.json['movie'])
+        boardTitle = "영화제목 너도"
+        myMovie.keywords.append(boardTitle)
+        myMovie.movieSetting['exclude'] = "제외, 너도,"
+
+        # action
+        result = myMovie.getRegKeyword(boardTitle)
+
+        # assert
+        self.assertEqual(result, "")
+
 if __name__ == '__main__':  
     unittest.main()
     
