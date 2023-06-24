@@ -64,5 +64,5 @@ class Setting:
         if len(transmissionSetting['id']) > 0:
             url += transmissionSetting['id']+":"+self.transPass+"@"
         url += transmissionSetting['host']+":"+str(transmissionSetting['port'])+"/transmission/rpc"
-        logging.debug(f"rpc url: {url}")
+        #logging.debug(f"rpc url: {url}")
         return url

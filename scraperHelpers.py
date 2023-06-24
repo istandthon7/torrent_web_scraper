@@ -46,4 +46,4 @@ def getSoupFromFile(filePath: str):
         soup = BeautifulSoup(open(filePath), "html.parser")
         return soup
     except Exception as e:
-        print("Exception getSoupFromFile path: "+filePath+" , error: " + str(e))
+        logging.error("Exception getSoupFromFile path: "+filePath+" , error: " + str(e))
