@@ -4,11 +4,10 @@ import tempfile
 import unittest
 import osHelper
 import stat
-import setting
 from pathlib import Path
 
 class OsHelperTest(unittest.TestCase):
-    """리눅스에서만 가능"""
+    """윈도우에서 테스트하지 않음"""
     def setUp(self):
         self.test_dir = tempfile.mkdtemp()
 
@@ -32,38 +31,54 @@ class OsHelperTest(unittest.TestCase):
         self.assertTrue(osHelper.isPermission(self.test_dir, stat.S_IRWXU))
 
     def test_폴더_퍼미션이_그룹_읽기쓰기_권한이_있는지_구하기(self):
-        # 폴더를 만들면 기본 755        
-        print(Path(self.test_dir).resolve())
-        mode = osHelper.getPermission(self.test_dir)
-        print(stat.filemode(mode))
-        self.assertTrue(osHelper.isPermission(self.test_dir, stat.S_IRGRP))
-        self.assertFalse(osHelper.isPermission(self.test_dir, stat.S_IWGRP))
-        self.assertFalse(osHelper.isPermission(self.test_dir, stat.S_IRGRP | stat.S_IWGRP))
-        self.assertFalse(osHelper.isPermission(self.test_dir, stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP))
-        self.assertFalse(osHelper.isPermission(self.test_dir, stat.S_IRWXG))
+        if os.name == 'nt':  # Windows
+            return
+        else:
+            # 폴더를 만들면 기본 755
+            dir = "dirtest2"
+            os.mkdir(dir)
+            print(Path(dir).resolve())
+            mode = osHelper.getPermission(dir)
+            print(stat.filemode(mode))
+            self.assertTrue(osHelper.isPermission(dir, stat.S_IRGRP))
+            self.assertFalse(osHelper.isPermission(dir, stat.S_IWGRP))
+            self.assertFalse(osHelper.isPermission(dir, stat.S_IRGRP | stat.S_IWGRP))
+            self.assertFalse(osHelper.isPermission(dir, stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP))
+            self.assertFalse(osHelper.isPermission(dir, stat.S_IRWXG))
 
     def test_폴더_퍼미션이_other_읽기실행_권한이_있는지_구하기(self):
-        print(Path(self.test_dir).resolve())
-        mode = osHelper.getPermission(self.test_dir)
+        if os.name == 'nt':  # Windows
+            return
+        dir = "dirtest"
+        os.mkdir(dir)
+        print(Path(dir).resolve())
+        mode = osHelper.getPermission(dir)
         print(stat.filemode(mode))
-        self.assertTrue(osHelper.isPermission(self.test_dir, stat.S_IROTH))
+        self.assertTrue(osHelper.isPermission(dir, stat.S_IROTH))
         #self.assertTrue(osHelper.isPermission(dir, stat.S_IWOTH))
-        self.assertTrue(osHelper.isPermission(self.test_dir, stat.S_IROTH | stat.S_IXOTH))
-        self.assertFalse(osHelper.isPermission(self.test_dir, stat.S_IWOTH))
+        self.assertTrue(osHelper.isPermission(dir, stat.S_IROTH | stat.S_IXOTH))
+        self.assertFalse(osHelper.isPermission(dir, stat.S_IWOTH))
+        shutil.rmtree(dir)
 
     def test_폴더_퍼미션이_전체권한이_없는지(self):
+        if os.name == 'nt':  # Windows
+            return
         print(Path(self.test_dir).resolve())
         mode = osHelper.getPermission(self.test_dir)
         print(stat.filemode(mode))
         self.assertFalse(osHelper.isPermission(self.test_dir, stat.S_IRWXO|stat.S_IRWXU|stat.S_IRWXG))
 
     def test_폴더_퍼미션이_other에_전체권한이_없는지(self):        
+        if os.name == 'nt':  # Windows
+            return
         print(Path(self.test_dir).resolve())
         mode = osHelper.getPermission(self.test_dir)
         print(stat.filemode(mode))
         self.assertFalse(osHelper.isPermission(self.test_dir, stat.S_IRWXO))
 
     def test_폴더_퍼미션이_group에_전체권한이_없는지(self):
+        if os.name == 'nt':  # Windows
+            return
         print(Path(self.test_dir).resolve())
         osHelper.removePermission(self.test_dir, stat.S_IWGRP)
         mode = osHelper.getPermission(self.test_dir)
@@ -71,6 +86,8 @@ class OsHelperTest(unittest.TestCase):
         self.assertFalse(osHelper.isPermission(self.test_dir, stat.S_IRWXG))
 
     def test_폴더_퍼미션이_other에_쓰기권한이_없는지(self):
+        if os.name == 'nt':  # Windows
+            return
         print(Path(self.test_dir).resolve())
         osHelper.removePermission(self.test_dir, stat.S_IWOTH)
         mode = osHelper.getPermission(self.test_dir)
@@ -78,6 +95,8 @@ class OsHelperTest(unittest.TestCase):
         self.assertFalse(osHelper.isPermission(self.test_dir, stat.S_IWOTH))
 
     def test_폴더_퍼미션이_user에_쓰기권한이_없는지(self):
+        if os.name == 'nt':  # Windows
+            return
         print(Path(self.test_dir).resolve())
         mode = osHelper.getPermission(self.test_dir)
         print(stat.filemode(mode))
@@ -87,6 +106,8 @@ class OsHelperTest(unittest.TestCase):
         self.assertFalse(osHelper.isPermission(self.test_dir, stat.S_IWUSR))
 
     def test_폴더_퍼미션이_group에_쓰기권한이_없는지(self):
+        if os.name == 'nt':  # Windows
+            return
         print(Path(self.test_dir).resolve())
         osHelper.removePermission(self.test_dir,stat.S_IWGRP)
         mode = osHelper.getPermission(self.test_dir)
