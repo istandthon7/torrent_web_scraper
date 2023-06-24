@@ -27,7 +27,7 @@
           "title": {
             "tag": "",
             "class": "",
-            "selector": "ul.list-body > li.list-item > div.wr-subject"
+            "selector": "ul.list-body > li.list-item"
           }
         },
         {
@@ -39,7 +39,7 @@
           "title": {
             "tag": "",
             "class": "",
-            "selector": "ul.list-body > li.list-item > div.wr-subject"
+            "selector": "ul.list-body > li.list-item"
           }
         }
       ],

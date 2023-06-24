@@ -167,9 +167,3 @@ class BoardScraperTest(unittest.TestCase):
         magnet = myBoardScraper.getMagnet(urllib.parse.urljoin(site["mainUrl"], boardItems[0].url))
 
         self.assertGreater(len(magnet), 0)
-
-    def test_getMagnet2(self):
-        myBoardScraper = boardScraper.BoardScraper()
-        magnet = myBoardScraper.getMagnet('https://torrentqq262.com/torrent/med/1113312.html')
-
-        self.assertGreater(len(magnet), 0)
