@@ -1,3 +1,4 @@
+import logging
 import os
 import unittest
 import boardScraper
@@ -50,6 +51,60 @@ class BoardScraperTest(unittest.TestCase):
         self.assertGreater(len(url), 0)
         self.assertGreater(id, 0)
 
+    def test_getBoardItems(self):
+        logging.basicConfig(level=logging.DEBUG)
+        file_path = os.path.join(os.path.dirname(__file__), 'board_q.html')
+        
+        # act
+        myBoardScraper = boardScraper.BoardScraper()
+        boardItems = myBoardScraper.getBoardItems(file_path, 1, "", "", "ul.list-body > li.list-item")
+        
+        # assert
+        title = boardItems[0].title
+        url = boardItems[0].url
+        id = boardItems[0].id
+        print(f"title: {title}, url: {url}, id: {id}")
+        self.assertEqual((title), "제목 하우스2.E04.230622.1080p.H264-F1RST.")
+        self.assertEqual((url), "https://qq22.com/torrent/med/1112811.html")
+        self.assertEqual(id, 1112811)
+        self.assertEqual(boardItems[0].number, 113553)
+
+    def test_getBoardItem2(self):
+        logging.basicConfig(level=logging.DEBUG)
+        file_path = os.path.join(os.path.dirname(__file__), 'board_q_type2.html')
+        
+        # act
+        myBoardScraper = boardScraper.BoardScraper()
+        boardItems = myBoardScraper.getBoardItems(file_path, 1, "", "", "ul.list-body > li.list-item")
+        
+        # assert
+        title = boardItems[0].title
+        url = boardItems[0].url
+        id = boardItems[0].id
+        print(f"title: {title}, url: {url}, id: {id}")
+        self.assertEqual((title), "제목은 찬가2.E02.230622.1080p.H264-F1RST")
+        self.assertEqual((url), "https://qq22.com/torrent/med/1112787.html")
+        self.assertEqual(id, 1112787)
+        self.assertEqual(boardItems[0].number, 113545)
+
+    def test_getBoardItems_ten(self):
+        logging.basicConfig(level=logging.DEBUG)
+        file_path = os.path.join(os.path.dirname(__file__), 'board_ten.html')
+        
+        # act
+        myBoardScraper = boardScraper.BoardScraper()
+        boardItems = myBoardScraper.getBoardItems(file_path, 1, "", "", "div.list-item")
+        
+        # assert
+        title = boardItems[0].title
+        url = boardItems[0].url
+        id = boardItems[0].id
+        print(f"title: {title}, url: {url}, id: {id}")
+        self.assertIn("칠일 Seven.Days.2000.KOREAN.1080p.BluRay.H264.AAC-VXT", title)
+        self.assertEqual((url), "https://www.ten12.com/bbs/board.php?bo_table=tmovie&wr_id=10078")
+        self.assertEqual(id, 10078)
+        self.assertIsNone(boardItems[0].number)
+
     def test_getID(self):
         myBoardScraper = boardScraper.BoardScraper()
         id = 999333
@@ -80,7 +135,7 @@ class BoardScraperTest(unittest.TestCase):
         url = "https://xxxxxxxxx3333.com/komovie/"+str(id)
         self.assertEqual(myBoardScraper.getID(url), id)
 
-    def test_getID_숫자(self):
+    def test_getID_숫자2(self):
         myBoardScraper = boardScraper.BoardScraper()
         id = 2829
         url = f"https://www.xxxx.com/movie/{str(id)}.html"
@@ -110,5 +165,11 @@ class BoardScraperTest(unittest.TestCase):
             mock_response = f.read()
             mock_getResponse.return_value.read.return_value = mock_response
         magnet = myBoardScraper.getMagnet(urllib.parse.urljoin(site["mainUrl"], boardItems[0].url))
+
+        self.assertGreater(len(magnet), 0)
+
+    def test_getMagnet2(self):
+        myBoardScraper = boardScraper.BoardScraper()
+        magnet = myBoardScraper.getMagnet('https://torrentqq262.com/torrent/med/1113312.html')
 
         self.assertGreater(len(magnet), 0)
