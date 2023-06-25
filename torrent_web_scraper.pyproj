@@ -20,7 +20,6 @@
     <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="config\Movie.txt" />
     <Content Include="requirements.txt" />
     <Content Include="test\board_q.html" />
     <Content Include="test\board_q_type2.html" />
@@ -28,8 +27,6 @@
     <Content Include="test\test.html" />
     <Content Include="test\test_board.html" />
     <Content Include="test\test_magnet.html" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="boardScraper.py" />
     <Compile Include="daumMovieTitleScraper.py" />
     <Compile Include="history.py" />
