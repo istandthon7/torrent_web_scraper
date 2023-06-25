@@ -3,7 +3,7 @@ import json
 import logging
 import re
 from model.BoardItem import BoardItem
-
+from typing import List
 import scraperHelpers
 import setting
 from urllib import parse
@@ -17,7 +17,7 @@ class BoardScraper():
         else:
             return url
 
-    def getBoardItems(self, urlOrFilePath: str, page: int, titleTag: str, titleClass: str, titleSelector: str)->list:
+    def getBoardItems(self, urlOrFilePath: str, page: int, titleTag: str, titleClass: str, titleSelector: str)->List[BoardItem]:
         """
         게시판에서 제목리스트 얻기
         """

@@ -1,6 +1,6 @@
 **실행 환경**  
 테스트 OS : 리눅스(우분투, 데비안, 라즈베리파이OS), 윈도우10, 윈도우11  
-실행 언어 : Python3.6이상  
+실행 언어 : Python3.8이상  
 토렌트 클라이언트: [Transmission](https://transmissionbt.com)
 
 # 1. 소개
@@ -65,6 +65,7 @@ transmission의 비밀번호를 지정할 수 있습니다.
 
 # 변경이력
 ## 2.2.04
+* Python3.6 지원 중단
 * 중분류가 있는 경우 스크랩이 누락되는 버그 수정
 ## 2.2.03.1
 * 제외 키워드 추가(setting.json: movie)
