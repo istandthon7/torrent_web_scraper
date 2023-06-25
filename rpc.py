@@ -99,7 +99,7 @@ def removeTransmissionRemote(url: str, sessionId, regKeyword: str, episode: int)
         # 에피소드를 파싱하기 위해 boardItem활용
         torrentItem = BoardItem()
         torrentItem.setTitle(torrent["name"])
-        if regKeyword in torrent["name"] and torrent["isFinished"] and torrentItem.episode()<episode:
+        if regKeyword in torrent["name"] and torrent["isFinished"] and torrentItem.episode<episode:
             payload = {
                 "method": "torrent-remove",
                 "arguments":{"ids":[torrent["id"]]}
