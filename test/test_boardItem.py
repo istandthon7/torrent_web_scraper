@@ -3,15 +3,6 @@ import unittest
 from model.BoardItem import BoardItem
 
 class BoardItemTest(unittest.TestCase):
-    def test_parseBoardItem(self):
-        boardItem = BoardItem()
-        boardItem.setTitle("우리는 세계사.E97.230505.720p-NEXT")
-        self.assertEqual(97, boardItem.episode)
-
-    def test_parseBoardItem2(self):
-        boardItem = BoardItem()
-        boardItem.setTitle("지구 세계여행 E09 1080p")
-        self.assertEqual(9, boardItem.episode)
 
     def test_getID(self):
         boardItem = BoardItem()

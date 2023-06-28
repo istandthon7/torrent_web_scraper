@@ -8,7 +8,6 @@ class BoardItem:
         self.url = url
         self.id = ID
         self.number = number
-        self.episode = 0
 
     def setItem(self, aTag: Tag, boardNumber: int):
         self.number = boardNumber
@@ -20,15 +19,6 @@ class BoardItem:
             if self.id == -1:
                 self.id = boardNumber
             self.title = re.sub(r'\s+', ' ', aTag.text).strip()
-    
-    def setTitle(self, title: str) -> int:
-        self.title = title
-        match = re.search(r'[Ee](\d+)', title, re.IGNORECASE)
-        if match:
-            self.episode = int(match.group(1))
-            logging.debug(f'에피소드 번호: {self.episode}')
-        else:
-            logging.debug('에피소드 번호를 찾을 수 없습니다')
     
     def setUrl(self, url: str):
         """Set the url of the BoardItem"""

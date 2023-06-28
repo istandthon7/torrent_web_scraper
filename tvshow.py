@@ -26,8 +26,10 @@ class TVShow(stringHelper.StringHelper):
         return "" 
 
     def getEpisodeNumber(self, boardTitle: str) -> int:
-        match = re.search(r'\.E(\d+)\.', boardTitle)
+        match = re.search(r'[\. ][Ee](\d+)[\. ]', boardTitle)
         if match:
-            return int(match.group(1))
-        else:
-            return None
+            episode = int(match.group(1))
+            logging.debug(f'에피소드 번호: {episode}')
+            return episode
+        logging.debug('에피소드 번호를 찾을 수 없습니다')
+        return None
