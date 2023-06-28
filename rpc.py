@@ -1,10 +1,11 @@
 import argparse
+import imp
 import json
 import logging
 import requests
 from bs4 import BeautifulSoup
 import setting
-from tvshow import TVShow
+import tvshow
 #from requests.auth import HTTPBasicAuth
 
 # https://github.com/transmission/transmission/blob/main/docs/rpc-spec.md
@@ -96,7 +97,7 @@ def removeTransmissionRemote(url: str, sessionId, regKeyword: str, episode: int)
     res = rpc(url, payload, sessionId)
 
     for torrent in res["arguments"]["torrents"]:
-        myTvShow = TVShow.TVShow()
+        myTvShow = tvshow.TVShow()
         episodeNumber = myTvShow.getEpisodeNumber(torrent["name"])
         if regKeyword in torrent["name"] and torrent["isFinished"] and episodeNumber<episode:
             payload = {
