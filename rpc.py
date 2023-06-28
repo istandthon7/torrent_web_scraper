@@ -3,8 +3,8 @@ import json
 import logging
 import requests
 from bs4 import BeautifulSoup
-from model.BoardItem import BoardItem
 import setting
+from tvshow import TVShow
 #from requests.auth import HTTPBasicAuth
 
 # https://github.com/transmission/transmission/blob/main/docs/rpc-spec.md
@@ -96,10 +96,9 @@ def removeTransmissionRemote(url: str, sessionId, regKeyword: str, episode: int)
     res = rpc(url, payload, sessionId)
 
     for torrent in res["arguments"]["torrents"]:
-        # 에피소드를 파싱하기 위해 boardItem활용
-        torrentItem = BoardItem()
-        torrentItem.setTitle(torrent["name"])
-        if regKeyword in torrent["name"] and torrent["isFinished"] and torrentItem.episode<episode:
+        myTvShow = TVShow.TVShow()
+        episodeNumber = myTvShow.getEpisodeNumber(torrent["name"])
+        if regKeyword in torrent["name"] and torrent["isFinished"] and episodeNumber<episode:
             payload = {
                 "method": "torrent-remove",
                 "arguments":{"ids":[torrent["id"]]}
