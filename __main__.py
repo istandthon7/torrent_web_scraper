@@ -45,15 +45,14 @@ if __name__ == '__main__':
             logging.info(f'[{site["name"]}] 비활성화되어 있습니다.')
             continue;
         logging.info(f'사이트 스크랩을 시작합니다. [{site["name"]}]')
+        
         response = scraperHelpers.getResponse(site["mainUrl"])
         if response is None:
             msg = f'[{site["name"]}] 접속할 수 없습니다. {site["mainUrl"]}'
             logging.critical(msg)
             print(msg, file=sys.stderr)
             continue;
-        if response.url != site["mainUrl"]:
-            logging.info(f'url이 변경되었네요. {site["mainUrl"]}->{response.url}')
-            site["mainUrl"] = response.url
+        site["mainUrl"] = scraperHelpers.getMainUrl(site["mainUrl"], response.url)
         isScrapFail = False
         myBoardScraper = boardScraper.BoardScraper()
         #Step 2.  Iterate categories for this site
