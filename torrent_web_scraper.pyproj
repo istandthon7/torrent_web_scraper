@@ -22,6 +22,7 @@
   <ItemGroup>
     <Content Include="README.md" />
     <Content Include="requirements.txt" />
+    <Content Include="settingSchema.json" />
     <Content Include="test\board_q.html" />
     <Content Include="test\board_q_type2.html" />
     <Content Include="test\board_ten.html" />

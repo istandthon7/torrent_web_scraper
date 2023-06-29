@@ -112,10 +112,12 @@ if __name__ == '__main__':
 
                     downloadPath = ""
                     if "영화" in category['name']:
-                        downloadPath += movieDownloadPath
+                        downloadPath = movieDownloadPath
                     else:
                         if len(tvshowDownloadPath) > 0:
-                            downloadPath += tvshowDownloadPath + "/" + regKeyword
+                            downloadPath = tvshowDownloadPath 
+                            if mySetting.json["tvshow"].get("createTitleFolder", False):
+                                downloadPath += "/" + regKeyword
                             if os.path.exists(downloadPath) is False:
                                 os.mkdir(downloadPath)
                                 logging.info(f'폴더를 만들었어요. {downloadPath}')
