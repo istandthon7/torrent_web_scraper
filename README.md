@@ -65,7 +65,9 @@ transmission의 비밀번호를 지정할 수 있습니다.
 
 # 변경이력
 ## 2.2.05
-* url 변경 버그(/home.php)
+* url 변경 버그. */home.php #43
+* "checkEpisodeNubmer"키가 생성되지 않는 버그 #37 upgrade시 발생할 수 있는 부분 수정
+* tvshow title 폴더생성 옵션 #35
 ## 2.2.04.1
 * 이전 회차 삭제되지 않는 버그 수정
 ## 2.2.04
