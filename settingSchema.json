@@ -13,8 +13,12 @@
           "type": "string"
         },
         "checkEpisodeNubmer": {
-          "type":"boolean",
+          "type": "boolean",
           "default": false
+        },
+        "createTitleFolder": {
+          "type": "boolean",
+          "default": true
         }
       },
       "required": [

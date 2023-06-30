@@ -1,8 +1,9 @@
+from http.client import HTTPResponse
+from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError, URLError
 from bs4 import BeautifulSoup
 import time
-import subprocess
 import random
 import ssl
 import logging
@@ -24,7 +25,7 @@ def getHtml(url: str):
         print("Exception getHtml url: "+url+" , error: " + str(e))
     return None
 
-def getResponse(url):
+def getResponse(url) -> HTTPResponse:
     try:
         request = Request(url, headers={"User-Agent": "Mozilla/5.0"})
         # python 3.6이상에서
@@ -47,3 +48,11 @@ def getSoupFromFile(filePath: str):
         return soup
     except Exception as e:
         logging.error("Exception getSoupFromFile path: "+filePath+" , error: " + str(e))
+
+def getMainUrl(url: str, responseUrl: str) -> str:
+    if responseUrl != url:
+        parsedUrl = urlparse(responseUrl)
+        mainDomain = f"https://{parsedUrl.netloc}/"
+        logging.info(f'url이 변경되었네요. {url}->{mainDomain}')
+        return mainDomain
+    return url
