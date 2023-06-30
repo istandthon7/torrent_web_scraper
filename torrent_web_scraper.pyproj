@@ -20,8 +20,10 @@
     <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="Movie.txt.sample" />
     <Content Include="README.md" />
     <Content Include="requirements.txt" />
+    <Content Include="setting.json.sample" />
     <Content Include="settingSchema.json" />
     <Content Include="test\board_q.html" />
     <Content Include="test\board_q_type2.html" />
@@ -60,6 +62,8 @@
     <Compile Include="transmission_script\setting.py" />
     <Compile Include="tvshow.py" />
     <Compile Include="__main__.py" />
+    <Content Include="torrent_done.sh.sample" />
+    <Content Include="TVShow.json.sample" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="config" />

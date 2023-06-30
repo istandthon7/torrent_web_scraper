@@ -1,8 +1,9 @@
 {
   "tvshow": {
     "download": "",
-    "list": "TVShow.json", 
-    "checkEpisodeNubmer": false
+    "list": "TVShow.json",
+    "checkEpisodeNubmer": false,
+    "createTitleFolder": true
   },
   "movie": {
     "download": "",
