@@ -2,15 +2,20 @@ import unittest
 from tvshow import TVShow
 
 class TvShowTest(unittest.TestCase): 
-    def test_parseBoardItem(self):
+    def test_getEpisodeNumber(self):
         myTvShow = TVShow()
         episode = myTvShow.getEpisodeNumber("우리는 세계사.E97.230505.720p-NEXT")
         self.assertEqual(97, episode)
 
-    def test_parseBoardItem2(self):
+    def test_getEpisodeNumber2(self):
         myTvShow = TVShow()
         episode = myTvShow.getEpisodeNumber("지구 세계여행 E09 1080p")
         self.assertEqual(9, episode)
+
+    def test_getEpisodeNumber3(self):
+        myTvShow = TVShow()
+        episode = myTvShow.getEpisodeNumber("화성오락실 S02E08.1080p.WEB-Sniper")
+        self.assertEqual(8, episode)
 
     def test_getRegKeyword_대소문자_있으면(self):
         myTvShow = TVShow()
