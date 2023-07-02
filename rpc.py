@@ -87,6 +87,8 @@ def renameFileTorrentRpc(url:str, torrentId, sessionId, srcFile: str, destFile: 
 def removeTransmissionRemote(url: str, sessionId, regKeyword: str, episode: int)->None:
     """ 상태가 Finished 이고 containName 인 토렌트 id를 구해서 삭제 (리스트에 남아있지 않도록 자동삭제되도록 하는
     기능이다.) """
+    if episode is None:
+            return
     payload = {
         "arguments":{
             "fields": ["id", "name", "isFinished"]
