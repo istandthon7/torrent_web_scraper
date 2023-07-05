@@ -137,11 +137,12 @@ if __name__ == '__main__':
                         logging.info(f'이미 다운로드 받은 파일입니다. {regKeyword}, {magnet}')
                         continue;
 
-                    if not "영화" in category['name'] and mySetting.json["tvshow"].get("checkEpisodeNubmer", False):
+                    if not "영화" in category['name']:
                         episodeNumber = myTvShow.getEpisodeNumber(boardItem.title)
-                        if magnetHistory.checkSameEpisode(regKeyword, episodeNumber):
-                            logging.info(f"이미 다운로드 받은 회차입니다. {regKeyword}, {boardItem.title}")
-                            continue;
+                        if mySetting.json["tvshow"].get("checkEpisodeNubmer", False):
+                            if magnetHistory.checkSameEpisode(regKeyword, episodeNumber):
+                                logging.info(f"이미 다운로드 받은 회차입니다. {regKeyword}, {boardItem.title}")
+                                continue;
 
                     sessionId = rpc.getSessionIdTransRpc(mySetting.getRpcUrl())
 
