@@ -64,6 +64,10 @@ transmission의 비밀번호를 지정할 수 있습니다.
 
 
 # 변경이력
+## 2.2.05.2
+* NameError: name 'episodeNumber' is not defined #53
+## 2.2.05.1
+* 에피소드 체크를 설정한 경우 스크랩이 중단되는 버그 #51
 ## 2.2.05
 * url 변경 버그. */home.php #43
 * "checkEpisodeNubmer"키가 생성되지 않는 버그 #37 upgrade시 발생할 수 있는 부분 수정

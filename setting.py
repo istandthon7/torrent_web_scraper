@@ -8,7 +8,7 @@ class Setting:
     설정파일을 self.json 로딩, 저장한다. 
     버전이 변경되면 self.version을 변경해야 한다.(소스에서 아직 참조하지 않으나 운영상 필요할 수있음)
     """
-    version = '2.2.05'
+    version = '2.2.05.2'
 
     currentPath = os.path.realpath(os.path.dirname(__file__))
     configDirPath = currentPath + "/config/"

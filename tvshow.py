@@ -21,8 +21,8 @@ class TVShow(keywords.Keywords):
                 continue
             return keyword
 
-    def getEpisodeNumber(self, boardTitle: str) -> int:
-        match = re.search(r'[\. ][Ee](\d+)[\. ]', boardTitle)
+    def getEpisodeNumber(self, boardTitle: str) -> Union[int, None]:
+        match = re.search(r'[\.\s][Ss]?\d*[Ee](\d+)', boardTitle)
         if match:
             episode = int(match.group(1))
             logging.debug(f'에피소드 번호: {episode}')

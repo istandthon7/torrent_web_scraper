@@ -24,6 +24,16 @@ class TvShowTest(unittest.TestCase):
         episode = self.myTvShow.getEpisodeNumber("지구 세계여행 E09 1080p")
         self.assertEqual(9, episode)
 
+    def test_getEpisodeNumber3(self):
+        myTvShow = TVShow()
+        episode = myTvShow.getEpisodeNumber("화성오락실 S02E08.1080p.WEB-Sniper")
+        self.assertEqual(8, episode)
+
+    def test_getEpisodeNumber4(self):
+        myTvShow = TVShow()
+        episode = myTvShow.getEpisodeNumber("화성오락실.E07-08.1080p.WEB-Sniper")
+        self.assertEqual(7, episode)
+
     def test_getRegKeyword_대소문자_있으면(self):
         self.myTvShow.json = {'keywords': [{"name": "My TVShow", "option": "720","option2":"264" }]}
         regKeyword = self.myTvShow.getRegKeyword("나의 티비쇼 시즌01 My TVShow S01 720p.KOR.HDRip.H264.AAC-RTM")
