@@ -34,6 +34,7 @@
     <Compile Include="boardScraper.py" />
     <Compile Include="daumMovieTitleScraper.py" />
     <Compile Include="history.py" />
+    <Compile Include="keywords.py" />
     <Compile Include="model\BoardItem.py" />
     <Compile Include="movie.py" />
     <Compile Include="movie_title_scraper.py" />

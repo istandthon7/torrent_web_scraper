@@ -1,12 +1,12 @@
 import os
 import unittest
-from history import MagnetHistory
+import history
 
 class TestMagnetHistory(unittest.TestCase):
     def setUp(self):
         self.csvFileName = 'test.csv'
         self.failFileName = 'fail.csv'
-        self.magnetHistory = MagnetHistory(self.csvFileName, self.failFileName)
+        self.magnetHistory = history.MagnetHistory(self.csvFileName, self.failFileName)
 
     def tearDown(self):
         if os.path.exists(self.csvFileName):
