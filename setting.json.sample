@@ -7,7 +7,7 @@
   },
   "movie": {
     "download": "",
-    "list": "Movie.txt",
+    "list": "Movie.json",
     "resolution": 1080,
     "videoCodec": "264",
     "titleScrap": {
@@ -45,7 +45,7 @@
         }
       ],
       "enable": true,
-      "mainUrl": "https://torrentqq263.com/",
+      "mainUrl": "https://torrentqq264.com/",
       "name": "토렌트큐큐"
     }
   ],
