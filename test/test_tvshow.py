@@ -25,13 +25,11 @@ class TvShowTest(unittest.TestCase):
         self.assertEqual(9, episode)
 
     def test_getEpisodeNumber3(self):
-        myTvShow = TVShow()
-        episode = myTvShow.getEpisodeNumber("화성오락실 S02E08.1080p.WEB-Sniper")
+        episode = self.myTvShow.getEpisodeNumber("화성오락실 S02E08.1080p.WEB-Sniper")
         self.assertEqual(8, episode)
 
     def test_getEpisodeNumber4(self):
-        myTvShow = TVShow()
-        episode = myTvShow.getEpisodeNumber("화성오락실.E07-08.1080p.WEB-Sniper")
+        episode = self.myTvShow.getEpisodeNumber("화성오락실.E07-08.1080p.WEB-Sniper")
         self.assertEqual(7, episode)
 
     def test_getRegKeyword_대소문자_있으면(self):
