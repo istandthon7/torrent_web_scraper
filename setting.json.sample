@@ -63,7 +63,6 @@
     "host": "127.0.0.1",
     "port": 9091,
     "id": "transmission",
-    "pw": "transmission",
     "puid": 1000,
     "pgid": 1000
   },

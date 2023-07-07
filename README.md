@@ -19,13 +19,12 @@
 설치가 완료되면 config디렉토리의 setting.json 파일을 자신의 환경에 맞게 수정해야 합니다.
 
 ## 1.2.1 transmission 접속정보 설정
-transmission과 통신할 호스트(아이피), 포트, 아이디와 패스워드를 지정합니다. 웹브라우저에서 http://[transmission이 실행중인 아이피]:9091로 접속을 확인해 보는 것이 좋습니다. 우분투, 데비안의 경우 트랜스미션 데몬의 기본값을 변경하지 않은 경우에는 아래 설정을 변경하지 않아도 됩니다. 비밀번호는 설정파일에 저장하지 않고 실행할 때 파라미터로 전달할 수 있습니다.
+transmission과 통신할 호스트(아이피), 포트, 아이디를 지정합니다. 웹브라우저에서 http://[transmission이 실행중인 아이피]:9091로 접속을 확인해 보는 것이 좋습니다. 우분투, 데비안의 경우 트랜스미션 데몬의 기본값을 변경하지 않은 경우에는 아래 설정을 변경하지 않아도 됩니다. 비밀번호는 설정파일에 저장하지 않고 실행할 때 파라미터로 전달할 수 있습니다.
 
     "transmission": {
         "host": "127.0.0.1",
         "port": 9091,
-        "id": "transmission",
-        "pw": "transmission"
+        "id": "transmission"
     }
 
 ## 1.2.2 토렌트 사이트 설정 
@@ -49,11 +48,7 @@ Movie.json 파일에 추가할 수 있습니다. 코덱과 해상도는 config/s
     }
 
 # 1.4 실행
-다음 명령어를 실행시키면 게시판을 읽어와서 TVShow.json와 Movie.txt에 등록한 키워드를 검색하여 transmission에 추가됩니다. 스크랩은 아주 느리게 작동됩니다. 
-
-    torrent_web_scraper$ python3 .
-
-transmission의 비밀번호를 지정할 수 있습니다. 
+다음 명령어를 실행하면 게시판에서 등록한 키워드를 검색하여 transmission에 추가됩니다. 스크랩은 아주 느리게 작동됩니다. 
 
     torrent_web_scraper$ python3 . --transPass 비밀번호
 
@@ -67,7 +62,8 @@ transmission의 비밀번호를 지정할 수 있습니다.
 
 # 변경이력
 ## 2.2.06
-* Movie.txt를 Movie.json으로 변경
+* Movie.txt를 Movie.json으로 변경 (이전 버전 사용자는 setting.json에서 변경해야 합니다.)
+* transmission 패스워드 제거
 ## 2.2.05.2
 * NameError: name 'episodeNumber' is not defined #53
 ## 2.2.05.1
