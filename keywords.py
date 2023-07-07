@@ -36,10 +36,10 @@ class Keywords(stringHelper.StringHelper):
         if not basePath:
             return ""
         downloadPath = basePath
-        if regKeyword['prefixDir']:
-            downloadPath = os.path.join(downloadPath, regKeyword['prefixDir'])
+        if regKeyword['parentDir']:
+            downloadPath = os.path.join(downloadPath, regKeyword['parentDir'])
         if createTitleFolder:
             downloadPath = os.path.join(downloadPath, regKeyword['name'])
-        if regKeyword['suffixDir']:
-            downloadPath = os.path.join(downloadPath, regKeyword['suffixDir'])
+        if regKeyword['subDir']:
+            downloadPath = os.path.join(downloadPath, regKeyword['subDir'])
         return downloadPath
