@@ -8,7 +8,7 @@ class Setting:
     설정파일을 self.json 로딩, 저장한다. 
     버전이 변경되면 self.version을 변경해야 한다.(소스에서 아직 참조하지 않으나 운영상 필요할 수있음)
     """
-    version = '2.2.05.2'
+    version = '2.2.06'
 
     currentPath = os.path.realpath(os.path.dirname(__file__))
     configDirPath = currentPath + "/config/"
@@ -20,7 +20,7 @@ class Setting:
     scraperLibraryPYPath = transmissionScriptDirPath + "scraperHelpers.py"
     settingPYPath = transmissionScriptDirPath + "setting.py"
 
-    transPass = None
+    transPass = ""
     json = json.dumps({})
     """설정정보를 가지는 json객체"""
 
@@ -59,8 +59,6 @@ class Setting:
         if transmissionSetting['port'] == 443:
             url += "s"
         url += "://"
-        if not self.transPass:
-            self.transPass = transmissionSetting['pw']
         if len(transmissionSetting['id']) > 0:
             url += transmissionSetting['id']+":"+self.transPass+"@"
         url += transmissionSetting['host']+":"+str(transmissionSetting['port'])+"/transmission/rpc"
