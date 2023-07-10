@@ -56,7 +56,7 @@ class BoardScraper():
             boardItem = BoardItem()
             boardItem.setItem(aTag, int(boardNumber) if boardNumber else None)
             if boardItem.id is None:
-                logging.info(f"게시물 아이디를 확인할 수 없습니다. title: {boardItem.title}")
+                logging.info(f"게시물 아이디를 확인할 수 없습니다. '{boardItem.title}''")
             elif boardItem.id > 10:
                 results.append(boardItem)
 

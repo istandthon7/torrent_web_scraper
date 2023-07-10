@@ -1,7 +1,7 @@
 import datetime
 import os
 import csv
-from tvshow import TVShow
+import tvshow
 
 
 class MagnetHistory:
@@ -42,7 +42,7 @@ class MagnetHistory:
             return False
         for row in self.data:
             if row[4] == keyword:
-                myTvShow = TVShow()
+                myTvShow = tvshow.TVShow()
                 if myTvShow.getEpisodeNumber(row[2]) == episodeNumber:
                     return True
         return False

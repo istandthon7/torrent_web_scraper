@@ -53,6 +53,7 @@ def getMainUrl(url: str, responseUrl: str) -> str:
     if responseUrl != url:
         parsedUrl = urlparse(responseUrl)
         mainDomain = f"https://{parsedUrl.netloc}/"
-        logging.info(f'url이 변경되었네요. {url}->{mainDomain}')
+        if mainDomain != url:
+            logging.info(f'url이 변경되었네요. [{url}]->[{mainDomain}]')
         return mainDomain
     return url

@@ -2,7 +2,7 @@
 
 import argparse
 import os
-from notification import Notification
+import notification
 import setting
 import movie
 import tvshow
@@ -18,10 +18,15 @@ import rpc
 if __name__ == '__main__':
 
     mySetting = setting.Setting()
-    myMovie = movie.Movie(mySetting.configDirPath, mySetting.json['movie'])
+    movieSetting = mySetting.json['movie']
+    tvSetting = mySetting.json["tvshow"]
+    transSetting = mySetting.json["transmission"]
+
+    myMovie = movie.Movie(movieSetting)
+    myMovie.load(os.path.join(mySetting.configDirPath, movieSetting['list']))
     myTvShow = tvshow.TVShow()
-    myTvShow.load(mySetting.configDirPath + mySetting.json["tvshow"]["list"])
-    myNoti = Notification(mySetting.json["notification"])
+    myTvShow.load(mySetting.configDirPath + tvSetting["list"])
+    myNoti = notification.Notification(mySetting.json["notification"])
     
     logging.info(f'--------------------------------------------------------')
     logging.info('Started.')
@@ -31,9 +36,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
     mySetting.transPass = args.transPass
     url = mySetting.getRpcUrl()
-    
-    movieDownloadPath = mySetting.json["movie"]["download"]
-    tvshowDownloadPath = mySetting.json["tvshow"]["download"]
 
     torrentHistoryPath = mySetting.configDirPath + mySetting.json["torrentHistory"]
     torrentFailPath = mySetting.configDirPath + mySetting.json["torrentFail"]
@@ -106,42 +108,39 @@ if __name__ == '__main__':
                         myNoti.executeNotiScript(site['name'], boardItem.title)
                         continue;
 
-                    logging.info(f'게시물을 검색하였습니다. {boardItem.title}')
+                    logging.info(f"게시물을 검색하였습니다. '{boardItem.title}'")
 
                     magnet = myBoardScraper.getMagnet(boardItem.url)
 
                     downloadPath = ""
                     if "영화" in category['name']:
-                        downloadPath = movieDownloadPath
+                        downloadPath = myMovie.getSavePath(regKeyword, movieSetting["download"], False)
                     else:
-                        if len(tvshowDownloadPath) > 0:
-                            downloadPath = tvshowDownloadPath 
-                            if mySetting.json["tvshow"].get("createTitleFolder", False):
-                                downloadPath += "/" + regKeyword
-                            if os.path.exists(downloadPath) is False:
-                                os.mkdir(downloadPath)
-                                logging.info(f'폴더를 만들었어요. {downloadPath}')
+                        downloadPath = myTvShow.getSavePath(regKeyword, tvSetting['download'], tvSetting.get("createTitleFolder", True))
                     if len(downloadPath) > 0:
-                        if osHelper.isOwner(downloadPath, mySetting.json["transmission"]["puid"], mySetting.json["transmission"]["pgid"]) is False:
-                            osHelper.changeOwner(downloadPath, mySetting.json["transmission"]["puid"], mySetting.json["transmission"]["pgid"])
-                        if osHelper.isPermission(downloadPath, stat.S_IRWXU) is False:
+                        if not os.path.exists(downloadPath):
+                            os.makedirs(downloadPath)
+                            logging.info(f'폴더를 만들었어요. [{downloadPath}]')
+                        if not osHelper.isOwner(downloadPath, transSetting["puid"], transSetting["pgid"]):
+                            osHelper.changeOwner(downloadPath, transSetting["puid"], transSetting["pgid"])
+                        if not osHelper.isPermission(downloadPath, stat.S_IRWXU):
                             osHelper.appendPermisson(downloadPath, stat.S_IRWXU)
                             
                     if not magnet:
-                        magnetHistory.addTorrentFailToFile(site['name'], boardItem.title, boardItem.url, regKeyword, downloadPath)
-                        msg = f"매그넷 검색에 실패하였습니다. {regKeyword}  {boardItem.title} {boardItem.url}  {downloadPath}"
+                        magnetHistory.addTorrentFailToFile(site['name'], boardItem.title, boardItem.url, regKeyword['name'], downloadPath)
+                        msg = f"매그넷 검색에 실패하였습니다. [{regKeyword['name']}]  '{boardItem.title}' {boardItem.url} 폴더: [{downloadPath}]"
                         logging.error(msg)
                         continue;
                     #magnet was already downloaded.
                     if magnetHistory.checkMagnetHistory(magnet):
-                        logging.info(f'이미 다운로드 받은 파일입니다. {regKeyword}, {magnet}')
+                        logging.info(f"이미 다운로드 받은 파일입니다. [{regKeyword['name']}] {magnet}")
                         continue;
 
                     if not "영화" in category['name']:
                         episodeNumber = myTvShow.getEpisodeNumber(boardItem.title)
-                        if mySetting.json["tvshow"].get("checkEpisodeNubmer", False):
-                            if magnetHistory.checkSameEpisode(regKeyword, episodeNumber):
-                                logging.info(f"이미 다운로드 받은 회차입니다. {regKeyword}, {boardItem.title}")
+                        if tvSetting.get("checkEpisodeNubmer", False):
+                            if magnetHistory.checkSameEpisode(regKeyword["name"], episodeNumber):
+                                logging.info(f"이미 다운로드 받은 회차입니다. [{regKeyword['name']}] '{boardItem.title}'")
                                 continue;
 
                     sessionId = rpc.getSessionIdTransRpc(mySetting.getRpcUrl())
@@ -152,14 +151,14 @@ if __name__ == '__main__':
                         print(msg, file=sys.stderr)
                         sys.exit()
                     rpc.addMagnetTransmissionRemote(magnet, mySetting.getRpcUrl(), downloadPath, sessionId)
-                    logging.info(f'Transmission에 추가하였습니다. {regKeyword}, {magnet}, 폴더: [{downloadPath}]')
+                    logging.info(f'Transmission에 추가하였습니다. [{regKeyword["name"]}] {magnet}, 폴더: [{downloadPath}]')
                     if "영화" in category['name']:
-                        myMovie.removeLineInMovieDotTxt(regKeyword)
-                        logging.info(f'영화 리스트에서 삭제했습니다. {regKeyword}')
+                        myMovie.removeKeyword(regKeyword["name"])
+                        logging.info(f"영화 리스트에서 삭제했습니다. [{regKeyword['name']}]")
                     else:
-                        rpc.removeTransmissionRemote(mySetting.getRpcUrl(), sessionId, regKeyword, episodeNumber)
+                        rpc.removeTransmissionRemote(mySetting.getRpcUrl(), sessionId, regKeyword["name"], episodeNumber)
                         
-                    magnetHistory.addMagnetToHistory(site['name'], boardItem.title, magnet, regKeyword)
+                    magnetHistory.addMagnetToHistory(site['name'], boardItem.title, magnet, regKeyword["name"])
                     
                 # --> 현재 페이지의 게시물 검색 완료
                 # 필터링 한 후의 아이디가 필터링 전 아이디보다 더 크다면 다음 페이지는 갈 필요없음
@@ -175,7 +174,7 @@ if __name__ == '__main__':
         # 스크랩을 완료하고 사이트 주소가 변경되었으면 변경.
         if isScrapFail == False and site["mainUrl"] != mySetting.json["sites"][siteIndex]["mainUrl"]:
             mySetting.json["sites"][siteIndex]["mainUrl"] = site["mainUrl"]
-            logging.info(f'url이 변경했어요. {site["mainUrl"]}')
+            logging.info(f'변경된 도메인을 저장했어요. {site["mainUrl"]}')
         #Step 4.  save json
         mySetting.saveJson()
         logging.info(f'설정파일을 저장했습니다.')

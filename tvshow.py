@@ -1,30 +1,25 @@
-import json
-from typing import Union
-import stringHelper
+import keywords
 import logging
 import re
+from typing import Union
 
-class TVShow(stringHelper.StringHelper):
-    def load(self, listFileName: str):
-        with open(listFileName,"r", encoding='utf-8') as jsonFile:
-            self.json = json.load(jsonFile)
+class TVShow(keywords.Keywords):
 
-    def getRegKeyword(self, boardTitle: str)->str:
-        for tvShow in self.json['title_list']:
-            if not self.IsContainAllWordsInBoardTitle(tvShow['name'], boardTitle):
-                logging.debug(f'[{tvShow["name"]}] tvshow 키워드에 해당하지 않습니다. {boardTitle}')
+    def getRegKeyword(self, boardTitle: str) -> Union[dict, None]:
+        for keyword in self.json['keywords']:
+            if not self.IsContainAllWordsInBoardTitle(keyword['name'], boardTitle):
+                logging.debug(f'[{keyword["name"]}] tvshow 키워드에 해당하지 않습니다. {boardTitle}')
                 continue
-            if 'exclude' in tvShow and tvShow['exclude'] and self.IsContainAnyCommaSeparatedWordsInBoardTitle(tvShow['exclude'], boardTitle):
-                logging.info(f"[{tvShow['name']}] 제외 키워드가 포함되어 있어요. [{tvShow['exclude']}]")
+            if 'exclude' in keyword and keyword['exclude'] and self.IsContainAnyCommaSeparatedWordsInBoardTitle(keyword['exclude'], boardTitle):
+                logging.info(f"[{keyword['name']}] 제외 키워드가 포함되어 있어요. [{keyword['exclude']}]")
                 continue
-            if not self.IsContainAllWordsInBoardTitle(tvShow['option'], boardTitle):
-                logging.info(f"[{tvShow['name']}] option이 달라요. [{tvShow['option']}]")
+            if not self.IsContainAllWordsInBoardTitle(keyword['option'], boardTitle):
+                logging.info(f"[{keyword['name']}] option이 달라요. [{keyword['option']}] '{boardTitle}'")
                 continue
-            if not self.IsContainAllWordsInBoardTitle(tvShow['option2'], boardTitle):
-                logging.info(f"[{tvShow['name']}] option2가 달라요. [{tvShow['option2']}]")
+            if not self.IsContainAllWordsInBoardTitle(keyword['option2'], boardTitle):
+                logging.info(f"[{keyword['name']}] option2가 달라요. [{keyword['option2']}] '{boardTitle}'")
                 continue
-            return tvShow['name']
-        return "" 
+            return keyword
 
     def getEpisodeNumber(self, boardTitle: str) -> Union[int, None]:
         match = re.search(r'[\.\s][Ss]?\d*[Ee](\d+)', boardTitle)

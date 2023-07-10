@@ -150,9 +150,6 @@
         "id": {
           "type": "string"
         },
-        "pw": {
-          "type": "string"
-        },
         "puid": {
           "type": "integer",
           "default": 1000

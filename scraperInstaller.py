@@ -38,7 +38,7 @@ class ScraperInstaller:
             print("\n\ntransmission 연결정보를 "+ self.mySetting.settingPath+"에 설정해주세요\n")
         self.mySetting.loadJson()
 
-        # Movie.txt
+        # Movie.json
         movieListPath = self.mySetting.configDirPath + self.mySetting.json['movie']['list']
         if self.copyConfigIfNotExist(movieListPath):
             print("다운로드할 영화를 "+movieListPath+"에 추가하세요.\n")

@@ -7,7 +7,7 @@
   },
   "movie": {
     "download": "",
-    "list": "Movie.txt",
+    "list": "Movie.json",
     "resolution": 1080,
     "videoCodec": "264",
     "titleScrap": {
@@ -45,7 +45,7 @@
         }
       ],
       "enable": true,
-      "mainUrl": "https://torrentqq263.com/",
+      "mainUrl": "https://torrentqq264.com/",
       "name": "토렌트큐큐"
     }
   ],
@@ -63,7 +63,6 @@
     "host": "127.0.0.1",
     "port": 9091,
     "id": "transmission",
-    "pw": "transmission",
     "puid": 1000,
     "pgid": 1000
   },
