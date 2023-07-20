@@ -12,8 +12,8 @@ export LC_ALL="ko_KR.UTF-8"
 
 log_file="/tmp/transmission.log"
 #다음 변수가 넘어온다.
-#TR_TORRENT_DIR="/media/tvshows/TV 동물농장"
-#TR_TORRENT_NAME="TV 동물농장.E912.190407.720p-NEXT.mp4"
+#TR_TORRENT_DIR="/media/tvshows/title"
+#TR_TORRENT_NAME="tvshow title.E912.190407.720p-NEXT.mp4"
 echo "download dir: $TR_TORRENT_DIR" >> $log_file
 echo "download name: $TR_TORRENT_NAME" >> $log_file
 echo "$0"
@@ -25,10 +25,5 @@ else
     #외부 스크립트 알림
 	echo "notification step 1" >> $log_file
 	/telegram.sh "transmission completed $TR_TORRENT_NAME"
-	if [[ "$TR_TORRENT_DIR" == *"tvshow"* ]]; then
-		cd /transmission_script && ./rename_season_transmission.py "$TR_TORRENT_NAME" >> $log_file
-
-		echo "notification step 2" >> $log_file
-	fi
 fi
 

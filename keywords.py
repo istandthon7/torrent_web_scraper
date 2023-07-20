@@ -34,12 +34,13 @@ class Keywords(stringHelper.StringHelper):
 
     def getSavePath(self, regKeyword: dict, basePath: str, createTitleFolder: bool) -> str:
         if not basePath:
+            logging.debug("basePath가 지정된 경우만 하위폴더를 생성합니다.")
             return ""
         downloadPath = basePath
-        if regKeyword['parentDir']:
+        if regKeyword.get('parentDir'):
             downloadPath = os.path.join(downloadPath, regKeyword['parentDir'])
         if createTitleFolder:
             downloadPath = os.path.join(downloadPath, regKeyword['name'])
-        if regKeyword['subDir']:
+        if regKeyword.get('subDir'):
             downloadPath = os.path.join(downloadPath, regKeyword['subDir'])
         return downloadPath

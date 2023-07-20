@@ -25,7 +25,7 @@ if __name__ == '__main__':
     myMovie = movie.Movie(movieSetting)
     myMovie.load(os.path.join(mySetting.configDirPath, movieSetting['list']))
     myTvShow = tvshow.TVShow()
-    myTvShow.load(mySetting.configDirPath + tvSetting["list"])
+    myTvShow.load(os.path.join(mySetting.configDirPath, tvSetting["list"]))
     myNoti = notification.Notification(mySetting.json["notification"])
     
     logging.info(f'--------------------------------------------------------')
@@ -37,8 +37,8 @@ if __name__ == '__main__':
     mySetting.transPass = args.transPass
     url = mySetting.getRpcUrl()
 
-    torrentHistoryPath = mySetting.configDirPath + mySetting.json["torrentHistory"]
-    torrentFailPath = mySetting.configDirPath + mySetting.json["torrentFail"]
+    torrentHistoryPath = os.path.join(mySetting.configDirPath, mySetting.json["torrentHistory"])
+    torrentFailPath = os.path.join(mySetting.configDirPath, mySetting.json["torrentFail"])
     magnetHistory = history.MagnetHistory(torrentHistoryPath, torrentFailPath)
         
     for siteIndex, site in enumerate(mySetting.json["sites"]):

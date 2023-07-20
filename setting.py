@@ -8,17 +8,14 @@ class Setting:
     설정파일을 self.json 로딩, 저장한다. 
     버전이 변경되면 self.version을 변경해야 한다.(소스에서 아직 참조하지 않으나 운영상 필요할 수있음)
     """
-    version = '2.2.06'
+    version = '2.2.06.1'
 
     currentPath = os.path.realpath(os.path.dirname(__file__))
-    configDirPath = currentPath + "/config/"
-    settingPath = configDirPath + "setting.json"
+    configDirPath = os.path.join(currentPath, "config")
+    settingPath = os.path.join(configDirPath, "setting.json")
 
-    transmissionScriptDirPath = currentPath + "/transmission_script/"
-    torrentDoneSHPath = transmissionScriptDirPath + "torrent_done.sh"
-    renameSeasonTransmissionPYPath = transmissionScriptDirPath + "rename_season_transmission.py"
-    scraperLibraryPYPath = transmissionScriptDirPath + "scraperHelpers.py"
-    settingPYPath = transmissionScriptDirPath + "setting.py"
+    transmissionScriptDirPath = os.path.join(currentPath, "transmission_script")
+    torrentDoneSHPath = os.path.join(transmissionScriptDirPath, "torrent_done.sh")
 
     transPass = ""
     json = json.dumps({})
@@ -34,20 +31,17 @@ class Setting:
             numericLevel = getattr(logging, loglevel.upper(), None)
             if not isinstance(numericLevel, int):
                 raise ValueError('Invalid log level: %s' % loglevel)
-            logging.basicConfig(level=numericLevel, filename=self.currentPath+"/"+self.json["logging"]["logFile"]
+            logging.basicConfig(level=numericLevel, filename=os.path.join(self.currentPath, self.json["logging"]["logFile"])
                 , format='%(asctime)s %(levelname)s:%(message)s')
 
     def loadJson(self)->None:
-        # try -> except -> else -> finally
         try:
-            settingText = open(self.settingPath, 'r', encoding='utf-8')
+            with open(self.settingPath, 'r', encoding='utf-8') as settingText:
+                self.json = json.load(settingText)
         except FileNotFoundError as e:
             print("설정파일("+self.settingPath+")이 없습니다. ./install.sh 를 실행한 후 변경사항을 적용하세요.")
             print(str(e))
             sys.exit()
-        else:
-            self.json = json.load(settingText)
-            settingText.close()
 
     def saveJson(self)->None:
         with open(self.settingPath, 'w', encoding='utf-8') as dataFile:
