@@ -61,6 +61,8 @@ Movie.json 파일에 추가할 수 있습니다. 코덱과 해상도는 config/s
 
 
 # 변경이력
+## 2.2.06.1
+* KeyError: 'parentDir' #57
 ## 2.2.06
 * Movie.txt를 Movie.json으로 변경 (이전 버전 사용자는 setting.json에서 변경해야 합니다.)
 * transmission 패스워드 제거
