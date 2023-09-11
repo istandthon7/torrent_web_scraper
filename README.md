@@ -62,7 +62,8 @@ Movie.json 파일에 추가할 수 있습니다. 코덱과 해상도는 config/s
 
 # 변경이력
 ## 2.2.06.2
-
+* "logFile": "scraper.log" 로 폴더 제거 #62
+* notiHistory파일 config 폴더에 생성 #61
 ## 2.2.06.1
 * KeyError: 'parentDir' #57
 ## 2.2.06
