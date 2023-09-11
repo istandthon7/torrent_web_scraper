@@ -45,7 +45,7 @@
         }
       ],
       "enable": true,
-      "mainUrl": "https://torrentqq266.com/",
+      "mainUrl": "https://torrentqq273.com/",
       "name": "토렌트큐큐"
     }
   ],
@@ -68,6 +68,6 @@
   },
   "logging": {
     "logLevel": "ERROR",
-    "logFile": "config/scraper.log"
+    "logFile": "scraper.log"
   }
 }

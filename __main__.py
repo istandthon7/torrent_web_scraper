@@ -26,7 +26,7 @@ if __name__ == '__main__':
     myMovie.load(os.path.join(mySetting.configDirPath, movieSetting['list']))
     myTvShow = tvshow.TVShow()
     myTvShow.load(os.path.join(mySetting.configDirPath, tvSetting["list"]))
-    myNoti = notification.Notification(mySetting.json["notification"])
+    myNoti = notification.Notification(mySetting.configDirPath, mySetting.json["notification"])
     
     logging.info(f'--------------------------------------------------------')
     logging.info('Started.')
