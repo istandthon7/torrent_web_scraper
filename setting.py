@@ -8,7 +8,7 @@ class Setting:
     설정파일을 self.json 로딩, 저장한다. 
     버전이 변경되면 self.version을 변경해야 한다.(소스에서 아직 참조하지 않으나 운영상 필요할 수있음)
     """
-    version = '2.2.06.1'
+    version = '2.2.06.2'
 
     currentPath = os.path.realpath(os.path.dirname(__file__))
     configDirPath = os.path.join(currentPath, "config")
@@ -31,7 +31,7 @@ class Setting:
             numericLevel = getattr(logging, loglevel.upper(), None)
             if not isinstance(numericLevel, int):
                 raise ValueError('Invalid log level: %s' % loglevel)
-            logging.basicConfig(level=numericLevel, filename=os.path.join(self.currentPath, self.json["logging"]["logFile"])
+            logging.basicConfig(level=numericLevel, filename=os.path.join(self.configDirPath, self.json["logging"]["logFile"])
                 , format='%(asctime)s %(levelname)s:%(message)s')
 
     def loadJson(self)->None:
