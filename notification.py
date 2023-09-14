@@ -6,9 +6,6 @@ import datetime
 from typing import List, Dict, Any
 
 # Constants
-HISTORY = "history"
-CMD = "cmd"
-KEYWORDS = "keywords"
 ENCODING = "utf-8"
 
 class Notification:
@@ -16,56 +13,52 @@ class Notification:
 
     def __init__(self, configDirPath: str, notiSetting: Dict[str, Any]):
         self.notiSetting = notiSetting  # mySetting.json["notification"]
-        self.historyFilePath = os.path.join(configDirPath, self.notiSetting[HISTORY])
+        self.historyFilePath = os.path.join(configDirPath, self.notiSetting["history"])
         if not os.path.isfile(self.historyFilePath):
             logging.error(f"File {self.historyFilePath} not found")
             return
         with open(self.historyFilePath, 'r', encoding=ENCODING) as f:
             self.notifications = list(csv.reader(f))
 
-    def executeNotiScript(self, siteName: str, boardTitle: str) -> bool:
+    def processNotification(self, siteName: str, boardTitle: str) -> bool:
         """
-        Execute the notification script.
-        If the script is executed, return True.
-        If the script has already been executed or cannot be executed, return False.
+        Process the notification.
+        If at least one notification is processed, return True.
+        If no notifications are processed, return False.
         """
-        if not self.isValidNotiSetting():
-            return False
-
-        for keyword in self.notiSetting[KEYWORDS]:
-            if keyword in boardTitle:
-                if self.checkNotiHistory(boardTitle):
-                    logging.debug(f"Already in the notification history. [{boardTitle}]")
-                    return False
-                try:
-                    cmd = self.notiSetting[CMD]
-                    cmd = cmd.replace("$board_title", "[" + siteName + "]" + boardTitle.replace("'", "`"))
-                    self.run_command(cmd)
-                    self.addNotiHistory(siteName, boardTitle, keyword)
-                    return True
-                except Exception as e:
-                    logging.error(f"Error executing notification script: {e}")
-        return False
-
-    def run_command(self, cmd: str) -> None:
-        """Run a command using subprocess."""
-        try:
-            subprocess.run(cmd, shell=True, check=True)
-            logging.debug(f"run_command: [{cmd}]")
-        except subprocess.CalledProcessError as e:
-            logging.error(f"Error running command: {e}")
-
-    def isValidNotiSetting(self) -> bool:
-        """Check if the notification settings are valid."""
         if not isinstance(self.notiSetting, dict):
             logging.error("Notification settings must be a dictionary.")
             return False
 
-        if self.notiSetting[CMD] is None or self.notiSetting[CMD] == "":
-            logging.error("Command for notification settings is missing.")
-            return False
+        notification_processed = False
+        for keyword in self.notiSetting["keywords"]:
+            if keyword in boardTitle:
+                if self.checkNotiHistory(boardTitle):
+                    logging.info(f"[{siteName}] Already in the notification history. [{boardTitle}]")
+                    continue
+                try:
+                    self.runNotiScript(siteName, boardTitle)
+                    self.addNotiHistory(siteName, boardTitle, keyword)
+                    notification_processed = True
+                except Exception as e:
+                    logging.error(f"Error processing notification for {siteName} and {boardTitle}: {e}")
 
-        return True
+        return notification_processed
+
+    def runNotiScript(self, siteName: str, boardTitle: str) -> int:
+        """Run the notification script and return the exit code."""
+        cmd = self.notiSetting["cmd"]
+        if cmd is not None and cmd != "":
+            cmd = cmd.replace("$board_title", "[" + siteName + "]" + boardTitle.replace("'", "`"))
+            try:
+                result = subprocess.run(cmd, shell=True, check=True)
+                logging.debug(f"run command: [{cmd}]")
+                return result.returncode
+            except subprocess.CalledProcessError as e:
+                logging.error(f"Command '{e.cmd}' returned non-zero exit status {e.returncode}.")
+        else:
+            logging.debug("Command for notification settings is missing.")
+            return 1  # Return a non-zero exit code to indicate an error
 
     def checkNotiHistory(self, title: str) -> bool:
         """Check if the given title is already in the notification history."""
