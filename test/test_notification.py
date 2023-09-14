@@ -2,6 +2,7 @@ import unittest
 import notification
 import setting
 import os
+from unittest.mock import patch
 
 class NotificationTest(unittest.TestCase):
 
@@ -16,17 +17,29 @@ class NotificationTest(unittest.TestCase):
     def tearDown(self):
         os.remove(self.notiSetting["history"])
 
-    def test_executeNotiScript_윈도우_키워드_없으면(self):
+    def test_processNotification_keyword_not_in_title(self):
         self.notiSetting["keywords"].insert(0, "왕밤빵")
         noti = notification.Notification(self.configDirPath, self.notiSetting)
-        self.assertFalse(noti.executeNotiScript("사이트명", "테스트 게시판 제목"))
+        with patch.object(noti, 'runNotiScript') as mocked_run:
+            result = noti.processNotification("사이트명", "테스트 게시판 제목")
+            self.assertFalse(result)
+            mocked_run.assert_not_called()
 
-    def test_executeNotiScript_윈도우_키워드_중복호출_안되나(self):
-        self.notiSetting["keywords"].insert(0, "테스트")
+    def test_processNotification_title_in_history(self):
+        self.notiSetting["keywords"].insert(0, "키워드")
         noti = notification.Notification(self.configDirPath, self.notiSetting)
-        noti.executeNotiScript("사이트명", "테스트 게시판 제목")
-        self.assertFalse(noti.executeNotiScript("사이트명", "테스트 게시판 제목"))
+        noti.notifications = [["2023-09-13 22:57:22", "사이트명", "테스트 게시판 제목 키워드", "키워드"]]
+        with patch.object(noti, 'runNotiScript') as mocked_run:
+            result = noti.processNotification("사이트명", "테스트 게시판 제목 키워드")
+            self.assertFalse(result)
+            mocked_run.assert_not_called()
 
+    def test_runNotiScript(self):
+        noti = notification.Notification(self.configDirPath, self.notiSetting)
+        with patch('subprocess.run') as mocked_run:
+            mocked_run.return_value.returncode = 0
+            result = noti.runNotiScript("사이트명", "테스트 게시판 제목")
+            self.assertEqual(result, 0)
 
 if __name__ == '__main__':
     unittest.main()
