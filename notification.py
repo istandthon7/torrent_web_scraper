@@ -4,6 +4,7 @@ import os
 import subprocess
 import datetime
 from typing import List, Dict, Any
+from model.BoardItem import BoardItem
 
 # Constants
 ENCODING = "utf-8"
@@ -20,7 +21,7 @@ class Notification:
         with open(self.historyFilePath, 'r', encoding=ENCODING) as f:
             self.notifications = list(csv.reader(f))
 
-    def processNotification(self, siteName: str, boardTitle: str) -> bool:
+    def processNotification(self, siteName: str, boardItem: BoardItem) -> bool:
         """
         Process the notification.
         If at least one notification is processed, return True.
@@ -32,16 +33,16 @@ class Notification:
 
         notification_processed = False
         for keyword in self.notiSetting["keywords"]:
-            if keyword in boardTitle:
-                if self.checkNotiHistory(boardTitle):
-                    logging.info(f"[{siteName}] Already in the notification history. [{boardTitle}]")
+            if keyword in boardItem.title:
+                if self.checkNotiHistory(boardItem.title):
+                    logging.info(f"[{siteName}] Already in the notification history. [{boardItem.title}]")
                     continue
                 try:
-                    self.runNotiScript(siteName, boardTitle)
-                    self.addNotiHistory(siteName, boardTitle, keyword)
+                    self.runNotiScript(siteName, boardItem.title)
+                    self.addNotiHistory(siteName, boardItem.title, keyword, boardItem.url)
                     notification_processed = True
                 except Exception as e:
-                    logging.error(f"Error processing notification for {siteName} and {boardTitle}: {e}")
+                    logging.error(f"Error processing notification for {siteName} and {boardItem.title}: {e}")
 
         return notification_processed
 
@@ -68,10 +69,10 @@ class Notification:
                 return True
         return False
 
-    def addNotiHistory(self, sitename: str, title: str, keyword: str) -> None:
+    def addNotiHistory(self, sitename: str, title: str, keyword: str, url: str) -> None:
         """Add a new entry to the notification history."""
         runtime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        new = [runtime, sitename, title, keyword]
+        new = [runtime, sitename, title, keyword, url]
         try:
             with open(self.historyFilePath, 'a', newline='\n', encoding=ENCODING) as f:
                 writer = csv.writer(f)

@@ -105,7 +105,7 @@ if __name__ == '__main__':
                         toSaveBoardNumber = boardItem.number
 
                     if not regKeyword:
-                        myNoti.processNotification(site['name'], boardItem.title)
+                        myNoti.processNotification(site['name'], boardItem)
                         continue;
 
                     logging.info(f"게시물을 검색하였습니다. '{boardItem.title}'")

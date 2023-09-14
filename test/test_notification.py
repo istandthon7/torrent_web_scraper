@@ -1,4 +1,5 @@
 import unittest
+from model.BoardItem import BoardItem
 import notification
 import setting
 import os
@@ -20,8 +21,9 @@ class NotificationTest(unittest.TestCase):
     def test_processNotification_keyword_not_in_title(self):
         self.notiSetting["keywords"].insert(0, "왕밤빵")
         noti = notification.Notification(self.configDirPath, self.notiSetting)
+        boardItem = BoardItem(title="테스트 게시판 제목")
         with patch.object(noti, 'runNotiScript') as mocked_run:
-            result = noti.processNotification("사이트명", "테스트 게시판 제목")
+            result = noti.processNotification("사이트명", boardItem)
             self.assertFalse(result)
             mocked_run.assert_not_called()
 
@@ -29,8 +31,9 @@ class NotificationTest(unittest.TestCase):
         self.notiSetting["keywords"].insert(0, "키워드")
         noti = notification.Notification(self.configDirPath, self.notiSetting)
         noti.notifications = [["2023-09-13 22:57:22", "사이트명", "테스트 게시판 제목 키워드", "키워드"]]
+        boardItem = BoardItem(title="테스트 게시판 제목 키워드")
         with patch.object(noti, 'runNotiScript') as mocked_run:
-            result = noti.processNotification("사이트명", "테스트 게시판 제목 키워드")
+            result = noti.processNotification("사이트명", boardItem)
             self.assertFalse(result)
             mocked_run.assert_not_called()
 
