@@ -68,6 +68,7 @@ __main__.py 폴더에서 다음 명령어를 실행하면 게시판에서 등록
 # 변경이력
 ## 2.3
 * qBittorrent 지원 #65 (setting.json파일 변경이 필요합니다. transmission -> torrentClient, owners)
+```
   "torrentClient": {
     "host": "",
     "port": 9091,
@@ -77,7 +78,8 @@ __main__.py 폴더에서 다음 명령어를 실행하면 게시판에서 등록
   "owners": {
     "puid": 1000,
     "pgid": 1000
-  },
+  }
+```
 ## 2.2.06.2
 * "logFile": "scraper.log" 로 폴더 제거 #62
 * notiHistory파일 config 폴더에 생성 #61
