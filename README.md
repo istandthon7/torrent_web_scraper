@@ -1,16 +1,20 @@
 **실행 환경**  
 테스트 OS : 리눅스(우분투, 데비안, 라즈베리파이OS), 윈도우10, 윈도우11  
 실행 언어 : Python3.8이상  
-토렌트 클라이언트: [Transmission](https://transmissionbt.com)
+토렌트 클라이언트: [Transmission](https://transmissionbt.com), [qBittorrent](https://www.qbittorrent.org/)
 
 # 1. 소개
 등록된 키워드로 게시판을 검색하여 토렌트(마그넷)를 추가 해주는 웹스크랩퍼(웹크롤러)입니다.
 
 # 1.1 설치
-## 1.1.1 transmission 설치
+## 1.1.1 토렌트 클라이언트 설치
+Transmission 혹은 qBittorrent를 설치합니다.
+### 1.1.1.1 transmission 설치 
 [https://transmissionbt.com](https://transmissionbt.com)에서 운영체제에 맞는 프로그램을 다운받아 설치합니다. 윈도우의 경우 transmission-daemon이 설치되도록 설치옵션을 변경해야 합니다.
+### 1.1.1.1 qBittorrent 설치 
+https://github.com/qbittorrent/qBittorrent/wiki/Installing-qBittorrent
 
-## 1.1.2 설치
+## 1.1.2 스크래퍼 설치
 소스를 다운로드 받은 후에 다음 스크립트를 실행합니다.
 
     $ ./install.sh
@@ -18,13 +22,14 @@
 # 1.2 설정
 설치가 완료되면 config디렉토리의 setting.json 파일을 환경에 맞게 수정해야 합니다.
 
-## 1.2.1 transmission 접속정보 설정
-transmission과 통신할 호스트(아이피), 포트, 아이디를 지정합니다. 웹브라우저에서 http://[transmission이 실행중인 아이피]:9091로 접속을 확인해 보는 것이 좋습니다. 우분투, 데비안의 경우 트랜스미션 데몬의 기본값을 변경하지 않은 경우에는 아래 설정을 변경하지 않아도 됩니다. 비밀번호는 설정파일에 저장하지 않고 실행할 때 파라미터로 전달할 수 있습니다.
+## 1.2.1 접속정보 설정
+토렌트 클라이언트와 통신할 호스트명(아이피), 포트, 아이디를 지정합니다. 
+Transmission은 웹브라우저에서 http://[transmission이 실행중인 아이피]:9091로 접속을 확인해 보는 것이 좋습니다. 우분투, 데비안의 경우 트랜스미션 데몬의 기본값을 변경하지 않은 경우에는 아래 설정을 변경하지 않아도 됩니다. 비밀번호는 설정파일에 저장하지 않으므로 실행할 때 파라미터로 전달할 수 있습니다.
 
-    "transmission": {
+    "torrentClient": {
         "host": "127.0.0.1",
-        "port": 9091,
-        "id": "transmission"
+        "port": 9091 혹은 8080,
+        "id": "transmission" 혹은 "admin"
     }
 
 ## 1.2.2 토렌트 사이트 설정 
@@ -48,9 +53,9 @@ Movie.json 파일에 추가할 수 있습니다. 코덱과 해상도는 config/s
     }
 
 # 1.4 실행
-다음 명령어를 실행하면 게시판에서 등록한 키워드를 검색하여 transmission에 추가됩니다. 스크랩은 아주 느리게 작동됩니다. 
+__main__.py 폴더에서 다음 명령어를 실행하면 게시판에서 등록한 키워드를 검색하여 토렌트 클라이언트에 추가됩니다. 스크랩은 아주 느리게 작동됩니다. 
 
-    torrent_web_scraper$ python3 . --transPass 비밀번호
+    $ python3 . --password 비밀번호
 
 # 1.5 스케줄러 등록
 주기적으로 실행하도록 cron 등의 스케줄러에 설정해서 스크랩을 실행할 수 있습니다.
@@ -61,6 +66,18 @@ Movie.json 파일에 추가할 수 있습니다. 코덱과 해상도는 config/s
 
 
 # 변경이력
+## 2.3
+* qBittorrent 지원 #65 (setting.json파일 변경이 필요합니다. transmission -> torrentClient, owners)
+  "torrentClient": {
+    "host": "",
+    "port": 9091,
+    "id": "client id",
+    "type": "transmission" or "qBittorrent"
+  },
+  "owners": {
+    "puid": 1000,
+    "pgid": 1000
+  },
 ## 2.2.06.2
 * "logFile": "scraper.log" 로 폴더 제거 #62
 * notiHistory파일 config 폴더에 생성 #61

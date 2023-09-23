@@ -1,4 +1,5 @@
 {
+  "$schema": "../settingSchema.json",
   "tvshow": {
     "download": "",
     "list": "TVShow.json",
@@ -45,7 +46,7 @@
         }
       ],
       "enable": true,
-      "mainUrl": "https://torrentqq273.com/",
+      "mainUrl": "https://torrentqq275.com/",
       "name": "토렌트큐큐"
     }
   ],
@@ -59,12 +60,15 @@
     ],
     "history":"notiHistory.csv"
   },
-  "transmission": {
+  "torrentClient": {
+    "type": "transmission",
     "host": "127.0.0.1",
     "port": 9091,
-    "id": "transmission",
-    "puid": 1000,
-    "pgid": 1000
+    "id": "transmission"
+  },
+  "owners": {
+    "uid": 1000,
+    "gid": 1000
   },
   "logging": {
     "logLevel": "ERROR",

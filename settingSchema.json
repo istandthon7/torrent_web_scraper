@@ -138,7 +138,7 @@
       "type": "string",
       "const": "torrentFail.csv"
     },
-    "transmission": {
+    "torrentClient": {
       "type": "object",
       "properties": {
         "host": {
@@ -150,6 +150,21 @@
         "id": {
           "type": "string"
         },
+        "type":{
+          "type":"string",
+          "enum": ["qBittorrent", "transmission"],
+          "default":"transmission"
+        }
+      },
+      "required": [
+        "host",
+        "port",
+        "id", "type"
+      ]
+    },
+    "owners":{
+      "type":"object",
+      "properties": {
         "puid": {
           "type": "integer",
           "default": 1000
@@ -158,12 +173,7 @@
           "type": "integer",
           "default": 1000
         }
-      },
-      "required": [
-        "host",
-        "port",
-        "id"
-      ]
+      }
     },
     "logging":{
       "type": "object",
@@ -180,7 +190,7 @@
       "required":["logLevel", "logFile"]
     }
   },
-  "required": ["tvshow", "movie", "sites", "transmission", "torrentHistory", "logging"],
+  "required": ["tvshow", "movie", "sites", "torrentClient", "torrentHistory", "logging"],
   "$defs":{
     "category": {
       "type": "object",

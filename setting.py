@@ -1,14 +1,15 @@
-import os
-import sys
 import json
 import logging
+import os
+import sys
+
 
 class Setting:
     """
     설정파일을 self.json 로딩, 저장한다. 
     버전이 변경되면 self.version을 변경해야 한다.(소스에서 아직 참조하지 않으나 운영상 필요할 수있음)
     """
-    version = '2.2.06.2'
+    version = '2.3'
 
     currentPath = os.path.realpath(os.path.dirname(__file__))
     configDirPath = os.path.join(currentPath, "config")
@@ -17,7 +18,6 @@ class Setting:
     transmissionScriptDirPath = os.path.join(currentPath, "transmission_script")
     torrentDoneSHPath = os.path.join(transmissionScriptDirPath, "torrent_done.sh")
 
-    transPass = ""
     json = json.dumps({})
     """설정정보를 가지는 json객체"""
 
@@ -46,15 +46,3 @@ class Setting:
     def saveJson(self)->None:
         with open(self.settingPath, 'w', encoding='utf-8') as dataFile:
             json.dump(self.json, dataFile, sort_keys = True, ensure_ascii=False, indent = 2)
-
-    def getRpcUrl(self)->str:
-        transmissionSetting = self.json['transmission']
-        url = "http"
-        if transmissionSetting['port'] == 443:
-            url += "s"
-        url += "://"
-        if len(transmissionSetting['id']) > 0:
-            url += transmissionSetting['id']+":"+self.transPass+"@"
-        url += transmissionSetting['host']+":"+str(transmissionSetting['port'])+"/transmission/rpc"
-        #logging.debug(f"rpc url: {url}")
-        return url

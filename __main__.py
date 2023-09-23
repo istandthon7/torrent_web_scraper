@@ -1,27 +1,27 @@
 #!/usr/bin/python3
 
 import argparse
-import os
-import notification
-import setting
-import movie
-import tvshow
 import logging
+import os
 import stat
 import sys
+
 import boardScraper
-import scraperHelpers
 import history
+import movie
+import notification
 import osHelper
-import rpc
+import scraperHelpers
+import setting
+import torrentClient
+import tvshow
 
 if __name__ == '__main__':
 
     mySetting = setting.Setting()
     movieSetting = mySetting.json['movie']
     tvSetting = mySetting.json["tvshow"]
-    transSetting = mySetting.json["transmission"]
-
+    
     myMovie = movie.Movie(movieSetting)
     myMovie.load(os.path.join(mySetting.configDirPath, movieSetting['list']))
     myTvShow = tvshow.TVShow()
@@ -33,9 +33,12 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--transPass", help="트랜스미션 접속 비밀번호")
+    parser.add_argument("--password", help="토렌트 클라이언트 접속 비밀번호")
     args = parser.parse_args()
-    mySetting.transPass = args.transPass
-    url = mySetting.getRpcUrl()
+
+    # 새로운 'password' 인자가 제공되었는지 확인합니다.
+    # 제공되지 않았다면 'transPass' 인자를 사용합니다.
+    pw = args.password if args.password is not None else args.transPass
 
     torrentHistoryPath = os.path.join(mySetting.configDirPath, mySetting.json["torrentHistory"])
     torrentFailPath = os.path.join(mySetting.configDirPath, mySetting.json["torrentFail"])
@@ -117,12 +120,13 @@ if __name__ == '__main__':
                         downloadPath = myMovie.getSavePath(regKeyword, movieSetting["download"], False)
                     else:
                         downloadPath = myTvShow.getSavePath(regKeyword, tvSetting['download'], tvSetting.get("createTitleFolder", True))
+                    ownersSetting = mySetting.json["owners"]
                     if len(downloadPath) > 0:
                         if not os.path.exists(downloadPath):
                             os.makedirs(downloadPath)
                             logging.info(f'폴더를 만들었어요. [{downloadPath}]')
-                        if not osHelper.isOwner(downloadPath, transSetting["puid"], transSetting["pgid"]):
-                            osHelper.changeOwner(downloadPath, transSetting["puid"], transSetting["pgid"])
+                        if not osHelper.isOwner(downloadPath, ownersSetting["puid"], ownersSetting["pgid"]):
+                            osHelper.changeOwner(downloadPath, ownersSetting["puid"], ownersSetting["pgid"])
                         if not osHelper.isPermission(downloadPath, stat.S_IRWXU):
                             osHelper.appendPermisson(downloadPath, stat.S_IRWXU)
                             
@@ -142,21 +146,23 @@ if __name__ == '__main__':
                             if magnetHistory.checkSameEpisode(regKeyword["name"], episodeNumber):
                                 logging.info(f"이미 다운로드 받은 회차입니다. [{regKeyword['name']}] '{boardItem.title}'")
                                 continue;
+                    clientSetting = mySetting.json["torrentClient"]
+                    if clientSetting["type"] == "transmission":
+                        client = torrentClient.TransmissionClient(clientSetting, pw)
+                        if client.headers['X-Transmission-Session-Id'] == None:
+                            sys.exit()
+                    elif clientSetting["type"] == "qBittorrent":
+                        client = torrentClient.QBittorrentClient(clientSetting, pw)
+                        if client.login() == False:
+                            sys.exit()
 
-                    sessionId = rpc.getSessionIdTransRpc(mySetting.getRpcUrl())
-
-                    if sessionId == None:
-                        msg = f'Transmission 세션아이디를 구하지 못했습니다. {url}'
-                        logging.critical(msg)
-                        print(msg, file=sys.stderr)
-                        sys.exit()
-                    rpc.addMagnetTransmissionRemote(magnet, mySetting.getRpcUrl(), downloadPath, sessionId)
+                    client.addTorrent(magnet, downloadPath)
                     logging.info(f'Transmission에 추가하였습니다. [{regKeyword["name"]}] {magnet}, 폴더: [{downloadPath}]')
                     if "영화" in category['name']:
                         myMovie.removeKeyword(regKeyword["name"])
                         logging.info(f"영화 리스트에서 삭제했습니다. [{regKeyword['name']}]")
                     else:
-                        rpc.removeTransmissionRemote(mySetting.getRpcUrl(), sessionId, regKeyword["name"], episodeNumber)
+                        client.deleteOlderEpisodes(regKeyword["name"], episodeNumber)
                         
                     magnetHistory.addMagnetToHistory(site['name'], boardItem.title, magnet, regKeyword["name"])
                     

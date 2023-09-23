@@ -1,8 +1,11 @@
 import argparse
-import os
 import logging
+import os
+import platform
 import stat
+
 import setting
+
 
 def appendPermisson(path:str, appendMode):
     '''appendMode(oct): stat.S_IRWXO|stat.S_IRWXU|stat.S_IRWXG'''
@@ -50,6 +53,8 @@ def addXToUser(path: str):
     os.chmod(path, st.st_mode | stat.S_IEXEC)
 
 def changeOwner(path: str, uid: int, gid: int):
+    if platform.system() == 'Windows':
+        return
     os.chown(path, uid, gid)
     logging.info(f'폴더 소유자를 변경했어요. {path}, puid: {uid}, pgid: {gid}')
 
