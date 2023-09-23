@@ -39,25 +39,33 @@ class TorrentClientTest(unittest.TestCase):
 
         mySetting = setting.Setting()
         client = torrentClient.TransmissionClient(mySetting.json["torrentClient"], "dummyPassword")
-        logging.debug(f'session id: {client.sessionId}')
-        self.assertEqual(sessionId, client.sessionId)
+        logging.debug(f"session id: {client.headers['X-Transmission-Session-Id']}")
+        self.assertEqual(sessionId, client.headers['X-Transmission-Session-Id'])
 
     @patch('torrentClient.requests.get')
-    def test_패스워드가_다르면(self, mock_get):
-        # mock the response
-        mock_response = MagicMock()
-        # Unauthorized
+    @patch.object(torrentClient.TransmissionClient, 'getRpcSessionId')
+    def test_패스워드가_다르면(self, mock_getRpcSessionId, mock_get):
+        # 가짜 응답을 설정합니다.
+        mock_response = mock_get.return_value
         mock_response.status_code = 401
         mock_response.text = ""
         mock_response.raise_for_status.side_effect = requests.exceptions.HTTPError()
-
-        # specify the return value of the get() method
-        mock_get.return_value = mock_response
-
-        mySetting = setting.Setting()
-        client = torrentClient.TransmissionClient(mySetting.json["torrentClient"], "5555")
         
-        self.assertIsNone(client.sessionId)
+        # 가짜 세션 ID를 설정합니다.
+        mock_getRpcSessionId.return_value = None
+        
+        # Transmission 설정
+        clientSetting = {
+            'id': 'dummy_id',  # 여기에 사용자 ID를 입력하세요.
+            'host': 'dummy_host',  # 여기에 호스트 주소를 입력하세요.
+            'port': 9091  # 여기에 포트 번호를 입력하세요.
+        }
+
+        # TransmissionClient 인스턴스 생성
+        client = torrentClient.TransmissionClient(clientSetting, "wrong_password")
+
+        # 세션 ID가 None인지 확인
+        self.assertIsNone(client.headers['X-Transmission-Session-Id'])
 
     @patch('torrentClient.TransmissionClient.addTorrent')
     @patch('torrentClient.TransmissionClient.getRpcSessionId')
