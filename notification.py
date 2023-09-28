@@ -15,11 +15,9 @@ class Notification:
     def __init__(self, configDirPath: str, notiSetting: Dict[str, Any]):
         self.notiSetting = notiSetting  # mySetting.json["notification"]
         self.historyFilePath = os.path.join(configDirPath, self.notiSetting["history"])
-        if not os.path.isfile(self.historyFilePath):
-            logging.error(f"File {self.historyFilePath} not found")
-            return
-        with open(self.historyFilePath, 'r', encoding=ENCODING) as f:
-            self.notifications = list(csv.reader(f))
+        if os.path.isfile(self.historyFilePath):
+            with open(self.historyFilePath, 'r', encoding=ENCODING) as f:
+                self.notifications = list(csv.reader(f))
 
     def processNotification(self, siteName: str, boardItem: BoardItem) -> bool:
         """
@@ -74,7 +72,7 @@ class Notification:
         runtime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         new = [runtime, sitename, title, keyword, url]
         try:
-            with open(self.historyFilePath, 'a', newline='\n', encoding=ENCODING) as f:
+            with open(self.historyFilePath, 'a', encoding=ENCODING) as f:
                 writer = csv.writer(f)
                 writer.writerow(new)
             self.notifications.append(new)

@@ -11,7 +11,7 @@
 Transmission 혹은 qBittorrent를 설치합니다.
 ### 1.1.1.1 transmission 설치 
 [https://transmissionbt.com](https://transmissionbt.com)에서 운영체제에 맞는 프로그램을 다운받아 설치합니다. 윈도우의 경우 transmission-daemon이 설치되도록 설치옵션을 변경해야 합니다.
-### 1.1.1.1 qBittorrent 설치 
+### 1.1.1.2 qBittorrent 설치 
 https://github.com/qbittorrent/qBittorrent/wiki/Installing-qBittorrent
 
 ## 1.1.2 스크래퍼 설치
@@ -24,7 +24,7 @@ https://github.com/qbittorrent/qBittorrent/wiki/Installing-qBittorrent
 
 ## 1.2.1 접속정보 설정
 토렌트 클라이언트와 통신할 호스트명(아이피), 포트, 아이디를 지정합니다. 
-Transmission은 웹브라우저에서 http://[transmission이 실행중인 아이피]:9091로 접속을 확인해 보는 것이 좋습니다. 우분투, 데비안의 경우 트랜스미션 데몬의 기본값을 변경하지 않은 경우에는 아래 설정을 변경하지 않아도 됩니다. 비밀번호는 설정파일에 저장하지 않으므로 실행할 때 파라미터로 전달할 수 있습니다.
+Transmission은 웹브라우저에서 http://[transmission이 실행중인 아이피]:9091로 접속을 확인해 보는 것이 좋습니다. 비밀번호는 설정파일에 저장하지 않으므로 실행할 때 파라미터로 전달할 수 있습니다.
 
     "torrentClient": {
         "host": "127.0.0.1",
