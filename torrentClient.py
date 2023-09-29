@@ -98,7 +98,7 @@ class TransmissionClient(TorrentClient):
             else:
                 logging.info("토렌트가 추가되었지만, 일부 정보가 누락되었습니다.")
             return self.statusCode
-        logging.error(f"토렌트 추가에 실패하였습니다. {magnetLink}")
+        logging.error(f"(트랜스미션)토렌트 추가에 실패하였습니다. {magnetLink}")
         return self.statusCode
 
     def deleteOlderEpisodes(self, regKeyword: str, episode: int) -> None:
@@ -112,7 +112,7 @@ class TransmissionClient(TorrentClient):
             episodeNumber = myTvShow.getEpisodeNumber(torrent["name"])
             if regKeyword in torrent["name"] and torrent["isFinished"] and episodeNumber < episode:
                 self.deleteTorrent(torrent["id"])
-                logging.info(f'tvshow 이전 에피소드를 qBittorrent에서 삭제했습니다. {torrent["name"]}')
+                logging.info(f'(트랜스미션)tvshow 이전 에피소드를 삭제했습니다. {torrent["name"]}')
 
     def deleteTorrent(self, torrentId: int) -> int:
         payload = {
@@ -210,7 +210,7 @@ class QBittorrentClient(TorrentClient):
             episodeNumber = myTvShow.getEpisodeNumber(torrent["name"])
             if regKeyword in torrent["name"] and torrent["progress"] == 1.0 and episodeNumber < episode:
                 self.deleteTorrent(torrent["hash"])
-                logging.info(f'tvshow 이전 에피소드를 qBittorrent에서 삭제했습니다. {torrent["name"]}')
+                logging.info(f'(qBittorrent)tvshow 이전 에피소드를 삭제했습니다. {torrent["name"]}')
 
     def getAllTorrents(self) -> List[Dict]:
         response = requests.get(f"{self.url}/torrents/info", headers=self.headers, auth=self.auth, cookies=self.cookies)
