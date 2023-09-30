@@ -153,7 +153,7 @@ if __name__ == '__main__':
                             sys.exit()
                     elif clientSetting["type"] == "qBittorrent":
                         client = torrentClient.QBittorrentClient(clientSetting, pw)
-                        if client.login() == False:
+                        if 'SID' not in client.cookies:
                             sys.exit()
 
                     client.addTorrent(magnet, downloadPath)
