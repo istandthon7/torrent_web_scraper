@@ -157,7 +157,7 @@ if __name__ == '__main__':
                             sys.exit()
 
                     client.addTorrent(magnet, downloadPath)
-                    logging.info(f'Transmission에 추가하였습니다. [{regKeyword["name"]}] {magnet}, 폴더: [{downloadPath}]')
+                    logging.info(f'추가하였습니다. [{regKeyword["name"]}] {magnet}, 폴더: [{downloadPath}]')
                     if "영화" in category['name']:
                         myMovie.removeKeyword(regKeyword["name"])
                         logging.info(f"영화 리스트에서 삭제했습니다. [{regKeyword['name']}]")
