@@ -102,7 +102,7 @@ class TorrentClientTest(unittest.TestCase):
         client = torrentClient.QBittorrentClient(qbittorrentSetting, "dummyPassword")
 
         # 연결 상태 확인
-        isLogined = client.login()
+        isLogined = 'SID' in client.cookies
 
         self.assertTrue(isLogined)
 
@@ -126,11 +126,6 @@ class TorrentClientTest(unittest.TestCase):
 
         # QBittorrentClient 인스턴스 생성
         client = torrentClient.QBittorrentClient(qbittorrentSetting, "dummyPassword")
-
-        # 연결 상태 확인
-        isLogined = client.login()
-
-        self.assertTrue(isLogined)
 
         # 모든 토렌트 정보 가져오기
         torrents = client.getAllTorrents()
@@ -158,10 +153,6 @@ class TorrentClientTest(unittest.TestCase):
         # QBittorrentClient 인스턴스 생성
         client = torrentClient.QBittorrentClient(qbittorrentSetting, "dummyPassword")
 
-        # 연결 상태 확인
-        isLogined = client.login()
-        self.assertTrue(isLogined)
-
         # 토렌트 추가
         magnet_link = "your_magnet_link"  # 여기에 토렌트 링크를 입력하세요.
         response_code = client.addTorrent(magnet_link)
@@ -188,10 +179,6 @@ class TorrentClientTest(unittest.TestCase):
 
         # QBittorrentClient 인스턴스 생성
         client = torrentClient.QBittorrentClient(qbittorrentSetting, "dummyPassword")
-
-        # 연결 상태 확인
-        isLogined = client.login()
-        self.assertTrue(isLogined)
         
          # 토렌트 삭제
         response_code = client.deleteTorrent('mock_hash')

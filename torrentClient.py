@@ -112,7 +112,7 @@ class TransmissionClient(TorrentClient):
             episodeNumber = myTvShow.getEpisodeNumber(torrent["name"])
             if regKeyword in torrent["name"] and torrent["isFinished"] and episodeNumber < episode:
                 self.deleteTorrent(torrent["id"])
-                logging.info(f'(트랜스미션)tvshow 이전 에피소드를 삭제했습니다. {torrent["name"]}')
+                logging.info(f'(트랜스미션)tvshow 이전 에피소드를 리스트에서 삭제했습니다. {torrent["name"]}')
 
     def deleteTorrent(self, torrentId: int) -> int:
         payload = {
@@ -150,7 +150,7 @@ class QBittorrentClient(TorrentClient):
         self.qbittorrentSetting = qbittorrentSetting
         self.url = self.getApiUrl()
         self.auth = (self.qbittorrentSetting['id'], pw)
-        self.pw = pw
+        self.login(self.auth[0], self.auth[1])
 
     def __del__(self):
         try:
@@ -172,9 +172,9 @@ class QBittorrentClient(TorrentClient):
         url += "/api/v2"
         return url
 
-    def login(self):
+    def login(self, id: str, pw: str) -> bool:
         try:
-            data = {'username': self.qbittorrentSetting['id'], 'password': self.pw}
+            data = {'username': id, 'password': pw}
             response = requests.post(f"{self.url}/auth/login", headers=self.headers, data=data)
             response.raise_for_status()
             # 로그인 요청의 응답으로 받은 쿠키를 저장합니다.
@@ -182,13 +182,13 @@ class QBittorrentClient(TorrentClient):
 
             # SID가 쿠키에 포함되어 있는지 확인합니다.
             if 'SID' not in self.cookies:
-                logging.critical(f'SID가 쿠키에 포함되어 있지 않습니다. id: [{self.qbittorrentSetting["id"]}]')
+                logging.critical(f'SID가 쿠키에 포함되어 있지 않습니다. id: [{id}]')
                 print('Error: SID not in cookies', file=sys.stderr)
                 return False
 
             return True
         except requests.exceptions.RequestException as e:
-            logging.critical(f'QBittorrent 접속에 실패했습니다. id: [{self.qbittorrentSetting["id"]}], error: {e}')
+            logging.critical(f'QBittorrent 접속에 실패했습니다. id: [{id}], error: {e}')
             print(f'Error: {e}', file=sys.stderr)
             return False
 
@@ -210,7 +210,7 @@ class QBittorrentClient(TorrentClient):
             episodeNumber = myTvShow.getEpisodeNumber(torrent["name"])
             if regKeyword in torrent["name"] and torrent["progress"] == 1.0 and episodeNumber < episode:
                 self.deleteTorrent(torrent["hash"])
-                logging.info(f'(qBittorrent)tvshow 이전 에피소드를 삭제했습니다. {torrent["name"]}')
+                logging.info(f'(qBittorrent)tvshow 이전 에피소드를 리스트에서 삭제했습니다. {torrent["name"]}')
 
     def getAllTorrents(self) -> List[Dict]:
         response = requests.get(f"{self.url}/torrents/info", headers=self.headers, auth=self.auth, cookies=self.cookies)
@@ -222,6 +222,7 @@ class QBittorrentClient(TorrentClient):
         return response.status_code
 
 def main():
+    mySetting = setting.Setting()
     logging.debug(f'magnet 추가 시작.')
     parser = argparse.ArgumentParser()
     parser.add_argument("magnet", help="magnet")
@@ -232,11 +233,11 @@ def main():
     logging.debug(f'폴더: {args.downloadPath}')
     
     logging.info(f"magnet을 추가합니다. {args.magnet}, download: [{args.downloadPath}]")
-    mySetting = setting.Setting()
+    torrentClientSetting = mySetting.json["torrentClient"]
     if args.clientType == 'transmission':
-        client = TransmissionClient(mySetting.json["torrentClient"], args.password)
+        client = TransmissionClient(torrentClientSetting, args.password)
     elif args.clientType == 'qBittorrent':
-        client = QBittorrentClient(mySetting.json["torrentClient"], args.password)
+        client = QBittorrentClient(torrentClientSetting, args.password)
     client.addTorrent(args.magnet, args.downloadPath)
 
 if __name__ == '__main__':

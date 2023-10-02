@@ -45,7 +45,11 @@ class BoardScraper():
             if aTag.get('href') == "#":
                 logging.debug("지원되지 않는 링크")
                 continue
-            
+
+            # 하위 태그 중에 클래스에 icon, badge, comment가 포함되어 있는 태그를 삭제
+            for unwanted_tag in aTag.find_all(True, {'class': ['icon', 'badge', 'comment']}):
+                unwanted_tag.extract()
+
             boardNumber = None
             for child in title.descendants:
                 if child.name and re.fullmatch(r'\d+', child.text.strip()):
