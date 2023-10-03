@@ -19,11 +19,9 @@ echo "download name: $TR_TORRENT_NAME" >> $log_file
 echo "$0"
 
 if [ "$TR_TORRENT_DIR" == *"skip_dir" ]; then
-
 	echo 'skipped notification' >> $log_file
 else
     #외부 스크립트 알림
 	echo "notification step 1" >> $log_file
-	/telegram.sh "transmission completed $TR_TORRENT_NAME"
 fi
 
