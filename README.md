@@ -15,7 +15,7 @@ Transmission 혹은 qBittorrent를 설치합니다.
 https://github.com/qbittorrent/qBittorrent/wiki/Installing-qBittorrent
 
 ## 1.1.2 스크래퍼 설치
-소스를 다운로드 받은 후에 다음 스크립트를 실행합니다.
+소스를 다운로드 받은 후에 다음 스크립트를 실행합니다. 관리자 권한이 필요합니다.
 
     $ ./install.sh
 
