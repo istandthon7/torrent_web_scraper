@@ -67,8 +67,8 @@
     "id": "transmission"
   },
   "owners": {
-    "uid": 1000,
-    "gid": 1000
+    "puid": 1000,
+    "pgid": 1000
   },
   "logging": {
     "logLevel": "ERROR",
