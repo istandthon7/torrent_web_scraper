@@ -1,9 +1,11 @@
+import os
 import unittest
-from model.BoardItem import BoardItem
+from unittest.mock import patch
+
 import notification
 import setting
-import os
-from unittest.mock import patch
+from model.BoardItem import BoardItem
+
 
 class NotificationTest(unittest.TestCase):
 
@@ -43,6 +45,32 @@ class NotificationTest(unittest.TestCase):
             mocked_run.return_value.returncode = 0
             result = noti.runNotiScript("사이트명", "테스트 게시판 제목")
             self.assertEqual(result, 0)
+
+    def test_isTitleInNotificationHistory(self):
+        noti = notification.Notification(self.configDirPath, self.notiSetting)
+        noti.notifications = [["2023-09-13 22:57:22", "사이트명", "테스트 게시판 제목", "키워드", "https://example.com"]]
+        result = noti.isTitleInNotificationHistory("테스트 게시판 제목")
+        self.assertTrue(result)
+
+    def test_isTitleInNotificationHistory2(self):
+        noti = notification.Notification(self.configDirPath, self.notiSetting)
+        noti.notifications = [
+            ["2023-09-13 22:57:22", "사이트명", "특별시 귀신들,2009.720p.WEBRip.H264.AAC", "키워드", "https://example.com"],
+            ["2023-09-13 22:57:22", "사이트명", "특별시 귀신들,2009 720p WEBRip H264 AAC", "키워드", "https://example.com"],
+            ["2023-09-13 22:57:22", "사이트명", "[한국영화] 특별시 귀신들,2009.720p.WEBRip.H264.AAC", "키워드", "https://example.com"]
+        ]
+        result = noti.isTitleInNotificationHistory("N 특별시 귀신들,2009.720p.WEBRip.H264.AAC")
+        self.assertTrue(result)
+
+    def test_isTitleInNotificationHistory3(self):
+        noti = notification.Notification(self.configDirPath, self.notiSetting)
+        noti.notifications = [
+            ["2023-09-13 22:57:22", "사이트명", "특별시 귀신들,2009.720p.WEBRip.H264.AAC", "키워드", "https://example.com"],
+            ["2023-09-13 22:57:22", "사이트명", "특별시 귀신들,2009 720p WEBRip H264 AAC", "키워드", "https://example.com"],
+            ["2023-09-13 22:57:22", "사이트명", "[한국영화] 특별시 귀신들,2009.720p.WEBRip.H264.AAC", "키워드", "https://example.com"]
+        ]
+        result = noti.isTitleInNotificationHistory("특별시 귀신들.2009.720p.WEBRip.H264.AAC")
+        self.assertTrue(result)
 
 if __name__ == '__main__':
     unittest.main()

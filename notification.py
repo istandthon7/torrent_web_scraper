@@ -1,15 +1,17 @@
 import csv
+import datetime
 import logging
 import os
 import subprocess
-import datetime
-from typing import List, Dict, Any
+from typing import Any, Dict, List
+
+import stringHelper
 from model.BoardItem import BoardItem
 
 # Constants
 ENCODING = "utf-8"
 
-class Notification:
+class Notification(stringHelper.StringHelper):
     notifications: List[List[str]] = []
 
     def __init__(self, configDirPath: str, notiSetting: Dict[str, Any]):
@@ -32,12 +34,12 @@ class Notification:
         notification_processed = False
         for keyword in self.notiSetting["keywords"]:
             if keyword in boardItem.title:
-                if self.checkNotiHistory(boardItem.title):
+                if self.isTitleInNotificationHistory(boardItem.title):
                     logging.info(f"[{siteName}] Already in the notification history. [{boardItem.title}]")
                     continue
                 try:
                     self.runNotiScript(siteName, boardItem.title)
-                    self.addNotiHistory(siteName, boardItem.title, keyword, boardItem.url)
+                    self.appendNotiHistory(siteName, boardItem.title, keyword, boardItem.url)
                     notification_processed = True
                 except Exception as e:
                     logging.error(f"Error processing notification for {siteName} and {boardItem.title}: {e}")
@@ -59,15 +61,15 @@ class Notification:
             logging.debug("Command for notification settings is missing.")
             return 1  # Return a non-zero exit code to indicate an error
 
-    def checkNotiHistory(self, title: str) -> bool:
+    def isTitleInNotificationHistory(self, title: str) -> bool:
         """Check if the given title is already in the notification history."""
         for notification in self.notifications:
-            if title == notification[2]:
+            if self.isShorterParamWordsContainedInLongerParam(title, notification[2]):
                 logging.info(f"Already in the notification history. [{title}]")
                 return True
         return False
 
-    def addNotiHistory(self, sitename: str, title: str, keyword: str, url: str) -> None:
+    def appendNotiHistory(self, sitename: str, title: str, keyword: str, url: str) -> None:
         """Add a new entry to the notification history."""
         runtime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         new = [runtime, sitename, title, keyword, url]

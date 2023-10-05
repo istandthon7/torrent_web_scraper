@@ -22,16 +22,16 @@ class Movie(keywords.Keywords):
 
     def getRegKeyword(self, boardTitle: str) -> Union[dict, None]:
         for keyword in self.json['keywords']:
-            if not self.IsContainAllWordsInBoardTitle(keyword['name'].replace(":", " "), boardTitle):
+            if not self.isShorterParamWordsContainedInLongerParam(keyword['name'].replace(":", " "), boardTitle):
                 logging.debug(f'[{keyword["name"]}] 키워드에 해당하지 않습니다. {boardTitle}')
                 continue
             if 'exclude' in self.movieSetting and self.movieSetting['exclude'] and self.IsContainAnyCommaSeparatedWordsInBoardTitle(self.movieSetting['exclude'], boardTitle):
                 logging.info(f"[{keyword['name']}] 제외 키워드가 포함되어 있어요. [{self.movieSetting['exclude']}] '{boardTitle}'")
                 continue
-            if not self.IsContainAllWordsInBoardTitle(str(self.movieSetting['resolution']), boardTitle):
+            if not self.isShorterParamWordsContainedInLongerParam(str(self.movieSetting['resolution']), boardTitle):
                 logging.info(f"[{keyword['name']}] 해상도가 달라요. [{self.movieSetting['resolution']}] '{boardTitle}'")
                 continue
-            if not self.IsContainAllWordsInBoardTitle(self.movieSetting['videoCodec'], boardTitle):
+            if not self.isShorterParamWordsContainedInLongerParam(self.movieSetting['videoCodec'], boardTitle):
                 logging.info(f"[{keyword['name']}] 코덱이 달라요. [{self.movieSetting['videoCodec']}] '{boardTitle}'")
                 continue
             return keyword
