@@ -65,7 +65,6 @@ class Notification(stringHelper.StringHelper):
         """Check if the given title is already in the notification history."""
         for notification in self.notifications:
             if self.isShorterParamWordsContainedInLongerParam(title, notification[2]):
-                logging.info(f"Already in the notification history. [{title}]")
                 return True
         return False
 
