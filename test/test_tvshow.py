@@ -49,7 +49,7 @@ class TvShowTest(unittest.TestCase):
         
     def test_getRegKeyword2(self):
         self.myTvShow.json = {'keywords': [{"name": ".23", "option": "","option2":"", "exclude": "" }]}
-        regKeyword = self.myTvShow.getRegKeyword("태어난 김에 세계일주2.E02.230618.1080p.WANNA")
+        regKeyword = self.myTvShow.getRegKeyword("검은 김의 세계일주2.E02.230618.1080p.WANNA")
         self.assertEqual((regKeyword['name']), ".23")
 
     def test_getRegKeyword_시즌이_없어도(self):

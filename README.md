@@ -80,6 +80,8 @@ __main__.py 폴더에서 다음 명령어를 실행하면 게시판에서 등록
     "pgid": 1000
   }
 ```
+* 알림 중복 개선 #74
+* urllib3 1.26.17 (보안이슈)
 ## 2.2.06.2
 * "logFile": "scraper.log" 로 폴더 제거 #62
 * notiHistory파일 config 폴더에 생성 #61
