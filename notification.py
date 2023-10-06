@@ -64,7 +64,7 @@ class Notification(stringHelper.StringHelper):
     def isTitleInNotificationHistory(self, title: str) -> bool:
         """Check if the given title is already in the notification history."""
         for notification in self.notifications:
-            if self.isShorterParamWordsContainedInLongerParam(title, notification[2]):
+            if self.isExactWordInParam(title, notification[2]):
                 return True
         return False
 

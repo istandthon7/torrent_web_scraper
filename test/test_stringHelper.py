@@ -8,11 +8,11 @@ class TestStringHelper(unittest.TestCase):
     def test_IsContainAllWordsInBoardTitle(self):
         keyword = 'apple banana'
         boardTitle = 'I like to eat apple and banana'
-        self.assertTrue(self.stringHelper.isShorterParamWordsContainedInLongerParam(keyword, boardTitle))
+        self.assertTrue(self.stringHelper.isWordContainedInParam(keyword, boardTitle))
 
         keyword = 'apple banana grape'
         boardTitle = 'I like to eat apple and banana'
-        self.assertFalse(self.stringHelper.isShorterParamWordsContainedInLongerParam(keyword, boardTitle))
+        self.assertFalse(self.stringHelper.isWordContainedInParam(keyword, boardTitle))
         
     def test_IsContainAnyCommaSeparatedWordsInBoardTitle(self):
         keywords = 'apple, banana, orange'
