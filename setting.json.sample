@@ -72,6 +72,8 @@
   },
   "logging": {
     "logLevel": "ERROR",
-    "logFile": "scraper.log"
+    "logFile": "scraper.log",
+    "maxBytes": 1048576,
+    "backupCount": 5
   }
 }

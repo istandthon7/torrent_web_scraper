@@ -185,9 +185,17 @@
         "logFile":{
           "type":"string",
           "default":"scraper.log"
+        },
+        "maxBytes": {
+          "type":"number",
+          "default": 1048576
+        },
+        "backupCount": {
+          "type": "number",
+          "default":5
         }
       },
-      "required":["logLevel", "logFile"]
+      "required":["logLevel", "logFile", "maxBytes", "backupCount"]
     }
   },
   "required": ["tvshow", "movie", "sites", "torrentClient", "torrentHistory", "logging"],
