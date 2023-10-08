@@ -109,7 +109,7 @@ class TransmissionClient(TorrentClient):
         torrents = self.getAllTorrents()
         for torrent in torrents:
             myTvShow = tvshow.TVShow()
-            if regKeyword in torrent["name"] and torrent["isFinished"]:
+            if regKeyword.lower() in torrent["name"].lower() and torrent["isFinished"]:
                 episodeNumber = myTvShow.getEpisodeNumber(torrent["name"])
                 if episodeNumber is None:
                     logging.info(f'(트랜스미션)tvshow 에피소드 번호를 찾을 수 없습니다. {torrent["name"]}')
@@ -211,7 +211,7 @@ class QBittorrentClient(TorrentClient):
         torrents = self.getAllTorrents()
         for torrent in torrents:
             myTvShow = tvshow.TVShow()
-            if regKeyword in torrent["name"] and torrent["progress"] == 1.0:
+            if regKeyword.lower() in torrent["name"].lower() and torrent["progress"] == 1.0:
                 episodeNumber = myTvShow.getEpisodeNumber(torrent["name"])
                 if episodeNumber is None:
                     logging.info(f'(qBittorrent)tvshow 에피소드 번호를 찾을 수 없습니다. {torrent["name"]}')
