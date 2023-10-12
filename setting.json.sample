@@ -46,7 +46,7 @@
         }
       ],
       "enable": true,
-      "mainUrl": "https://torrentqq277.com/",
+      "mainUrl": "https://torrentqq278.com/",
       "name": "토렌트큐큐"
     }
   ],
@@ -72,6 +72,8 @@
   },
   "logging": {
     "logLevel": "ERROR",
-    "logFile": "scraper.log"
+    "logFile": "scraper.log",
+    "maxBytes": 1048576,
+    "backupCount": 5
   }
 }

@@ -66,6 +66,14 @@ __main__.py 폴더에서 다음 명령어를 실행하면 게시판에서 등록
 
 
 # 변경이력
+## 2.3.1
+* log 회전
+```
+"logging": {
+  "maxBytes": 1048576,
+  "backupCount": 5
+}
+```
 ## 2.3
 * qBittorrent 지원 #65 (setting.json파일 변경이 필요합니다. transmission -> torrentClient, owners)
 ```
