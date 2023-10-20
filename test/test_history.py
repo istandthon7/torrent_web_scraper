@@ -14,27 +14,27 @@ class TestMagnetHistory(unittest.TestCase):
         if os.path.exists(self.failFileName):
             os.remove(self.failFileName)
 
-    def test_checkMagnetHistory(self):
+    def test_isMagnetAppended(self):
         magnet = 'magnet:?xt=urn:btih:example1'
-        self.assertFalse(self.magnetHistory.checkMagnetHistory(magnet))
-        self.magnetHistory.addMagnetToHistory('siteName', 'boardTitle', magnet, 'keyword')
-        self.assertTrue(self.magnetHistory.checkMagnetHistory(magnet))
+        self.assertFalse(self.magnetHistory.isMagnetAppended(magnet))
+        self.magnetHistory.appendMagnet('siteName', 'boardTitle', magnet, 'keyword')
+        self.assertTrue(self.magnetHistory.isMagnetAppended(magnet))
 
-    def test_addMagnetToHistory(self):
+    def test_appendMagnet(self):
         magnet = 'magnet:?xt=urn:btih:example2'
-        self.magnetHistory.addMagnetToHistory('siteName', 'boardTitle', magnet, 'keyword')
+        self.magnetHistory.appendMagnet('siteName', 'boardTitle', magnet, 'keyword')
         with open(self.csvFileName, 'r', encoding="utf-8") as f:
             lines = f.readlines()
             self.assertTrue(len(lines) > 0)
             self.assertIn(magnet, lines[-1])
 
-    def test_addTorrentFailToFile(self):
+    def test_appendTorrentFail(self):
         siteName = 'siteName'
         boardTitle = 'boardTitle'
         boardUrl = 'http://example.com'
         keyword = 'keyword'
         downloadDir = '/path/to/download/dir'
-        self.magnetHistory.addTorrentFailToFile(siteName, boardTitle, boardUrl, keyword, downloadDir)
+        self.magnetHistory.appendTorrentFail(siteName, boardTitle, boardUrl, keyword, downloadDir)
         with open(self.failFileName, 'r', encoding="utf-8") as f:
             lines = f.readlines()
             self.assertTrue(len(lines) > 0)
