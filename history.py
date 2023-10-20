@@ -16,31 +16,31 @@ class MagnetHistory:
                     if len(row) != 0:
                         self.data.append(row)
 
-    def checkMagnetHistory(self, magnet: str) -> bool:
-        for row in self.data:
+    def isMagnetAppended(self, magnet: str) -> bool:
+        for row in reversed(self.data):
             if magnet == row[3]:
                 return True
         return False
 
-    def addMagnetToHistory(self, siteName: str, boardTitle: str, magnet: str, keyword: str) -> None:
+    def appendMagnet(self, siteName: str, boardTitle: str, magnet: str, keyword: str) -> None:
         runtime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        magnetInfo = [runtime, siteName, boardTitle, magnet, keyword]
+        magnetInfo = [runtime, siteName, boardTitle, magnet, keyword, ""]
         self.data.append(magnetInfo)
         with open(self.historyFileName, 'a', newline='\n', encoding="utf-8") as f:
             writer = csv.writer(f)
             writer.writerow(magnetInfo)
 
-    def addTorrentFailToFile(self, siteName: str, boardTitle: str, boardUrl: str, keyword: str, downloadDir: str) -> None:
+    def appendTorrentFail(self, siteName: str, boardTitle: str, boardUrl: str, keyword: str, downloadDir: str) -> None:
         runtime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         torrentFailInfo = [runtime, siteName, boardTitle, boardUrl, keyword, downloadDir]
         with open(self.failFileName, 'a', newline='\n', encoding="utf-8") as f:
             writer = csv.writer(f)
             writer.writerow(torrentFailInfo)
 
-    def checkSameEpisode(self, keyword: str, episodeNumber: int) -> bool:
+    def isEpisodeDownloaded(self, keyword: str, episodeNumber: int) -> bool:
         if episodeNumber is None:
             return False
-        for row in self.data:
+        for row in reversed(self.data):
             if row[4] == keyword:
                 myTvShow = tvshow.TVShow()
                 if myTvShow.getEpisodeNumber(row[2]) == episodeNumber:

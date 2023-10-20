@@ -131,19 +131,19 @@ if __name__ == '__main__':
                             osHelper.appendPermisson(downloadPath, stat.S_IRWXU)
                             
                     if not magnet:
-                        magnetHistory.addTorrentFailToFile(site['name'], boardItem.title, boardItem.url, regKeyword['name'], downloadPath)
+                        magnetHistory.appendTorrentFail(site['name'], boardItem.title, boardItem.url, regKeyword['name'], downloadPath)
                         msg = f"매그넷 검색에 실패하였습니다. [{regKeyword['name']}]  '{boardItem.title}' {boardItem.url} 폴더: [{downloadPath}]"
                         logging.error(msg)
                         continue;
                     #magnet was already downloaded.
-                    if magnetHistory.checkMagnetHistory(magnet):
+                    if magnetHistory.isMagnetAppended(magnet):
                         logging.info(f"이미 다운로드 받은 파일입니다. [{regKeyword['name']}] {magnet}")
                         continue;
 
                     if not "영화" in category['name']:
                         episodeNumber = myTvShow.getEpisodeNumber(boardItem.title)
                         if tvSetting.get("checkEpisodeNubmer", False):
-                            if magnetHistory.checkSameEpisode(regKeyword["name"], episodeNumber):
+                            if magnetHistory.isEpisodeDownloaded(regKeyword["name"], episodeNumber):
                                 logging.info(f"이미 다운로드 받은 회차입니다. [{regKeyword['name']}] '{boardItem.title}'")
                                 continue;
                     clientSetting = mySetting.json["torrentClient"]
@@ -164,7 +164,7 @@ if __name__ == '__main__':
                     else:
                         client.deleteOlderEpisodes(regKeyword["name"], episodeNumber)
                         
-                    magnetHistory.addMagnetToHistory(site['name'], boardItem.title, magnet, regKeyword["name"])
+                    magnetHistory.appendMagnet(site['name'], boardItem.title, magnet, regKeyword["name"])
                     
                 # --> 현재 페이지의 게시물 검색 완료
                 # 필터링 한 후의 아이디가 필터링 전 아이디보다 더 크다면 다음 페이지는 갈 필요없음
