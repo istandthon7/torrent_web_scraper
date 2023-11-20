@@ -5,27 +5,21 @@ import logging
 import os
 import stat
 import sys
+from typing import Union
 
 import boardScraper
 import history
-import movie
+import keywords
 import notification
 import osHelper
 import scraperHelpers
 import setting
 import torrentClient
-import tvshow
 
 if __name__ == '__main__':
 
     mySetting = setting.Setting()
-    movieSetting = mySetting.json['movie']
-    tvSetting = mySetting.json["tvshow"]
     
-    myMovie = movie.Movie(movieSetting)
-    myMovie.load(os.path.join(mySetting.configDirPath, movieSetting['list']))
-    myTvShow = tvshow.TVShow()
-    myTvShow.load(os.path.join(mySetting.configDirPath, tvSetting["list"]))
     myNoti = notification.Notification(mySetting.configDirPath, mySetting.json["notification"])
     
     logging.info(f'--------------------------------------------------------')
@@ -60,26 +54,34 @@ if __name__ == '__main__':
         site["mainUrl"] = scraperHelpers.getMainUrl(site["mainUrl"], response.url)
         isScrapFail = False
         myBoardScraper = boardScraper.BoardScraper()
-        #Step 2.  Iterate categories for this site
-        for categoryIndex, category in enumerate(site["categories"]):
-            logging.info(f'게시판 스크랩을 시작합니다. {category["name"]}')
+        #Step 2.  Iterate boards for this site
+        for boardIndex, board in enumerate(site["boards"]):
+            logging.info(f'게시판 스크랩을 시작합니다. {board["name"]}, download Rule: [{board["downloadRule"]}]')
             isNextPageScrap = True
             toSaveBoardId = None
             toSaveBoardNumber = None
+            #
+            downloadRuleSetting = next((rule for rule in mySetting.json['downloadRules'] if rule['name'] == board['downloadRule']), None)
+            if downloadRuleSetting is None:
+                logging.error(f"No matching download rule found for [{board['downloadRule']}]")
+                break
+
+            myKeywords = keywords.Keywords()
+            myKeywords.load(os.path.join(mySetting.configDirPath, downloadRuleSetting['list']))
 
             #Step 3.  iterate page for this site/this category
-            for pageNumber in range(1, category['scrapPage']+1):
+            for pageNumber in range(1, board['scrapPage']+1):
                 logging.info(f'페이지 스크랩을 시작합니다. page: {pageNumber}')
                 if isNextPageScrap == False:
                     logging.info(f'페이지 스크랩을 마칩니다.')
                     break;
 
-                boardItems = myBoardScraper.getBoardItems(site["mainUrl"]+category["url"], pageNumber
-                                , category["title"].get("tag"), category["title"].get("class"), category["title"].get("selector"))
+                boardItems = myBoardScraper.getBoardItems(site["mainUrl"]+board["url"], pageNumber
+                                , board["title"].get("tag"), board["title"].get("class"), board["title"].get("selector"))
 
                 if not boardItems:
                     isScrapFail = True
-                    msg = f"[{site['name']}] 사이트 '{category['name']}' 게시판에서 제목리스트 얻기에 실패하였습니다."
+                    msg = f"[{site['name']}] 사이트 '{board['name']}' 게시판에서 제목리스트 얻기에 실패하였습니다."
                     logging.error(msg)
                     print(msg, file=sys.stderr)
                     continue;
@@ -87,10 +89,10 @@ if __name__ == '__main__':
                 # 필터링 한 후의 아이디가 더 커진다면 다음 페이지는 갈 필요없음.
                 lastID = boardItems[-1].id
 
-                boardItems = list(filter(lambda x: x.id>category['history'], boardItems))
+                boardItems = list(filter(lambda x: x.id>board['history'], boardItems))
 
                 if len(boardItems) == 0:
-                    logging.info(f'모든 게시물을 검색하였으므로 다음 게시판으로 넘어갑니다. history: {category["history"]}')
+                    logging.info(f'모든 게시물을 검색하였으므로 다음 게시판으로 넘어갑니다. history: {board["history"]}')
                     break;
 
                 for boardItemIndex, boardItem in enumerate(boardItems, start=1):
@@ -98,10 +100,7 @@ if __name__ == '__main__':
                         boardItem.url = (str(site["mainUrl"])[:-1])+boardItem.url
                     logging.debug(f'게시물 제목검색을 시작합니다. id: {boardItem.id}, {boardItem.title}, {boardItem.url}')
 
-                    if "영화" in category['name']:
-                        regKeyword = myMovie.getRegKeyword(boardItem.title)
-                    else:
-                        regKeyword = myTvShow.getRegKeyword(boardItem.title)
+                    regKeyword = myKeywords.getRegKeyword(boardItem.title, downloadRuleSetting)
 
                     if boardItemIndex == 1 and pageNumber == 1:
                         toSaveBoardId = boardItem.id
@@ -116,10 +115,9 @@ if __name__ == '__main__':
                     magnet = myBoardScraper.getMagnet(boardItem.url)
 
                     downloadPath = ""
-                    if "영화" in category['name']:
-                        downloadPath = myMovie.getSavePath(regKeyword, movieSetting["download"], False)
-                    else:
-                        downloadPath = myTvShow.getSavePath(regKeyword, tvSetting['download'], tvSetting.get("createTitleFolder", True))
+                    downloadPath = myKeywords.getSavePath(regKeyword, downloadRuleSetting['download']
+                                                                   , downloadRuleSetting.get("createTitleFolder", True))
+                        
                     ownersSetting = mySetting.json["owners"]
                     if len(downloadPath) > 0:
                         if not os.path.exists(downloadPath):
@@ -132,36 +130,36 @@ if __name__ == '__main__':
                             
                     if not magnet:
                         magnetHistory.appendTorrentFail(site['name'], boardItem.title, boardItem.url, regKeyword['name'], downloadPath)
-                        msg = f"매그넷 검색에 실패하였습니다. [{regKeyword['name']}]  '{boardItem.title}' {boardItem.url} 폴더: [{downloadPath}]"
+                        msg = f"magnet 검색에 실패하였습니다. [{regKeyword['name']}]  '{boardItem.title}' {boardItem.url} 폴더: [{downloadPath}]"
                         logging.error(msg)
                         continue;
                     #magnet was already downloaded.
                     if magnetHistory.isMagnetAppended(magnet):
-                        logging.info(f"이미 다운로드 받은 파일입니다. [{regKeyword['name']}] {magnet}")
+                        logging.info(f"이미 추가한 토렌트입니다. [{regKeyword['name']}] {magnet}")
                         continue;
 
-                    if not "영화" in category['name']:
-                        episodeNumber = myTvShow.getEpisodeNumber(boardItem.title)
-                        if tvSetting.get("checkEpisodeNubmer", False):
-                            if magnetHistory.isEpisodeDownloaded(regKeyword["name"], episodeNumber):
-                                logging.info(f"이미 다운로드 받은 회차입니다. [{regKeyword['name']}] '{boardItem.title}'")
-                                continue;
+                    if downloadRuleSetting.get("checkEpisodeNubmer", False):
+                        episodeNumber = myKeywords.getEpisodeNumber(boardItem.title)
+                        if episodeNumber is not None and magnetHistory.isEpisodeDownloaded(regKeyword["name"], episodeNumber):
+                            logging.info(f"이미 추가한 회차입니다. [{regKeyword['name']}] '{boardItem.title}'")
+                            continue;
                     clientSetting = mySetting.json["torrentClient"]
+                    client: Union[torrentClient.TransmissionClient, torrentClient.QBittorrentClient]
                     if clientSetting["type"] == "transmission":
                         client = torrentClient.TransmissionClient(clientSetting, pw)
                         if client.headers['X-Transmission-Session-Id'] == None:
                             sys.exit()
                     elif clientSetting["type"] == "qBittorrent":
                         client = torrentClient.QBittorrentClient(clientSetting, pw)
-                        if 'SID' not in client.cookies:
+                        if isinstance(client, torrentClient.QBittorrentClient) and client.cookies is not None and 'SID' not in client.cookies:
                             sys.exit()
 
                     client.addTorrent(magnet, downloadPath)
                     logging.info(f'추가하였습니다. [{regKeyword["name"]}] {magnet}, 폴더: [{downloadPath}]')
-                    if "영화" in category['name']:
-                        myMovie.removeKeyword(regKeyword["name"])
-                        logging.info(f"영화 리스트에서 삭제했습니다. [{regKeyword['name']}]")
-                    else:
+                    if downloadRuleSetting.get("removeFromList", False):
+                        myKeywords.removeKeyword(regKeyword["name"])
+                        
+                    if downloadRuleSetting.get("deleteOlderEpisodes", False) and episodeNumber is not None:
                         client.deleteOlderEpisodes(regKeyword["name"], episodeNumber)
                         
                     magnetHistory.appendMagnet(site['name'], boardItem.title, magnet, regKeyword["name"])
@@ -173,8 +171,8 @@ if __name__ == '__main__':
                     break;
             # pageNumber 완료
             if toSaveBoardId is not None:
-                mySetting.json["sites"][siteIndex]["categories"][categoryIndex]["history"] = toSaveBoardId
-                mySetting.json["sites"][siteIndex]["categories"][categoryIndex]["number"] = toSaveBoardNumber
+                mySetting.json["sites"][siteIndex]["boards"][boardIndex]["history"] = toSaveBoardId
+                mySetting.json["sites"][siteIndex]["boards"][boardIndex]["number"] = toSaveBoardNumber
                 logging.info(f'history를 변경했습니다. {toSaveBoardId}')
         # category 완료
         # 스크랩을 완료하고 사이트 주소가 변경되었으면 변경.

@@ -1,16 +1,18 @@
+
 import json
 import logging
 from logging.handlers import RotatingFileHandler
 import os
 import sys
+from typing import Dict, Any
 
 
 class Setting:
     """
-    설정파일을 self.json 로딩, 저장한다. 
-    버전이 변경되면 self.version을 변경해야 한다.(소스에서 아직 참조하지 않으나 운영상 필요할 수있음)
+    설정파일을 self.json에 로딩, 저장한다. 
+    버전이 변경되면 self.version을 변경해야 한다.(소스에서 아직 참조하지 않으나 필요할 수있음)
     """
-    version = '2.3.1'
+    version = '2.4'
 
     currentPath = os.path.realpath(os.path.dirname(__file__))
     configDirPath = os.path.join(currentPath, "config")
@@ -19,7 +21,7 @@ class Setting:
     transmissionScriptDirPath = os.path.join(currentPath, "transmission_script")
     torrentDoneSHPath = os.path.join(transmissionScriptDirPath, "torrent_done.sh")
 
-    json = json.dumps({})
+    json: Dict[str, Any] = {}
     """설정정보를 가지는 json객체"""
 
     def __init__(self) -> None:

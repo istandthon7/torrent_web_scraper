@@ -1,0 +1,7 @@
+{
+    "json parser": "http://json.parser.online.fr/",
+    "keywords": [
+        {"name": "키워드", "option": "포함1","option2":"포함2", "exclude":"제외","parentDir": "상위폴더", "subDir": "하위폴더"}
+        ,{"name": "추가 2022"}
+    ]
+}

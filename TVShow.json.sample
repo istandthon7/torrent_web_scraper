@@ -1,7 +1,0 @@
-{
-    "json parser": "http://json.parser.online.fr/",
-    "keywords": [
-        {"name": "제목", "option": "720","option2":"Next", "exclude":"제외, 완결" }
-        ,{"name": "간단한", "option": "", "option2":""}
-    ]
-}

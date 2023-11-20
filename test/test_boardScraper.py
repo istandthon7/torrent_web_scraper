@@ -15,7 +15,7 @@ class BoardScraperTest(unittest.TestCase):
             mock_getResponse.return_value.read.return_value = mock_response
         mySetting = setting.Setting()
         site = mySetting.json["sites"][0]
-        category = site["categories"][0]
+        category = site["boards"][0]
         myBoardScraper = boardScraper.BoardScraper()
         boardItems = myBoardScraper.getBoardItems(site["mainUrl"]+category["url"], 1
                         , category["title"]["tag"], category["title"]["class"], category["title"].get("selector"))
@@ -35,7 +35,7 @@ class BoardScraperTest(unittest.TestCase):
         # arrange
         mySetting = setting.Setting()
         site = mySetting.json["sites"][0]
-        firstBoard = site["categories"][0]
+        firstBoard = site["boards"][0]
         firstBoard["history"] = 0
         # act
         myBoardScraper = boardScraper.BoardScraper()
@@ -114,7 +114,7 @@ class BoardScraperTest(unittest.TestCase):
             mock_getResponse.return_value.read.return_value = mock_response
         mySetting = setting.Setting()
         site = mySetting.json["sites"][0]
-        category = site["categories"][0]
+        category = site["boards"][0]
         myBoardScraper = boardScraper.BoardScraper()
         boardItems = myBoardScraper.getBoardItems(site["mainUrl"]+category["url"], 1
                         , category["title"]["tag"], category["title"]["class"], category["title"].get("selector"))

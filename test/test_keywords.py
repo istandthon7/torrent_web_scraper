@@ -3,7 +3,7 @@ import keywords
 import unittest
 
 
-class TestKeywords(unittest.TestCase):
+class KeywordsTest(unittest.TestCase):
     def test_getSavePath(self):
         myKeywords = keywords.Keywords()
         downloadPath = myKeywords.getSavePath({"name": "제목", "option": "720","option2":"Next", "exclude":"제외, 완결" }, "", True)

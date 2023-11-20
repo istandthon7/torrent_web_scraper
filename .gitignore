@@ -115,3 +115,5 @@ transmission_script
 .vscode
 
 venv
+movieTitleScraper.py
+daumMovieTitleScraper.py
