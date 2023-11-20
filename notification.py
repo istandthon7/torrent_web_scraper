@@ -39,6 +39,7 @@ class Notification(stringHelper.StringHelper):
                     continue
                 try:
                     self.runNotiScript(siteName, boardItem.title)
+                    # 알림 중복 방지 및 내역에서 직접 확인
                     self.appendNotiHistory(siteName, boardItem.title, keyword, boardItem.url)
                     notification_processed = True
                 except Exception as e:
@@ -57,6 +58,7 @@ class Notification(stringHelper.StringHelper):
                 return result.returncode
             except subprocess.CalledProcessError as e:
                 logging.error(f"Command '{e.cmd}' returned non-zero exit status {e.returncode}.")
+                return e.returncode
         else:
             logging.debug("Command for notification settings is missing.")
             return 1  # Return a non-zero exit code to indicate an error

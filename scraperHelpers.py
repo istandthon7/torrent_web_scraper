@@ -1,4 +1,5 @@
 from http.client import HTTPResponse
+from typing import Optional
 from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError, URLError
@@ -20,12 +21,14 @@ def getSoup(url: str):
 def getHtml(url: str):
     try:
         time.sleep(random.randrange(1, 4))
-        return getResponse(url).read().decode('utf-8','replace')
+        response = getResponse(url)
+        if response is not None:
+            return response.read().decode('utf-8','replace')
     except Exception as e:
         print("Exception getHtml url: "+url+" , error: " + str(e))
     return None
 
-def getResponse(url) -> HTTPResponse:
+def getResponse(url) -> Optional[HTTPResponse]:
     try:
         request = Request(url, headers={"User-Agent": "Mozilla/5.0"})
         # python 3.6이상에서
@@ -41,6 +44,7 @@ def getResponse(url) -> HTTPResponse:
         logging.error(f"사이트 주소가 변경등으로 정상적으로 작동하지 않아요. 원인: {er.reason}, url: {url}")
     except ConnectionResetError as er:
         logging.error(f"서버가 연결을 종료했습니다. 원인: {er.strerror}, url: {url}")
+    return None
 
 def getSoupFromFile(filePath: str):
     try:

@@ -58,6 +58,7 @@ class BoardScraper():
             logging.debug(f"게시물 번호: {boardNumber}")
 
             boardItem = BoardItem()
+            # boardNumber: int? 
             boardItem.setItem(aTag, int(boardNumber) if boardNumber else None)
             if boardItem.id is None:
                 logging.info(f"게시물 아이디를 확인할 수 없습니다. '{boardItem.title}''")
