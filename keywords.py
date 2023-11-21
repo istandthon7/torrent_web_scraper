@@ -18,7 +18,6 @@ class Keywords(stringHelper.StringHelper):
             #self.save()
 
     def getRegKeyword(self, boardTitle: str, downloadRuleSetting: dict) -> Optional[dict]:
-        #next(rule for rule in self.mySetting.json['downloadRules'] if rule['name'] == '')
         for keyword in self.json['keywords']:
             if not self.isWordContainedInParam(keyword['name'].replace(":", " "), boardTitle):
                 logging.debug(f'[{keyword["name"]}] 키워드에 해당하지 않습니다. {boardTitle}')
@@ -36,11 +35,14 @@ class Keywords(stringHelper.StringHelper):
                 logging.info(f"[{keyword['name']}] option2가 달라요. [{keyword['option2']}] '{boardTitle}'")
                 continue
             # 'include' 항목을 처리합니다.
-            includes = downloadRuleSetting['include'].split(', ')
-            for include in includes:
-                if not self.isWordContainedInParam(include, boardTitle):
-                    logging.info(f"[{keyword['name']}] 포함되어야 하는 단어가 없어요. [{include}] '{boardTitle}'")
-                    break
+            if 'include' in downloadRuleSetting and downloadRuleSetting['include']:
+                includes = downloadRuleSetting['include'].split(', ')
+                for include in includes:
+                    if not self.isWordContainedInParam(include, boardTitle):
+                        logging.info(f"[{keyword['name']}] 포함되어야 하는 단어가 없어요. [{include}] '{boardTitle}'")
+                        break
+                else:
+                    return keyword
             else:
                 return keyword
         return None
