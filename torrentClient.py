@@ -2,14 +2,15 @@ import abc
 import argparse
 import base64
 import json
+import keywords
 import logging
 import sys
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 import requests
+from requests.cookies import RequestsCookieJar
 
 import setting
-import tvshow
 
 
 class TorrentClient(abc.ABC):
@@ -74,7 +75,7 @@ class TransmissionClient(TorrentClient):
             return response.headers.get('X-Transmission-Session-Id')
 
     def addTorrent(self, magnetLink: str, downloadDir: Optional[str] = None) -> int:
-        payload = {
+        payload: Dict[str, Any] = {
             "method": "torrent-add",
             "arguments":{
                 "filename": magnetLink
@@ -94,7 +95,7 @@ class TransmissionClient(TorrentClient):
             hashString = torrent.get('hashString')
 
             if id and name and hashString:
-                logging.info(f"토렌트가 성공적으로 추가되었습니다: {name} ({id}, {hashString})")
+                logging.debug(f"토렌트가 성공적으로 추가되었습니다: {name} (id: {id}, {hashString})")
             else:
                 logging.info("토렌트가 추가되었지만, 일부 정보가 누락되었습니다.")
             return self.statusCode
@@ -108,9 +109,9 @@ class TransmissionClient(TorrentClient):
             return
         torrents = self.getAllTorrents()
         for torrent in torrents:
-            myTvShow = tvshow.TVShow()
             if regKeyword.lower() in torrent["name"].lower() and torrent["isFinished"]:
-                episodeNumber = myTvShow.getEpisodeNumber(torrent["name"])
+                myKeywords = keywords.Keywords()
+                episodeNumber = myKeywords.getEpisodeNumber(torrent["name"])
                 if episodeNumber is None:
                     logging.info(f'(트랜스미션)tvshow 에피소드 번호를 찾을 수 없습니다. {torrent["name"]}')
                     continue
@@ -150,7 +151,7 @@ class TransmissionClient(TorrentClient):
 
 class QBittorrentClient(TorrentClient):
     def __init__(self, qbittorrentSetting: Dict[str, str], pw: str):
-        self.cookies = None
+        self.cookies: Optional[RequestsCookieJar] = None
         self.qbittorrentSetting = qbittorrentSetting
         self.url = self.getApiUrl()
         self.auth = (self.qbittorrentSetting['id'], pw)
@@ -210,9 +211,9 @@ class QBittorrentClient(TorrentClient):
             return
         torrents = self.getAllTorrents()
         for torrent in torrents:
-            myTvShow = tvshow.TVShow()
+            myMyKeywords = keywords.Keywords()
             if regKeyword.lower() in torrent["name"].lower() and torrent["progress"] == 1.0:
-                episodeNumber = myTvShow.getEpisodeNumber(torrent["name"])
+                episodeNumber = myMyKeywords.getEpisodeNumber(torrent["name"])
                 if episodeNumber is None:
                     logging.info(f'(qBittorrent)tvshow 에피소드 번호를 찾을 수 없습니다. {torrent["name"]}')
                     continue

@@ -1,24 +1,31 @@
 import logging
 import re
+from typing import Optional
 from bs4 import Tag
 
 class BoardItem:
+    number : Optional[int]
+
     def __init__(self, title: str = '', url: str = '', ID: int = -1, number: int = -1):
         self.title = title
         self.url = url
         self.id = ID
         self.number = number
 
-    def setItem(self, aTag: Tag, boardNumber: int):
+    def setItem(self, aTag: Tag, boardNumber: Optional[int]):
         self.number = boardNumber
-        self.setUrl(aTag.get('href'))
-        if self.url is None:
-            self.id = -1
-        else:
-            self.id = self.getIDFromUrl(self.url)
-            if self.id == -1:
+        url = aTag.get('href')
+        if url is None or not isinstance(url, str):
+            logging.error("Invalid URL")
+            return
+        self.setUrl(str(url))
+        self.id = self.getIDFromUrl(self.url)
+        if self.id == -1:
+            if boardNumber is None:
+                self.id = -1
+            else:
                 self.id = boardNumber
-            self.title = re.sub(r'\s+', ' ', aTag.text).strip()
+        self.title = re.sub(r'\s+', ' ', aTag.text).strip()
     
     def setUrl(self, url: str):
         """Set the url of the BoardItem"""

@@ -1,7 +1,7 @@
 import datetime
 import os
 import csv
-import tvshow
+import keywords
 
 
 class MagnetHistory:
@@ -24,6 +24,7 @@ class MagnetHistory:
 
     def appendMagnet(self, siteName: str, boardTitle: str, magnet: str, keyword: str) -> None:
         runtime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        # "": tag
         magnetInfo = [runtime, siteName, boardTitle, magnet, keyword, ""]
         self.data.append(magnetInfo)
         with open(self.historyFileName, 'a', newline='\n', encoding="utf-8") as f:
@@ -42,7 +43,7 @@ class MagnetHistory:
             return False
         for row in reversed(self.data):
             if row[4] == keyword:
-                myTvShow = tvshow.TVShow()
-                if myTvShow.getEpisodeNumber(row[2]) == episodeNumber:
+                myKeywords = keywords.Keywords()
+                if myKeywords.getEpisodeNumber(row[2]) == episodeNumber:
                     return True
         return False

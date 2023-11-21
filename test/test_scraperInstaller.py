@@ -2,7 +2,7 @@ import unittest
 import shutil
 import os
 import scraperInstaller
-import setting
+
 
 class ScraperInstallerTest(unittest.TestCase): 
 

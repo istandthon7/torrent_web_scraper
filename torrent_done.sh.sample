@@ -12,8 +12,8 @@ export LC_ALL="ko_KR.UTF-8"
 
 log_file="/tmp/transmission.log"
 #다음 변수가 넘어온다.
-#TR_TORRENT_DIR="/media/tvshows/title"
-#TR_TORRENT_NAME="tvshow title.E912.190407.720p-NEXT.mp4"
+#TR_TORRENT_DIR=""
+#TR_TORRENT_NAME=""
 echo "download dir: $TR_TORRENT_DIR" >> $log_file
 echo "download name: $TR_TORRENT_NAME" >> $log_file
 echo "$0"

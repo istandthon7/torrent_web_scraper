@@ -1,63 +1,59 @@
 {
   "$schema": "../settingSchema.json",
-  "tvshow": {
-    "download": "",
-    "list": "TVShow.json",
-    "checkEpisodeNubmer": false,
-    "createTitleFolder": true
-  },
-  "movie": {
-    "download": "",
-    "list": "Movie.json",
-    "resolution": 1080,
-    "videoCodec": "264",
-    "titleScrap": {
-      "ranking": 8,
-      "url": "https://movie.daum.net/ranking/boxoffice/monthly"
+  "downloadRules":[
+    {
+      "name": "firstRule",
+      "download": "",
+      "list": "first.json",
+      "createTitleFolder": true,
+      "checkEpisodeNubmer": false,
+      "deleteOlderEpisodes": true
     },
-    "exclude":""
-  },
+    {
+      "name": "secondRule",
+      "download": "",
+      "list": "second.json",
+      "include": "",
+      "exclude": "",
+      "removeFromList": true
+    }
+  ],
   "sites": [
     {
-      "categories": [
+      "name": "사이트명",
+      "mainUrl": "https://mainUrl.com/",
+      "enable": true,
+      "boards": [
         {
+          "name": "게시판명",
+          "url": "subUrl",
+          "title": {
+            "selector": "ul.list-body > li.list-item"
+          },
+          "downloadRule": "secondRule",
           "history": 0,
           "number": 0,
-          "name": "영화",
-          "scrapPage": 3,
-          "url": "torrent/mov.html",
-          "title": {
-            "tag": "",
-            "class": "",
-            "selector": "ul.list-body > li.list-item"
-          }
+          "scrapPage": 3
         },
         {
+          "name": "게시판2",
+          "url": "usbUrl",
+          "title": {
+            "selector": "ul.list-body > li.list-item"
+          },
+          "downloadRule": "firstRule",
           "history": 0,
           "number": 0,
-          "name": "방송",
-          "scrapPage": 3,
-          "url": "torrent/med.html",
-          "title": {
-            "tag": "",
-            "class": "",
-            "selector": "ul.list-body > li.list-item"
-          }
+          "scrapPage": 3
         }
-      ],
-      "enable": true,
-      "mainUrl": "https://torrentqq279.com/",
-      "name": "토렌트큐큐"
+      ]
     }
   ],
   "torrentHistory":"torrentHistory.csv",
   "torrentFail":"torrentFail.csv",
   "notification": {
     "cmd": "",
-    "keywords": [
-      "키워드",
-      "키워드2"
-    ],
+    "keywords": ["키워드", "키워드2"],
     "history":"notiHistory.csv"
   },
   "torrentClient": {

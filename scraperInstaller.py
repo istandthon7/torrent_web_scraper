@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import os
 import shutil
+from typing import Optional
 import setting
 import osHelper
 
@@ -8,7 +9,7 @@ class ScraperInstaller:
 
     mySetting = setting.Setting()
 
-    def __init__(self, configDir: str = None) -> None:
+    def __init__(self, configDir: Optional[str] = None) -> None:
         if configDir is not None:
             self.mySetting.configDirPath = os.path.join(self.mySetting.currentPath, configDir)
             self.mySetting.settingPath = os.path.join(self.mySetting.configDirPath, "setting.json")
@@ -35,17 +36,14 @@ class ScraperInstaller:
             os.mkdir(self.mySetting.configDirPath)
         # setting.json
         if self.copyFileIfNotExist(self.mySetting.settingPath):
-            print("\n\ntransmission 연결정보를 "+ self.mySetting.settingPath+"에 설정해주세요\n")
+            print("\n\ntorrent client 연결정보를 "+ self.mySetting.settingPath+"에 설정해주세요\n")
         self.mySetting.loadJson()
 
-        # Movie.json
-        movieListPath = os.path.join(self.mySetting.configDirPath, self.mySetting.json['movie']['list'])
-        if self.copyFileIfNotExist(movieListPath):
-            print("다운로드할 영화를 "+movieListPath+"에 추가하세요.\n")
-        # TvShow.json
-        tvShowListPath = os.path.join(self.mySetting.configDirPath, self.mySetting.json["tvshow"]["list"])
-        if self.copyFileIfNotExist(tvShowListPath) :
-            print("다운로드할 tv프로그램을 "+tvShowListPath+"에 추가하세요.\n")
+        # downloadRules 섹션에서 각 규칙을 처리합니다.
+        for rule in self.mySetting.json['downloadRules']:
+            listPath = os.path.join(self.mySetting.configDirPath, rule['list'])
+            if self.copyFileIfNotExist(listPath):
+                print(f"다운로드할 항목을 {listPath}에 추가하세요.\n")
 
     def installTransmissionScript(self)->None:
         if os.path.isdir(self.mySetting.transmissionScriptDirPath) is False:

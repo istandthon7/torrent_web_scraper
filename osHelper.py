@@ -55,7 +55,7 @@ def addXToUser(path: str):
 def changeOwner(path: str, uid: int, gid: int):
     if platform.system() == 'Windows':
         return
-    os.chown(path, uid, gid)
+    os.chown(path, uid, gid) # type: ignore
     logging.info(f'폴더 소유자를 변경했어요. {path}, puid: {uid}, pgid: {gid}')
 
 def getUid(path: str) -> int:
@@ -67,12 +67,13 @@ def getGid(path: str) -> int:
 def isOwner(path: str, uid: int, gid: int) -> bool:
     if os.path.exists(path) is False:
         logging.warning(f'폴더가 없네요. {path}')
-        return;
+        return False;
     if uid == getUid(path) and gid == getGid(path):
         return True
     return False
 
 def setOwnerRwxPermission(path: str, puid: int , pgid: int, permissions: str):
+    permission: int
     if puid is not None and pgid is not None:
         logging.debug('폴더 소유자를 설정합니다.')
         if isOwner(path, puid, pgid) is False:

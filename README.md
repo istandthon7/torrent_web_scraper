@@ -4,7 +4,7 @@
 토렌트 클라이언트: [Transmission](https://transmissionbt.com), [qBittorrent](https://www.qbittorrent.org/)
 
 # 1. 소개
-등록된 키워드로 게시판을 검색하여 토렌트(마그넷)를 추가 해주는 웹스크랩퍼(웹크롤러)입니다.
+등록된 키워드로 게시판을 검색하여 토렌트(magnet)를 추가 해주는 스크랩퍼(크롤러)입니다.
 
 # 1.1 설치
 ## 1.1.1 토렌트 클라이언트 설치
@@ -20,37 +20,77 @@ https://github.com/qbittorrent/qBittorrent/wiki/Installing-qBittorrent
     $ ./install.sh
 
 # 1.2 설정
-설치가 완료되면 config디렉토리의 setting.json 파일을 환경에 맞게 수정해야 합니다.
+설치가 완료되면 config디렉토리의 setting.json 파일을 환경에 맞게 수정해야 합니다.  
+'online json editor'를 검색하여 수정하는 것을 추천합니다.
 
 ## 1.2.1 접속정보 설정
 토렌트 클라이언트와 통신할 호스트명(아이피), 포트, 아이디를 지정합니다. 
 Transmission은 웹브라우저에서 http://[transmission이 실행중인 아이피]:9091로 접속을 확인해 보는 것이 좋습니다. 비밀번호는 설정파일에 저장하지 않으므로 실행할 때 파라미터로 전달할 수 있습니다.
 
     "torrentClient": {
+        "type": "qBittorrent" 혹은 "transmission"
         "host": "127.0.0.1",
         "port": 9091 혹은 8080,
         "id": "transmission" 혹은 "admin"
     }
 
 ## 1.2.2 토렌트 사이트 설정 
-도메인에 숫자가 변경되는 경우가 있을 때에는 수정합니다. 
+mainUrl과 게시판을 설정합니다. 게시판은 여러 개로 구성할 수 있고, url은 mainUrl을 제외한 나머지 주소입니다. title selector는 브라우저의 개발자 도구를 이용하여 css selector를 지정합니다. 
 
-    "mainUrl": "https://domainXXX.com/",
+    "mainUrl": "https://mainUrl.com/",
+    "boards": [
+      {
+        "name": "게시판명",
+        "url": "subUrl",
+        "title": {
+          "selector": "ul.list-body > li.list-item"
+        },
+        "downloadRule": "secondRule",
+        "history": 0,
+        "number": 0,
+        "scrapPage": 3
+      },
+      {
+        "name": "게시판2",
+        "url": "usbUrl",
+        "title": {
+          "selector": "ul.list-body > li.list-item"
+        },
+        "downloadRule": "firstRule",
+        "history": 0,
+        "number": 0,
+        "scrapPage": 3
+      }
+    ]
 
+## 1.2.3 downloadRules 설정
+게시판에서 사용할 다운로드 규칙의 프리셋입니다. name은 게시판의 downloadRule과 연결되므로 적당한 이름을 사용하세요. download는 다운로드 경로입니다. list는 키워드 리스트의 파일명이고 config폴더에 위치합니다. createTitleFolder는 키워드 폴더를 생성할지 여부입니다. checkEpisodeNubmer는 회차가 동일한 경우 처음 검색한 것만 추가할지 여부입니다. deleteOlderEpisodes는 토렌트 추가 후 이전 에피소드를 토렌트 클라이언트에서 삭제할지 여부입니다. include는 제외, exclude는 제외할 키워드이며 쉼표로 구분됩니다. removeFromList는 토렌트 추가 후 키워드 리스트에서 삭제할지 여부입니다.
+
+   "downloadRules":[
+    {
+      "name": "firstRule",
+      "download": "",
+      "list": "first.json",
+      "createTitleFolder": true,
+      "checkEpisodeNubmer": false,
+      "deleteOlderEpisodes": true
+    },
+    {
+      "name": "secondRule",
+      "download": "",
+      "list": "second.json",
+      "include": "",
+      "exclude": "",
+      "removeFromList": true
+    }
+  ],
 # 1.3 키워드 추가
-TVShow.json 파일에 제목과 해상도 등을 옵션으로 추가로 지정할 수 있습니다. (옵션은 생략가능) 
+ downloadRules의 list에 해당하는 파일에 name과 option에 키워드를, 제외 키워드에 쉼표로 구분된 키워드를 추가할 수 있고, 상위 폴더와 하위 폴더를 지정할 수 있습니다. 폴더는 downloadRules에서 download 경로가 지정된 경우에 지정할 수 있어요.
 
-    ,{
-      "name": "제목",
-      "option": "720",
-      "option2": "NEXT"
-    }
-
-Movie.json 파일에 추가할 수 있습니다. 코덱과 해상도는 config/setting.json파일의 movie에서 변경할 수 있습니다.
-
-    ,{
-      "name": "제목 2023"
-    }
+    "keywords": [
+        {"name": "키워드", "option": "포함1", "option2":"포함2", "exclude":"제외, 제외2", "parentDir": "상위폴더", "subDir": "하위폴더" }
+        ,{"name": "간단한", "option": "", "option2":""}
+    ]
 
 # 1.4 실행
 __main__.py 폴더에서 다음 명령어를 실행하면 게시판에서 등록한 키워드를 검색하여 토렌트 클라이언트에 추가됩니다. 스크랩은 아주 느리게 작동됩니다. 
@@ -62,10 +102,15 @@ __main__.py 폴더에서 다음 명령어를 실행하면 게시판에서 등록
   
 **주의** 
 
-토렌트 사이트를 웹 스크래핑하는 것은 불법이 아닙니다. 하지만, 토렌트를 사용하여 동영상 등을 배포하여 저작권을 침해하는 것은 불법입니다. 이점을 이해하고 실행 여부를 결정하세요.
+토렌트 사이트를 스크래핑하는 것은 불법이 아닙니다. 하지만, 토렌트 클라이언트는 일반적으로 다운로드 중에 업로드되고, 이로 인한 배포로 저작권을 침해하는 것이므로 불법입니다. 이점을 이해하고 키워드 등록에 각별히 유의하세요.
 
 
 # 변경이력
+## 2.4
+* download rule추가 (setting.json)
+  * tvshow와 movie를 downloadRules로 이동하고 name을 tvshow로 설정하고 사용할 수 있어요. movie는 include에 해상도와 코덱 등을 설정할 수 있어요.
+* sites하위의 categories를 boards로 변경하고 하위에 "downloadRule":"tvshow"로 설정
+* 키워드 파일 포맷 변경
 ## 2.3.2
 * torrentHistory.csv 컬럼 추가 #82 (기존 파일은 삭제/백업이 필요할 수 있어요.)
 ## 2.3.1
