@@ -18,7 +18,7 @@ class BoardScraperTest(unittest.TestCase):
         category = site["boards"][0]
         myBoardScraper = boardScraper.BoardScraper()
         boardItems = myBoardScraper.getBoardItems(site["mainUrl"]+category["url"], 1
-                        , category["title"]["tag"], category["title"]["class"], category["title"].get("selector"))
+                        , category["title"].get("tag"), category["title"].get("class"), category["title"].get("selector"))
         self.assertTrue(boardItems)
 
     def test_getBoardListFromFile(self):
@@ -40,7 +40,7 @@ class BoardScraperTest(unittest.TestCase):
         # act
         myBoardScraper = boardScraper.BoardScraper()
         boardItems = myBoardScraper.getBoardItems(site["mainUrl"]+firstBoard["url"], 1
-            , firstBoard["title"]["tag"], firstBoard["title"]["class"], firstBoard["title"].get("selector"))
+            , firstBoard["title"].get("tag"), firstBoard["title"].get("class"), firstBoard["title"].get("selector"))
         
         # assert
         title = boardItems[0].title
@@ -117,7 +117,7 @@ class BoardScraperTest(unittest.TestCase):
         category = site["boards"][0]
         myBoardScraper = boardScraper.BoardScraper()
         boardItems = myBoardScraper.getBoardItems(site["mainUrl"]+category["url"], 1
-                        , category["title"]["tag"], category["title"]["class"], category["title"].get("selector"))
+                        , category["title"].get("tag"), category["title"].get("class"), category["title"].get("selector"))
         boardItems = list(filter(lambda x: "예고편" not in x.title, boardItems))
         file_path = os.path.join(os.path.dirname(__file__), 'test_magnet.html')
         with open(file_path, 'rb') as f:
