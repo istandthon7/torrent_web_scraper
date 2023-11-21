@@ -36,14 +36,14 @@ class ScraperInstaller:
             os.mkdir(self.mySetting.configDirPath)
         # setting.json
         if self.copyFileIfNotExist(self.mySetting.settingPath):
-            print("\n\ntorrent client 연결정보를 "+ self.mySetting.settingPath+"에 설정해주세요\n")
+            print("\n\ntorrent client 연결정보와 사이트 정보를 "+ self.mySetting.settingPath+"에 설정해주세요\n")
         self.mySetting.loadJson()
 
         # downloadRules 섹션에서 각 규칙을 처리합니다.
         for rule in self.mySetting.json['downloadRules']:
             listPath = os.path.join(self.mySetting.configDirPath, rule['list'])
             if self.copyFileIfNotExist(listPath):
-                print(f"다운로드할 항목을 {listPath}에 추가하세요.\n")
+                print(f"키워드는 {listPath}에 추가하세요.\n")
 
     def installTransmissionScript(self)->None:
         if os.path.isdir(self.mySetting.transmissionScriptDirPath) is False:
