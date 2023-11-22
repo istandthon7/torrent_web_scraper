@@ -26,11 +26,11 @@
             "default": false
           },
           "include": {
-            "type": "string",
+            "type": ["string", "null"],
             "description": "포함, 단어, 쉼표로, 구분"
           },
           "exclude": {
-            "type": "string",
+            "type": ["string", "null"],
             "description": "제외, 단어, 쉼표로, 구분"
           },
           "deleteOlderEpisodes": {
@@ -123,11 +123,7 @@
           "default":"transmission"
         }
       },
-      "required": [
-        "host",
-        "port",
-        "id", "type"
-      ]
+      "required": ["host", "port", "id", "type"]
     },
     "owners":{
       "type":"object",

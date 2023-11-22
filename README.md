@@ -28,10 +28,10 @@ https://github.com/qbittorrent/qBittorrent/wiki/Installing-qBittorrent
 Transmission은 웹브라우저에서 http://[transmission이 실행중인 아이피]:9091로 접속을 확인해 보는 것이 좋습니다. 비밀번호는 설정파일에 저장하지 않으므로 실행할 때 파라미터로 전달할 수 있습니다.
 
     "torrentClient": {
-        "type": "qBittorrent" 혹은 "transmission"
-        "host": "127.0.0.1",
-        "port": 9091 혹은 8080,
-        "id": "transmission" 혹은 "admin"
+      "type": "qBittorrent" 혹은 "transmission"
+      "host": "127.0.0.1",
+      "port": 9091 혹은 8080,
+      "id": "transmission" 혹은 "admin"
     }
 
 ## 1.2.2 토렌트 사이트 설정 
@@ -66,24 +66,25 @@ mainUrl과 게시판을 설정합니다. 게시판은 여러 개로 구성할 �
 ## 1.2.3 downloadRules 설정
 게시판에서 사용할 다운로드 규칙의 프리셋입니다. name은 게시판의 downloadRule과 연결되므로 적당한 이름을 사용하세요. download는 다운로드 경로입니다. list는 키워드 리스트의 파일명이고 config폴더에 위치합니다. createTitleFolder는 키워드 폴더를 생성할지 여부입니다. checkEpisodeNubmer는 회차가 동일한 경우 처음 검색한 것만 추가할지 여부입니다. deleteOlderEpisodes는 토렌트 추가 후 이전 에피소드를 토렌트 클라이언트에서 삭제할지 여부입니다. include는 제외, exclude는 제외할 키워드이며 쉼표로 구분됩니다. removeFromList는 토렌트 추가 후 키워드 리스트에서 삭제할지 여부입니다.
 
-   "downloadRules":[
-    {
-      "name": "firstRule",
-      "download": "",
-      "list": "first.json",
-      "createTitleFolder": true,
-      "checkEpisodeNubmer": false,
-      "deleteOlderEpisodes": true
-    },
-    {
-      "name": "secondRule",
-      "download": "",
-      "list": "second.json",
-      "include": "",
-      "exclude": "",
-      "removeFromList": true
-    }
-  ],
+    "downloadRules":[
+      {
+        "name": "firstRule",
+        "download": "",
+        "list": "first.json",
+        "createTitleFolder": true,
+        "checkEpisodeNubmer": false,
+        "deleteOlderEpisodes": true
+      },
+      {
+        "name": "secondRule",
+        "download": "",
+        "list": "second.json",
+        "include": "",
+        "exclude": "",
+        "removeFromList": true
+      }
+    ],
+
 # 1.3 키워드 추가
  downloadRules의 list에 해당하는 파일에 name과 option에 키워드를, 제외 키워드에 쉼표로 구분된 키워드를 추가할 수 있고, 상위 폴더와 하위 폴더를 지정할 수 있습니다. 폴더는 downloadRules에서 download 경로가 지정된 경우에 지정할 수 있어요.
 
