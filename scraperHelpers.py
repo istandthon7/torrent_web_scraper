@@ -1,4 +1,6 @@
+import argparse
 from http.client import HTTPResponse
+import sys
 from typing import Optional
 from urllib.parse import urlparse
 from urllib.request import Request, urlopen
@@ -9,13 +11,15 @@ import random
 import ssl
 import logging
 
+import setting
+
 def getSoup(url: str):
     try:
         html = getHtml(url)
         soup = BeautifulSoup(html, "html.parser")
         return soup
     except Exception as e:
-        print(f"Exception getSoup url: {url} , error: {str(e)}")
+        logging.error(f"Exception getSoup url: {url} , error: {str(e)}")
     return None
 
 def getHtml(url: str):
@@ -25,7 +29,7 @@ def getHtml(url: str):
         if response is not None:
             return response.read().decode('utf-8','replace')
     except Exception as e:
-        print("Exception getHtml url: "+url+" , error: " + str(e))
+        logging.error("Exception getHtml url: "+url+" , error: " + str(e))
     return None
 
 def getResponse(url) -> Optional[HTTPResponse]:
@@ -61,3 +65,22 @@ def getMainUrl(url: str, responseUrl: str) -> str:
             logging.info(f'url이 변경되었네요. [{url}]->[{mainDomain}]')
         return mainDomain
     return url
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("url", help="저장할 url")
+    parser.add_argument("--savePath", help="HTML을 저장할 경로")
+    args = parser.parse_args()
+    # 로그파일 초기화용
+    mySetting = setting.Setting()
+    logging.info("HTML을 가져오는 중...")
+    html = getHtml(args.url)
+    if html is not None:
+        with open(args.savePath, 'w', encoding='utf-8') as f:
+            f.write(html)
+    else:
+        message = f"HTML을 가져오는 데 실패했습니다: {args.url}"
+        logging.error(message)
+        sys.stderr.write(message)
+
