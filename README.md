@@ -71,7 +71,7 @@ mainUrl과 게시판을 설정합니다. 게시판은 여러 개로 구성할 �
         "name": "firstRule",
         "download": "",
         "list": "first.json",
-        "createTitleFolder": true,
+        "createTitleFolder": false,
         "checkEpisodeNubmer": false,
         "deleteOlderEpisodes": true
       },
@@ -111,7 +111,7 @@ __main__.py 폴더에서 다음 명령어를 실행하면 게시판에서 등록
 * download rule추가 (setting.json)
   * tvshow와 movie를 downloadRules로 이동하고 name을 tvshow로 설정하고 사용할 수 있어요. movie는 include에 해상도와 코덱 등을 설정할 수 있어요.
 * sites하위의 categories를 boards로 변경하고 하위에 "downloadRule":"tvshow"로 설정
-* 키워드 파일 포맷 변경
+* 키워드 파일(downloadRules의 list에 해당하는 파일) 포맷 변경
 ## 2.3.2
 * torrentHistory.csv 컬럼 추가 #82 (기존 파일은 삭제/백업이 필요할 수 있어요.)
 ## 2.3.1
