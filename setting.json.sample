@@ -5,7 +5,7 @@
       "name": "firstRule",
       "download": "",
       "list": "first.json",
-      "createTitleFolder": true,
+      "createTitleFolder": false,
       "checkEpisodeNubmer": false,
       "deleteOlderEpisodes": true
     },

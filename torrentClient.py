@@ -103,8 +103,7 @@ class TransmissionClient(TorrentClient):
         return self.statusCode
 
     def deleteOlderEpisodes(self, regKeyword: str, episode: int) -> None:
-        """ 상태가 Finished 이고 regKeyword 인 토렌트 id를 구해서 삭제 (리스트에 남아있지 않도록 자동삭제되도록 하는
-        기능이다.) """
+        """ 상태가 Finished 이고 regKeyword 인 토렌트 id를 구해서 삭제 (리스트에 남아있지 않도록 자동삭제되도록 하는 기능) """
         if episode is None:
             return
         torrents = self.getAllTorrents()
@@ -113,11 +112,11 @@ class TransmissionClient(TorrentClient):
                 myKeywords = keywords.Keywords()
                 episodeNumber = myKeywords.getEpisodeNumber(torrent["name"])
                 if episodeNumber is None:
-                    logging.info(f'(트랜스미션)tvshow 에피소드 번호를 찾을 수 없습니다. {torrent["name"]}')
+                    logging.info(f'(트랜스미션) 에피소드 번호를 찾을 수 없습니다. {torrent["name"]}')
                     continue
                 if episodeNumber < episode:
                     self.deleteTorrent(torrent["id"])
-                    logging.info(f'(트랜스미션)tvshow 이전 에피소드를 리스트에서 삭제했습니다. {torrent["name"]}')
+                    logging.info(f'(트랜스미션) 이전 에피소드를 리스트에서 삭제했습니다. {torrent["name"]}')
 
     def deleteTorrent(self, torrentId: int) -> int:
         payload = {
@@ -215,11 +214,11 @@ class QBittorrentClient(TorrentClient):
             if regKeyword.lower() in torrent["name"].lower() and torrent["progress"] == 1.0:
                 episodeNumber = myMyKeywords.getEpisodeNumber(torrent["name"])
                 if episodeNumber is None:
-                    logging.info(f'(qBittorrent)tvshow 에피소드 번호를 찾을 수 없습니다. {torrent["name"]}')
+                    logging.info(f'(qBittorrent) 에피소드 번호를 찾을 수 없습니다. {torrent["name"]}')
                     continue
                 if episodeNumber < episode:
                     self.deleteTorrent(torrent["hash"])
-                    logging.info(f'(qBittorrent)tvshow 이전 에피소드를 리스트에서 삭제했습니다. {torrent["name"]}')
+                    logging.info(f'(qBittorrent) 이전 에피소드를 리스트에서 삭제했습니다. {torrent["name"]}')
 
     def getAllTorrents(self) -> List[Dict]:
         response = requests.get(f"{self.url}/torrents/info", headers=self.headers, auth=self.auth, cookies=self.cookies)
