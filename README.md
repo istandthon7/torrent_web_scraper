@@ -17,7 +17,10 @@ https://github.com/qbittorrent/qBittorrent/wiki/Installing-qBittorrent
 ## 1.1.2 스크래퍼 설치
 소스를 다운로드 받은 후에 다음 스크립트를 실행합니다. 관리자 권한이 필요합니다.
 
-    $ ./install.sh
+    # ./install.sh
+ 혹은 가상환경 경로를 지정할 수 있습니다.
+
+    # ./install.sh venv
 
 # 1.2 설정
 설치가 완료되면 config디렉토리의 setting.json 파일을 환경에 맞게 수정해야 합니다.  
