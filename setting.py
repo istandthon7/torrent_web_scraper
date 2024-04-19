@@ -12,7 +12,7 @@ class Setting:
     설정파일을 self.json에 로딩, 저장한다. 
     버전이 변경되면 self.version을 변경해야 한다.(소스에서 아직 참조하지 않으나 필요할 수있음)
     """
-    version = '2.4'
+    version = '2.4.1'
 
     currentPath = os.path.realpath(os.path.dirname(__file__))
     configDirPath = os.path.join(currentPath, "config")
