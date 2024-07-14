@@ -13,12 +13,12 @@ class BoardScraperTest(unittest.TestCase):
         with open(file_path, 'rb') as f:
             mock_response = f.read()
             mock_getResponse.return_value.read.return_value = mock_response
+        setting.Setting.settingPath = os.path.join(setting.Setting.currentPath, 'setting.json.sample')
         mySetting = setting.Setting()
         site = mySetting.json["sites"][0]
-        category = site["boards"][0]
+        board = site["boards"][0]
         myBoardScraper = boardScraper.BoardScraper()
-        boardItems = myBoardScraper.getBoardItems(site["mainUrl"]+category["url"], 1
-                        , category["title"].get("tag"), category["title"].get("class"), category["title"].get("selector"))
+        boardItems = myBoardScraper.getBoardItems(site["mainUrl"]+board["url"], 1, board["title"].get("tag"), board["title"].get("class"), board["title"].get("selector"))
         self.assertTrue(boardItems)
 
     def test_getBoardListFromFile(self):
@@ -33,14 +33,14 @@ class BoardScraperTest(unittest.TestCase):
             mock_response = f.read()
             mock_getResponse.return_value.read.return_value = mock_response
         # arrange
+        setting.Setting.settingPath = os.path.join(setting.Setting.currentPath, 'setting.json.sample')
         mySetting = setting.Setting()
         site = mySetting.json["sites"][0]
         firstBoard = site["boards"][0]
         firstBoard["history"] = 0
         # act
         myBoardScraper = boardScraper.BoardScraper()
-        boardItems = myBoardScraper.getBoardItems(site["mainUrl"]+firstBoard["url"], 1
-            , firstBoard["title"].get("tag"), firstBoard["title"].get("class"), firstBoard["title"].get("selector"))
+        boardItems = myBoardScraper.getBoardItems(site["mainUrl"]+firstBoard["url"], 1, firstBoard["title"].get("tag"), firstBoard["title"].get("class"), firstBoard["title"].get("selector"))
         
         # assert
         title = boardItems[0].title
@@ -112,12 +112,12 @@ class BoardScraperTest(unittest.TestCase):
         with open(file_path, 'rb') as f:
             mock_response = f.read()
             mock_getResponse.return_value.read.return_value = mock_response
+        setting.Setting.settingPath = os.path.join(setting.Setting.currentPath, 'setting.json.sample')
         mySetting = setting.Setting()
         site = mySetting.json["sites"][0]
-        category = site["boards"][0]
+        board = site["boards"][0]
         myBoardScraper = boardScraper.BoardScraper()
-        boardItems = myBoardScraper.getBoardItems(site["mainUrl"]+category["url"], 1
-                        , category["title"].get("tag"), category["title"].get("class"), category["title"].get("selector"))
+        boardItems = myBoardScraper.getBoardItems(site["mainUrl"]+board["url"], 1, board["title"].get("tag"), board["title"].get("class"), board["title"].get("selector"))
         boardItems = list(filter(lambda x: "예고편" not in x.title, boardItems))
         file_path = os.path.join(os.path.dirname(__file__), 'test_magnet.html')
         with open(file_path, 'rb') as f:
