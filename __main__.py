@@ -6,6 +6,7 @@ import os
 import stat
 import sys
 from typing import Union
+from urllib.parse import urljoin
 
 import boardScraper
 import history
@@ -76,8 +77,7 @@ if __name__ == '__main__':
                     logging.info(f'페이지 스크랩을 마칩니다.')
                     break;
 
-                boardItems = myBoardScraper.getBoardItems(site["mainUrl"]+board["url"], pageNumber
-                                , board["title"].get("tag"), board["title"].get("class"), board["title"].get("selector"))
+                boardItems = myBoardScraper.getBoardItems(site["mainUrl"]+board["url"], pageNumber, board["title"].get("tag"), board["title"].get("class"), board["title"].get("selector"))
 
                 if not boardItems:
                     isScrapFail = True
@@ -96,8 +96,7 @@ if __name__ == '__main__':
                     break;
 
                 for boardItemIndex, boardItem in enumerate(boardItems, start=1):
-                    if boardItem.url.startswith("http") is False:
-                        boardItem.url = (str(site["mainUrl"])[:-1])+boardItem.url
+                    boardItem.url = urljoin(site["mainUrl"], boardItem.url)
                     logging.debug(f'게시물 제목검색을 시작합니다. id: {boardItem.id}, {boardItem.title}, {boardItem.url}')
 
                     regKeyword = myKeywords.getRegKeyword(boardItem.title, downloadRuleSetting)
@@ -115,8 +114,7 @@ if __name__ == '__main__':
                     magnet = myBoardScraper.getMagnet(boardItem.url)
 
                     downloadPath = ""
-                    downloadPath = myKeywords.getSavePath(regKeyword, downloadRuleSetting['download']
-                                                                   , downloadRuleSetting.get("createTitleFolder", True))
+                    downloadPath = myKeywords.getSavePath(regKeyword, downloadRuleSetting['download'], downloadRuleSetting.get("createTitleFolder", True))
                         
                     ownersSetting = mySetting.json["owners"]
                     if len(downloadPath) > 0:
