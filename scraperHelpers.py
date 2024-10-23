@@ -5,13 +5,23 @@ from typing import Optional
 from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError, URLError
-from bs4 import BeautifulSoup
+import logging
+import setting
+# 로그파일 초기화용
+mySetting = setting.Setting()
+
+# bs4 모듈이 설치되어 있는지 확인
+try:
+    from bs4 import BeautifulSoup
+except ImportError:
+    message = "Error: 'beautifulsoup4' 모듈이 설치되지 않았습니다."
+    logging.error(message)
+    sys.stderr.write(message)
+    sys.exit(1)
 import time
 import random
 import ssl
-import logging
 
-import setting
 
 def getSoup(url: str):
     try:
@@ -45,9 +55,9 @@ def getResponse(url) -> Optional[HTTPResponse]:
         else:
             raise
     except URLError as er:
-        logging.error(f"사이트 주소가 변경등으로 정상적으로 작동하지 않아요. 원인: {er.reason}, url: {url}")
+        logging.error(f"URL을 열거나 읽는 동안 발생하는 오류가 발생했어요. 원인: {er.reason}, url: {url}")
     except ConnectionResetError as er:
-        logging.error(f"서버가 연결을 종료했습니다. 원인: {er.strerror}, url: {url}")
+        logging.error(f"네트워크 연결이 원격 호스트에 의해 강제로 재설정되었어요. 원인: {er.strerror}, url: {url}")
     return None
 
 def getSoupFromFile(filePath: str):
@@ -68,12 +78,12 @@ def getMainUrl(url: str, responseUrl: str) -> str:
 
 
 if __name__ == '__main__':
+    logging.info("스크랩을 시작하는 중...")
     parser = argparse.ArgumentParser()
     parser.add_argument("url", help="저장할 url")
     parser.add_argument("--savePath", help="HTML을 저장할 경로")
     args = parser.parse_args()
-    # 로그파일 초기화용
-    mySetting = setting.Setting()
+    
     logging.info("HTML을 가져오는 중...")
     html = getHtml(args.url)
     if html is not None:
