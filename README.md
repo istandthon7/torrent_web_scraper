@@ -110,6 +110,9 @@ __main__.py 폴더에서 다음 명령어를 실행하면 게시판에서 등록
 
 
 # 변경이력
+## 2.5
+* python 3.8 -> 3.9
+* 보안이슈로 패키지 버전업(urllib3: 1.26.19->2.5.0, request: 2.32.2->2.32.4)
 ## 2.4
 * download rule추가 (setting.json)
   * tvshow와 movie를 downloadRules로 이동하고 name을 tvshow로 설정하고 사용할 수 있어요. movie는 include에 해상도와 코덱 등을 설정할 수 있어요.
