@@ -1,6 +1,6 @@
 **실행 환경**  
 테스트 OS : 리눅스(우분투, 데비안, 라즈베리파이OS), 윈도우10, 윈도우11  
-실행 언어 : Python3.8이상  
+실행 언어 : Python3.9이상  
 토렌트 클라이언트: [Transmission](https://transmissionbt.com), [qBittorrent](https://www.qbittorrent.org/)
 
 # 1. 소개
