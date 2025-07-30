@@ -8,7 +8,7 @@ set -e
 
 # ubuntu or debian
 apt update
-apt install -y python3-pip python3-testresources curl
+apt install -y python3-pip curl
 
 # 가상 환경 생성 및 활성화
 if [ -n "$VENV_PATH" ]; then
