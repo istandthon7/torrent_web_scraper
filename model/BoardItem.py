@@ -2,15 +2,16 @@ import logging
 import re
 from typing import Optional
 from bs4 import Tag
+from dataclasses import dataclass
 
-class BoardItem:
-    number : Optional[int]
+@dataclass
+class BoardItem():
 
-    def __init__(self, title: str = '', url: str = '', ID: int = -1, number: int = -1):
-        self.title = title
-        self.url = url
-        self.id = ID
-        self.number = number
+    title: str = ''
+    url: str = ''
+    id: int = -1
+    number : Optional[int] = -1
+    """게시판 번호는 선택적이며, 일부 게시판에서는 사용되지 않을 수 있습니다."""
 
     def setItem(self, aTag: Tag, boardNumber: Optional[int]):
         self.number = boardNumber
