@@ -54,6 +54,7 @@
   "notification": {
     "cmd": "",
     "keywords": ["키워드", "키워드2"],
+    "excludeKeywords": ["광고", "스팸", "테스트"],
     "history":"notiHistory.csv"
   },
   "torrentClient": {

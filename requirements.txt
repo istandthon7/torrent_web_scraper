@@ -5,3 +5,4 @@ idna==3.7
 requests==2.32.4
 soupsieve==2.3.2.post1
 urllib3==2.5.0
+dataclasses-json==0.6.7

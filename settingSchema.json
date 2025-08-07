@@ -84,7 +84,12 @@
           "items": [
             {
               "type": "string"
-            },
+            }
+          ]
+        },
+        "excludeKeywords": {
+          "type": "array",
+          "items": [
             {
               "type": "string"
             }

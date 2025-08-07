@@ -3,37 +3,39 @@ import datetime
 import logging
 import os
 import subprocess
-from typing import Any, Dict, List
+from typing import List, Final
+from dataclasses import dataclass, field
+from dataclasses_json import dataclass_json, LetterCase
 
 import stringHelper
 from model.BoardItem import BoardItem
 
-# Constants
-ENCODING = "utf-8"
+ENCODING:Final[str] = "utf-8"
+
+@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass
+class NotificationSetting:
+    cmd: str = ""
+    history: str = ""
+    keywords: List[str] = field(default_factory=list)
+    exclude_keywords: List[str] = field(default_factory=list)
 
 class Notification(stringHelper.StringHelper):
     notifications: List[List[str]] = []
 
-    def __init__(self, configDirPath: str, notiSetting: Dict[str, Any]):
-        self.notiSetting = notiSetting  # mySetting.json["notification"]
-        self.historyFilePath = os.path.join(configDirPath, self.notiSetting["history"])
+    def __init__(self, configDirPath: str, notiSetting: dict):
+        self.notiSetting: NotificationSetting = NotificationSetting.from_dict(notiSetting) # type: ignore[attr-defined]
+        self.historyFilePath = os.path.join(configDirPath, self.notiSetting.history)
         if os.path.isfile(self.historyFilePath):
             with open(self.historyFilePath, 'r', encoding=ENCODING) as f:
                 self.notifications = list(csv.reader(f))
 
     def processNotification(self, siteName: str, boardItem: BoardItem) -> bool:
-        """
-        Process the notification.
-        If at least one notification is processed, return True.
-        If no notifications are processed, return False.
-        """
-        if not isinstance(self.notiSetting, dict):
-            logging.error("Notification settings must be a dictionary.")
-            return False
+        """ Process the notification for a given site and board item."""
 
         notification_processed = False
-        for keyword in self.notiSetting["keywords"]:
-            if keyword in boardItem.title:
+        for keyword in self.notiSetting.keywords:
+            if keyword in boardItem.title and all(ex not in boardItem.title for ex in self.notiSetting.exclude_keywords):
                 if self.isTitleInNotificationHistory(boardItem.title):
                     logging.info(f"[{siteName}] Already in the notification history. [{boardItem.title}]")
                     continue
@@ -49,7 +51,7 @@ class Notification(stringHelper.StringHelper):
 
     def runNotiScript(self, siteName: str, boardTitle: str) -> int:
         """Run the notification script and return the exit code."""
-        cmd = self.notiSetting["cmd"]
+        cmd = self.notiSetting.cmd
         if cmd is not None and cmd != "":
             cmd = cmd.replace("$board_title", "[" + siteName + "]" + boardTitle.replace("'", "`"))
             try:
