@@ -2,7 +2,6 @@ import json
 import logging
 import os
 import stringHelper
-from typing import Optional
 
 class Keywords(stringHelper.StringHelper):
 
@@ -17,13 +16,13 @@ class Keywords(stringHelper.StringHelper):
             # 저장은 직접
             #self.save()
 
-    def getRegKeyword(self, boardTitle: str, downloadRuleSetting: dict) -> Optional[dict]:
+    def getRegKeyword(self, boardTitle: str, downloadRuleSetting: dict) -> dict:
         for keyword in self.json['keywords']:
             if not self.isWordContainedInParam(keyword['name'].replace(":", " "), boardTitle):
                 logging.debug(f'[{keyword["name"]}] 키워드에 해당하지 않습니다. {boardTitle}')
                 continue
             if 'exclude' in downloadRuleSetting and downloadRuleSetting['exclude'] and self.IsContainAnyCommaSeparatedWordsInBoardTitle(downloadRuleSetting['exclude'], boardTitle):
-                logging.info(f"[{keyword['name']}] 제외 키워드가 포함되어 있어요. [{downloadRuleSetting['exclude']}] '{boardTitle}'")
+                logging.info(f"[{keyword['name']}] 전체 제외 키워드가 포함되어 있어요. [{downloadRuleSetting['exclude']}] '{boardTitle}'")
                 continue
             if 'exclude' in keyword and keyword['exclude'] and self.IsContainAnyCommaSeparatedWordsInBoardTitle(keyword['exclude'], boardTitle):
                 logging.info(f"[{keyword['name']}] 제외 키워드가 포함되어 있어요. [{keyword['exclude']}]")
@@ -45,7 +44,7 @@ class Keywords(stringHelper.StringHelper):
                     return keyword
             else:
                 return keyword
-        return None
+        return {}
             
     def load(self, listFileName: str):
         try:

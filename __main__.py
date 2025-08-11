@@ -5,12 +5,13 @@ import logging
 import os
 import stat
 import sys
-from typing import Union
+from typing import List, Union
 from urllib.parse import urljoin
 
 import boardScraper
 import history
 import keywords
+from model.BoardItem import BoardItem
 import notification
 import osHelper
 import scraperHelpers
@@ -77,7 +78,7 @@ if __name__ == '__main__':
                     logging.info(f'페이지 스크랩을 마칩니다.')
                     break;
 
-                boardItems = myBoardScraper.getBoardItems(site["mainUrl"]+board["url"], pageNumber, board["title"].get("tag"), board["title"].get("class"), board["title"].get("selector"))
+                boardItems: List[BoardItem] = myBoardScraper.getBoardItems(site["mainUrl"]+board["url"], pageNumber, board["title"].get("tag"), board["title"].get("class"), board["title"].get("selector"))
 
                 if not boardItems:
                     isScrapFail = True
