@@ -21,33 +21,39 @@ class NotificationSetting:
     exclude_keywords: List[str] = field(default_factory=list)
 
 class Notification(stringHelper.StringHelper):
-    notifications: List[List[str]] = []
+    histories: List[List[str]] = []
 
     def __init__(self, configDirPath: str, notiSetting: dict):
         self.notiSetting: NotificationSetting = NotificationSetting.from_dict(notiSetting) # type: ignore[attr-defined]
         self.historyFilePath = os.path.join(configDirPath, self.notiSetting.history)
         if os.path.isfile(self.historyFilePath):
             with open(self.historyFilePath, 'r', encoding=ENCODING) as f:
-                self.notifications = list(csv.reader(f))
+                self.histories = list(csv.reader(f))
 
     def processNotification(self, siteName: str, boardItem: BoardItem) -> bool:
-        """ Process the notification for a given site and board item."""
+        added = False
 
-        notification_processed = False
         for keyword in self.notiSetting.keywords:
-            if keyword in boardItem.title and all(ex not in boardItem.title for ex in self.notiSetting.exclude_keywords):
-                if self.isTitleInNotificationHistory(boardItem.title):
-                    logging.info(f"[{siteName}] Already in the notification history. [{boardItem.title}]")
-                    continue
-                try:
-                    self.runNotiScript(siteName, boardItem.title)
-                    # 알림 중복 방지 및 내역에서 직접 확인
-                    self.appendNotiHistory(siteName, boardItem.title, keyword, boardItem.url)
-                    notification_processed = True
-                except Exception as e:
-                    logging.error(f"Error processing notification for {siteName} and {boardItem.title}: {e}")
+            if keyword not in boardItem.title:
+                logging.debug(f"[notification] site={siteName} title={boardItem.title} keyword={keyword} reason=KEYWORD_NOT_IN_TITLE")
+                continue
+            if any(ex in boardItem.title for ex in self.notiSetting.exclude_keywords):
+                logging.info(f"[notification] site={siteName} title={boardItem.title} keyword={keyword} reason=EXCLUDED_BY_RULE excludes={self.notiSetting.exclude_keywords}")
+                continue
+            if self.isTitleInNotificationHistory(boardItem.title):
+                logging.info(f"[notification] site={siteName} title={boardItem.title} keyword={keyword} reason=DUPLICATE_IN_HISTORY")
+                continue
 
-        return notification_processed
+            try:
+                self.runNotiScript(siteName, boardItem.title)
+                self.appendNotiHistory(siteName, boardItem.title, keyword, boardItem.url)
+                logging.info(f"[notification] site={siteName} title={boardItem.title} keyword={keyword} action=NOTIFICATION_SENT")
+                added = True
+            except Exception as e:
+                logging.error(f"[notification] site={siteName} title={boardItem.title} keyword={keyword} action=NOTIFICATION_FAILED error={e}")
+
+        return added
+
 
     def runNotiScript(self, siteName: str, boardTitle: str) -> int:
         """Run the notification script and return the exit code."""
@@ -67,7 +73,7 @@ class Notification(stringHelper.StringHelper):
 
     def isTitleInNotificationHistory(self, title: str) -> bool:
         """Check if the given title is already in the notification history."""
-        for notification in self.notifications:
+        for notification in self.histories:
             if self.isExactWordInParam(title, notification[2]):
                 return True
         return False
@@ -80,7 +86,7 @@ class Notification(stringHelper.StringHelper):
             with open(self.historyFilePath, 'a', encoding=ENCODING) as f:
                 writer = csv.writer(f)
                 writer.writerow(new)
-            self.notifications.append(new)
+            self.histories.append(new)
             logging.info(f"addNotiHistory. [{new}]")
         except PermissionError:
             logging.error(f"Permission denied when trying to write to {self.historyFilePath}")

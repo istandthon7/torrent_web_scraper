@@ -65,7 +65,7 @@ class NotificationTest(unittest.TestCase):
     def test_processNotification_title_in_history(self):
         self.noti_dict["keywords"].insert(0, "키워드")
         noti = notification.Notification(self.configDirPath, self.noti_dict)
-        noti.notifications = [["2023-09-13 22:57:22", "사이트명", "테스트 게시판 제목 키워드", "키워드"]]
+        noti.histories = [["2023-09-13 22:57:22", "사이트명", "테스트 게시판 제목 키워드", "키워드"]]
         boardItem = BoardItem(title="테스트 게시판 제목 키워드")
         with patch.object(noti, 'runNotiScript') as mocked_run:
             result = noti.processNotification("사이트명", boardItem)
@@ -81,13 +81,13 @@ class NotificationTest(unittest.TestCase):
 
     def test_isTitleInNotificationHistory(self):
         noti = notification.Notification(self.configDirPath, self.noti_dict)
-        noti.notifications = [["2023-09-13 22:57:22", "사이트명", "테스트 게시판 제목", "키워드", "https://example.com"]]
+        noti.histories = [["2023-09-13 22:57:22", "사이트명", "테스트 게시판 제목", "키워드", "https://example.com"]]
         result = noti.isTitleInNotificationHistory("테스트 게시판 제목")
         self.assertTrue(result)
 
     def test_isTitleInNotificationHistory2(self):
         noti = notification.Notification(self.configDirPath, self.noti_dict)
-        noti.notifications = [
+        noti.histories = [
             ["2023-09-13 22:57:22", "사이트명", "특별시 귀신들,2009.720p.WEBRip.H264.AAC", "키워드", "https://example.com"],
             ["2023-09-13 22:57:22", "사이트명", "특별시 귀신들,2009 720p WEBRip H264 AAC", "키워드", "https://example.com"],
             ["2023-09-13 22:57:22", "사이트명", "[한국영화] 특별시 귀신들,2009.720p.WEBRip.H264.AAC", "키워드", "https://example.com"]
@@ -97,7 +97,7 @@ class NotificationTest(unittest.TestCase):
 
     def test_isTitleInNotificationHistory3(self):
         noti = notification.Notification(self.configDirPath, self.noti_dict)
-        noti.notifications = [
+        noti.histories = [
             ["2023-09-13 22:57:22", "사이트명", "특별시 귀신들,2009.720p.WEBRip.H264.AAC", "키워드", "https://example.com"],
             ["2023-09-13 22:57:22", "사이트명", "특별시 귀신들,2009 720p WEBRip H264 AAC", "키워드", "https://example.com"],
             ["2023-09-13 22:57:22", "사이트명", "[한국영화] 특별시 귀신들,2009.720p.WEBRip.H264.AAC", "키워드", "https://example.com"]
