@@ -14,11 +14,11 @@ class NotificationTest(unittest.TestCase):
         self.noti_dict = mySetting.json["notification"]
         self.configDirPath = mySetting.configDirPath
         self.noti_dict["history"] = 'test_notification.csv'
-        open(self.noti_dict["history"], 'w').close()
+        open(os.path.join(self.configDirPath, self.noti_dict["history"]), 'w').close()
         self.noti_dict["cmd"] = "C:\\windows\\system32\\cmd.exe /C echo 'torrent_web_scraper keyword notification. $board_title' "
 
     def tearDown(self):
-        os.remove(self.noti_dict["history"])
+        os.remove(os.path.join(self.configDirPath, self.noti_dict["history"]))
 
     def test_processNotification_keyword_not_in_title(self):
         self.noti_dict["keywords"].insert(0, "왕밤빵")
