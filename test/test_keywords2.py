@@ -6,78 +6,73 @@ import setting
 class KeywordsTest2(unittest.TestCase):
     def setUp(self):
         mySetting = setting.Setting()
-        self.downloadRule = {}
         self.myKeywords = keywords.Keywords()
-        self.testFilePath = os.path.join(mySetting.configDirPath, 'test_keyword2_list.json')
-        open(self.testFilePath, 'w').close()
-        self.myKeywords.load(os.path.join(mySetting.configDirPath, self.testFilePath))
-
-    def tearDown(self):
-        os.remove(self.testFilePath)
+        self.downloadRuleSetting = next((rule for rule in mySetting.json['downloadRules'] if rule['name'] == 'tvshow'), None)
+        self.myKeywords.load(mySetting.configDirPath, self.downloadRuleSetting)
 
     def test_getRegKeyword_대소문자_있으면(self):
         regKeywordOrg = "Title like this and that"
         self.myKeywords.addKeyword(regKeywordOrg)
-        regKeyword = self.myKeywords.getRegKeyword("이런 저런 제목.Title like this and that,2022.1080p.KOR.FHDRip.H264.AAC.REEL", self.downloadRule)
+        regKeyword = self.myKeywords.getRegKeyword("이런 저런 제목.Title like this and that,2022.1080p.KOR.FHDRip.H264.AAC.REEL")
         self.assertEqual(regKeywordOrg, regKeyword['name'])
 
     def test_getRegKeyword_소문자만_있으면(self):
         regKeywordOrg = "title like this and that"
         self.myKeywords.addKeyword(regKeywordOrg)
-        regKeyword = self.myKeywords.getRegKeyword("이런 저런 제목.Title like this and that,2022.1080p.KOR.FHDRip.H264.AAC.REEL", self.downloadRule)
+        regKeyword = self.myKeywords.getRegKeyword("이런 저런 제목.Title like this and that,2022.1080p.KOR.FHDRip.H264.AAC.REEL")
         self.assertEqual(regKeywordOrg, regKeyword['name'])
 
     def test_getRegKeyword(self):
         regKeywordOrg = "이런 저런 제목 2022"
         self.myKeywords.addKeyword(regKeywordOrg)
-        regKeyword = self.myKeywords.getRegKeyword("이런 저런 제목.Title like this and that,2022.1080p.KOR.FHDRip.H264.AAC.REEL", self.downloadRule)
+        regKeyword = self.myKeywords.getRegKeyword("이런 저런 제목.Title like this and that,2022.1080p.KOR.FHDRip.H264.AAC.REEL")
         self.assertEqual(regKeywordOrg, regKeyword['name'])
 
     def test_getRegKeyword_등록된것이_없으면(self):
         regKeywordOrg = "재미난 테스트"
         self.myKeywords.addKeyword(regKeywordOrg)
-        regKeyword = self.myKeywords.getRegKeyword("이런 저런 제목.Title like this and that,2022.1080p.KOR.FHDRip.H264.AAC.REEL", self.downloadRule)
-        self.assertIsNone(regKeyword)
+        regKeyword = self.myKeywords.getRegKeyword("이런 저런 제목.Title like this and that,2022.1080p.KOR.FHDRip.H264.AAC.REEL")
+        self.assertEqual(regKeyword, {})
         
     def test_getRegKeyword_년도가_없어도(self):
         regKeywordOrg = "이런 저런 제목"
         self.myKeywords.addKeyword(regKeywordOrg)
-        regKeyword = self.myKeywords.getRegKeyword("이런 저런 제목.Title like this and that,2022.1080p.KOR.FHDRip.H264.AAC.REEL", self.downloadRule)
+        regKeyword = self.myKeywords.getRegKeyword("이런 저런 제목.Title like this and that,2022.1080p.KOR.FHDRip.H264.AAC.REEL")
         self.assertEqual(regKeywordOrg, regKeyword['name'])
     
     def test_getRegKeyword_년도가_다르면(self):
         regKeywordOrg = "이런 저런 제목 2021"
         self.myKeywords.addKeyword(regKeywordOrg)
-        regKeyword = self.myKeywords.getRegKeyword("이런 저런 제목.Title like this and that,2022.1080p.KOR.FHDRip.H264.AAC.REEL", self.downloadRule)
-        self.assertIsNone(regKeyword)
+        regKeyword = self.myKeywords.getRegKeyword("이런 저런 제목.Title like this and that,2022.1080p.KOR.FHDRip.H264.AAC.REEL")
+        self.assertEqual(regKeyword, {})
 
     def test_getRegKeyword_include_같으면(self):
-        self.downloadRule['include'] = "1080"
+        self.downloadRuleSetting['include'] = "1080"
         regKeywordOrg = "이런 저런 제목"
         self.myKeywords.addKeyword(regKeywordOrg)
-        regKeyword = self.myKeywords.getRegKeyword("이런 저런 제목.Title like this and that,2022.1080p.KOR.FHDRip.H264.AAC.REEL", self.downloadRule)
+        regKeyword = self.myKeywords.getRegKeyword("이런 저런 제목.Title like this and that,2022.1080p.KOR.FHDRip.H264.AAC.REEL")
         self.assertEqual(regKeywordOrg, regKeyword['name'])
 
     def test_getRegKeyword_include가_다르면(self):
-        self.downloadRule['include'] = "720"
+        self.downloadRuleSetting['include'] = "720"
         regKeywordOrg = "이런 저런 제목"
         self.myKeywords.addKeyword(regKeywordOrg)
-        regKeyword = self.myKeywords.getRegKeyword("이런 저런 제목.Title like this and that,2022.1080p.KOR.FHDRip.H264.AAC.REEL", self.downloadRule)
-        self.assertIsNone(regKeyword)
+        regKeyword = self.myKeywords.getRegKeyword("이런 저런 제목.Title like this and that,2022.1080p.KOR.FHDRip.H264.AAC.REEL")
+        self.assertEqual(regKeyword, {})
 
     def test_getRegKeyword_include_같으면2(self):
-        self.downloadRule['include'] = "264"
+        self.downloadRuleSetting['include'] = "264"
         regKeywordOrg = "이런 저런 제목"
         self.myKeywords.addKeyword(regKeywordOrg)
-        regKeyword = self.myKeywords.getRegKeyword("이런 저런 제목.Title like this and that,2022.1080p.KOR.FHDRip.H264.AAC.REEL", self.downloadRule)
+        regKeyword = self.myKeywords.getRegKeyword("이런 저런 제목.Title like this and that,2022.1080p.KOR.FHDRip.H264.AAC.REEL")
         self.assertEqual(regKeywordOrg, regKeyword['name'])
 
     def test_getRegKeyword_include_다르면(self):
-        self.downloadRule['include'] = "265"
+        self.downloadRuleSetting['include'] = "265"
         regKeywordOrg = "이런 저런 제목"
         self.myKeywords.addKeyword(regKeywordOrg)
-        regKeyword = self.myKeywords.getRegKeyword("이런 저런 제목.Title like this and that,2022.1080p.KOR.FHDRip.H264.AAC.REEL", self.downloadRule)
-        self.assertIsNone(regKeyword)
+        regKeyword = self.myKeywords.getRegKeyword("이런 저런 제목.Title like this and that,2022.1080p.KOR.FHDRip.H264.AAC.REEL")
+        self.assertEqual(regKeyword, {})
 
     def test_removeKeyword(self):
         # arrange
@@ -125,84 +120,84 @@ class KeywordsTest2(unittest.TestCase):
         self.myKeywords.addKeyword(regKeywordOrg)
 
         # action
-        regKeyword = self.myKeywords.getRegKeyword("제목 부제 1080 264", self.downloadRule)
+        regKeyword = self.myKeywords.getRegKeyword("제목 부제 1080 264")
 
         # assert 
-        self.assertIsNotNone(regKeyword)
+        self.assertEqual(regKeywordOrg, regKeyword['name'])
 
     def test_getRegKeyword_exclude_keyword(self):
         # arrange
         boardTitle = "나의 테스트 제목"
         self.myKeywords.addKeyword(boardTitle)
-        self.downloadRule['exclude'] = "제외"
+        self.downloadRuleSetting['exclude'] = "제외"
 
         # action
-        result = self.myKeywords.getRegKeyword(boardTitle + " 제외", self.downloadRule)
+        regKeyword = self.myKeywords.getRegKeyword(boardTitle + " 제외")
 
         # assert
-        self.assertIsNone(result)
+        self.assertEqual(regKeyword, {})
 
     def test_getRegKeyword_exclude_keywords(self):
         # arrange
         boardTitle = "나의 테스트 제목"
         self.myKeywords.addKeyword(boardTitle)
-        self.downloadRule['exclude'] = "제외, 너도"
+        self.downloadRuleSetting['exclude'] = "제외, 너도"
 
         # action
-        result = self.myKeywords.getRegKeyword(boardTitle + " 너도", self.downloadRule)
+        regKeyword = self.myKeywords.getRegKeyword(boardTitle + " 너도")
 
         # assert
-        self.assertIsNone(result)
+        self.assertEqual(regKeyword, {})
 
     def test_getRegKeyword_exclude_keyword_not_contain(self):
         # arrange
-        self.downloadRule["include"] = "1080"
-        movieTitle = "나의 테스트 제목"
-        boardTitle = f"{movieTitle} 1080"
-        self.myKeywords.addKeyword(movieTitle)
-        self.downloadRule['exclude'] = "제외, 너도"
+        self.downloadRuleSetting["include"] = "1080"
+        regKeywordOrg = "나의 테스트 제목"
+        boardTitle = f"{regKeywordOrg} 1080"
+        self.myKeywords.addKeyword(regKeywordOrg)
+        self.downloadRuleSetting['exclude'] = "제외, 너도"
 
         # action
-        result = self.myKeywords.getRegKeyword(boardTitle, self.downloadRule)
+        regKeyword = self.myKeywords.getRegKeyword(boardTitle)
 
         # assert
-        self.assertEqual(result['name'], movieTitle)
+        self.assertEqual(regKeywordOrg, regKeyword['name'])
 
     def test_getRegKeyword_exclude_keywords_space(self):
         # arrange
         boardTitle = "나의 테스트 제목너도"
         self.myKeywords.addKeyword(boardTitle)
-        self.downloadRule['exclude'] = "제외, 너도"
+        self.downloadRuleSetting['exclude'] = "제외, 너도"
 
         # action
-        result = self.myKeywords.getRegKeyword(boardTitle, self.downloadRule)
+        regKeyword = self.myKeywords.getRegKeyword(boardTitle)
 
         # assert
-        self.assertIsNone(result)
+        self.assertEqual(regKeyword, {})
 
     def test_getRegKeyword_exclude_keywords_space_word(self):
         # arrange
         boardTitle = "나의 테스트 제목 너도"
         self.myKeywords.addKeyword(boardTitle)
-        self.downloadRule['exclude'] = "제외, 너도"
+        self.downloadRuleSetting['exclude'] = "제외, 너도"
 
         # action
-        result = self.myKeywords.getRegKeyword(boardTitle, self.downloadRule)
+        regKeyword = self.myKeywords.getRegKeyword(boardTitle)
 
         # assert
-        self.assertIsNone(result)
+        self.assertEqual(regKeyword, {})
 
     def test_getRegKeyword_exclude_keywords_endof_comma(self):
         # arrange
         boardTitle = "나의 테스트 제목 너도"
         self.myKeywords.addKeyword(boardTitle)
-        self.downloadRule['exclude'] = "제외, 너도,"
+        self.downloadRuleSetting['exclude'] = "제외, 너도,"
 
         # action
-        result = self.myKeywords.getRegKeyword(boardTitle, self.downloadRule)
+        regKeyword = self.myKeywords.getRegKeyword(boardTitle)
 
         # assert
-        self.assertIsNone(result)
+        self.assertEqual(regKeyword, {})
 
 if __name__ == '__main__':  
     unittest.main()

@@ -16,47 +16,49 @@ class Keywords(stringHelper.StringHelper):
             # 저장은 직접
             #self.save()
 
-    def getRegKeyword(self, boardTitle: str, downloadRuleSetting: dict) -> dict:
+    def isKeywordMatchForTitle(self, keyword: dict, title: str) -> bool:
+        if not self.isWordContainedInParam(keyword['name'].replace(":", " "), title):
+            logging.debug(f'[{keyword["name"]}] 키워드에 해당하지 않습니다. {title}')
+            return False
+        if 'exclude' in self.downloadRuleSetting and self.downloadRuleSetting['exclude'] and self.IsContainAnyCommaSeparatedWordsInBoardTitle(self.downloadRuleSetting['exclude'], title):
+            logging.info(f"[{keyword['name']}] 전체 제외 키워드가 포함되어 있어요. [{self.downloadRuleSetting['exclude']}] '{title}'")
+            return False
+        if 'exclude' in keyword and keyword['exclude'] and self.IsContainAnyCommaSeparatedWordsInBoardTitle(keyword['exclude'], title):
+            logging.info(f"[{keyword['name']}] 제외 키워드가 포함되어 있어요. [{keyword['exclude']}]")
+            return False
+        if not self.isWordContainedInParam(keyword['option'], title):
+            logging.info(f"[{keyword['name']}] option이 달라요. [{keyword['option']}] '{title}'")
+            return False
+        if not self.isWordContainedInParam(keyword['option2'], title):
+            logging.info(f"[{keyword['name']}] option2가 달라요. [{keyword['option2']}] '{title}'")
+            return False
+        if 'include' in self.downloadRuleSetting and self.downloadRuleSetting['include']:
+            includes = self.downloadRuleSetting['include'].split(', ')
+            for include in includes:
+                if not self.isWordContainedInParam(include, title):
+                    logging.info(f"[{keyword['name']}] 포함되어야 하는 단어가 없어요. [{include}] '{title}'")
+                    return False
+        return True
+
+    def getRegKeyword(self, boardTitle: str) -> dict:
         for keyword in self.json['keywords']:
-            if not self.isWordContainedInParam(keyword['name'].replace(":", " "), boardTitle):
-                logging.debug(f'[{keyword["name"]}] 키워드에 해당하지 않습니다. {boardTitle}')
-                continue
-            if 'exclude' in downloadRuleSetting and downloadRuleSetting['exclude'] and self.IsContainAnyCommaSeparatedWordsInBoardTitle(downloadRuleSetting['exclude'], boardTitle):
-                logging.info(f"[{keyword['name']}] 전체 제외 키워드가 포함되어 있어요. [{downloadRuleSetting['exclude']}] '{boardTitle}'")
-                continue
-            if 'exclude' in keyword and keyword['exclude'] and self.IsContainAnyCommaSeparatedWordsInBoardTitle(keyword['exclude'], boardTitle):
-                logging.info(f"[{keyword['name']}] 제외 키워드가 포함되어 있어요. [{keyword['exclude']}]")
-                continue
-            if not self.isWordContainedInParam(keyword['option'], boardTitle):
-                logging.info(f"[{keyword['name']}] option이 달라요. [{keyword['option']}] '{boardTitle}'")
-                continue
-            if not self.isWordContainedInParam(keyword['option2'], boardTitle):
-                logging.info(f"[{keyword['name']}] option2가 달라요. [{keyword['option2']}] '{boardTitle}'")
-                continue
-            # 'include' 항목을 처리합니다.
-            if 'include' in downloadRuleSetting and downloadRuleSetting['include']:
-                includes = downloadRuleSetting['include'].split(', ')
-                for include in includes:
-                    if not self.isWordContainedInParam(include, boardTitle):
-                        logging.info(f"[{keyword['name']}] 포함되어야 하는 단어가 없어요. [{include}] '{boardTitle}'")
-                        break
-                else:
-                    return keyword
-            else:
+            if self.isKeywordMatchForTitle(keyword, boardTitle):
                 return keyword
         return {}
             
-    def load(self, listFileName: str):
+    def load(self, configDirPath: str, downloadRuleSetting: dict) -> None:
         try:
+            listFileName = os.path.join(configDirPath, downloadRuleSetting['list'])
             with open(listFileName, "r", encoding='utf-8') as jsonFile:
                 self.json = json.load(jsonFile)
         except json.JSONDecodeError:
             self.json = {'keywords':[]}
         self.listFileName = listFileName
+        self.downloadRuleSetting = downloadRuleSetting
 
     def save(self):
         if self.listFileName is None:
-            logging.warn("파일명이 지정되어 있지 않아요.")
+            logging.warning("파일명이 지정되어 있지 않아요.")
             return
         with open(self.listFileName, "w", encoding='utf-8') as jsonFile:
             json.dump(self.json, jsonFile, ensure_ascii=False, indent=2)
