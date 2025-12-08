@@ -4,5 +4,5 @@ charset-normalizer==2.0.12
 idna==3.7
 requests==2.32.4
 soupsieve==2.3.2.post1
-urllib3==2.5.0
+urllib3==2.6.0
 dataclasses-json==0.6.7
