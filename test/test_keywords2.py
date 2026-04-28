@@ -6,7 +6,7 @@ class KeywordsTest2(unittest.TestCase):
     def setUp(self):
         mySetting = setting.Setting()
         self.myKeywords = keywords.Keywords()
-        self.downloadRuleSetting = next((rule for rule in mySetting.json['downloadRules'] if rule['name'] == 'tvshow'), None)
+        self.downloadRuleSetting = next((rule for rule in mySetting.json['downloadRules'] if rule['name'] == 'tvshow'), {})
         self.myKeywords.load(mySetting.configDirPath, self.downloadRuleSetting)
 
     def test_getRegKeyword_대소문자_있으면(self):
