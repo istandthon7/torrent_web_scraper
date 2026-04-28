@@ -1,5 +1,4 @@
 import keywords
-import os
 import unittest
 import setting
 
