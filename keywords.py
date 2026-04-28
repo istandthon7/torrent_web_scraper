@@ -50,7 +50,7 @@ class Keywords(stringHelper.StringHelper):
         return {}
             
     def load(self, configDirPath: str, downloadRuleSetting: dict) -> None:
-        self.downloadRuleSetting = downloadRuleSetting or {}
+        self.downloadRuleSetting = downloadRuleSetting if downloadRuleSetting is not None else {}
 
         try:
             list_name = self.downloadRuleSetting.get('list')
