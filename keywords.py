@@ -1,18 +1,21 @@
 import json
 import logging
 import os
+from typing import Any
 import stringHelper
 
 class Keywords(stringHelper.StringHelper):
+    json: dict[str, Any]
 
     def addKeyword(self, keyword: str) -> None:
-        newKeyword = {"name": keyword, "option": "","option2":"", "exclude": ""}
+        newKeyword = {"name": keyword, "option": "", "option2": "", "exclude": ""}
+
         if self.isExist(keyword):
             logging.info(f"이미 존재하는 키워드입니다. '{keyword}'")
             return
-        if 'keywords' in self.json:
-            self.json['keywords'].append(newKeyword)
-            logging.info(f"키워드를 추가했습니다. '{newKeyword}'")
+
+        self.json.setdefault('keywords', []).append(newKeyword)
+        logging.info(f"키워드를 추가했습니다. '{newKeyword}'")
             # 저장은 직접
             #self.save()
 
@@ -47,14 +50,23 @@ class Keywords(stringHelper.StringHelper):
         return {}
             
     def load(self, configDirPath: str, downloadRuleSetting: dict) -> None:
+        self.downloadRuleSetting = downloadRuleSetting or {}
+
         try:
-            listFileName = os.path.join(configDirPath, downloadRuleSetting['list'])
+            list_name = self.downloadRuleSetting.get('list')
+            if not list_name:
+                self.json = {'keywords': []}
+                self.listFileName = None
+                return
+
+            listFileName = os.path.join(configDirPath, list_name)
             with open(listFileName, "r", encoding='utf-8') as jsonFile:
                 self.json = json.load(jsonFile)
-        except json.JSONDecodeError:
-            self.json = {'keywords':[]}
-        self.listFileName = listFileName
-        self.downloadRuleSetting = downloadRuleSetting
+
+            self.listFileName = listFileName
+        except (json.JSONDecodeError, FileNotFoundError, TypeError):
+            self.json = {'keywords': []}
+            self.listFileName = None
 
     def save(self):
         if self.listFileName is None:
@@ -70,9 +82,7 @@ class Keywords(stringHelper.StringHelper):
             logging.info(f"키워드 리스트에서 삭제했습니다. [{keyword}]")
 
     def isExist(self, name: str) -> bool:
-        if 'keywords' in self.json:
-            return any(k['name'] == name for k in self.json['keywords'])
-        return False
+        return any(k['name'] == name for k in self.json.get('keywords', []))
 
     def getSavePath(self, regKeyword: dict, basePath: str, createTitleFolder: bool) -> str:
         if not basePath:
