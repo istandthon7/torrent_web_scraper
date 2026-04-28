@@ -2,7 +2,7 @@ beautifulsoup4==4.11.1
 certifi>=2022.12.07
 charset-normalizer==2.0.12
 idna==3.7
-requests==2.32.4
+requests==2.33.0
 soupsieve==2.3.2.post1
 urllib3==2.6.0
 dataclasses-json==0.6.7
