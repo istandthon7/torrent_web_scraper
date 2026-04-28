@@ -2,7 +2,7 @@ import abc
 import argparse
 import base64
 import json
-import keywords
+from keywords import Keywords
 import logging
 import sys
 from typing import Any, Dict, List, Optional
@@ -19,7 +19,7 @@ class TorrentClient(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def deleteOlderEpisodes(self, regKeyword: str, episode: int) -> None:
+    def deleteOlderEpisodes(self, regKeyword: dict, episode: int, keywords: Keywords) -> None:
         raise NotImplementedError
 
     @abc.abstractmethod
@@ -102,21 +102,23 @@ class TransmissionClient(TorrentClient):
         logging.error(f"(트랜스미션)토렌트 추가에 실패하였습니다. {magnetLink}")
         return self.statusCode
 
-    def deleteOlderEpisodes(self, regKeyword: str, episode: int) -> None:
-        """ 상태가 Finished 이고 regKeyword 인 토렌트 id를 구해서 삭제 (리스트에 남아있지 않도록 자동삭제되도록 하는 기능) """
-        if episode is None:
+    def deleteOlderEpisodes(self, keyword: dict, episodeNumber: int, keywords: Keywords) -> None:
+        if not keyword or episodeNumber is None:
             return
         torrents = self.getAllTorrents()
         for torrent in torrents:
-            if regKeyword.lower() in torrent["name"].lower() and torrent["isFinished"]:
-                myKeywords = keywords.Keywords()
-                episodeNumber = myKeywords.getEpisodeNumber(torrent["name"])
-                if episodeNumber is None:
-                    logging.info(f'(트랜스미션) 에피소드 번호를 찾을 수 없습니다. {torrent["name"]}')
-                    continue
-                if episodeNumber < episode:
-                    self.deleteTorrent(torrent["id"])
-                    logging.info(f'(트랜스미션) 이전 에피소드를 리스트에서 삭제했습니다. {torrent["name"]}')
+            if not torrent.get("isFinished"):
+                continue
+            torrentName = torrent["name"]
+            if not keywords.isKeywordMatchForTitle(keyword, torrentName):
+                continue
+            torrentEpisodeNumber = keywords.getEpisodeNumber(torrentName)
+            if torrentEpisodeNumber is None:
+                logging.info(f'(트랜스미션) 에피소드 번호를 찾을 수 없습니다. {torrentName}')
+                continue
+            if torrentEpisodeNumber < episodeNumber:
+                self.deleteTorrent(torrent["id"])
+                logging.info(f'(트랜스미션) 이전 에피소드를 리스트에서 삭제했습니다. {torrentName}')
 
     def deleteTorrent(self, torrentId: int) -> int:
         payload = {
@@ -203,22 +205,23 @@ class QBittorrentClient(TorrentClient):
         response = requests.post(f"{self.url}/torrents/add", auth=self.auth, headers=self.headers, data=data, cookies=self.cookies)
         return response.status_code
 
-    def deleteOlderEpisodes(self, regKeyword: str, episode: int) -> None:
-        """ 상태가 downloading 이고 regKeyword 인 토렌트 id를 구해서 삭제 (리스트에 남아있지 않도록 자동삭제되도록 하는
-        기능이다.) """
-        if episode is None:
+    def deleteOlderEpisodes(self, keyword: dict, episodeNumber: int, keywords: Keywords) -> None:
+        if not keyword or episodeNumber is None:
             return
         torrents = self.getAllTorrents()
         for torrent in torrents:
-            myMyKeywords = keywords.Keywords()
-            if regKeyword.lower() in torrent["name"].lower() and torrent["progress"] == 1.0:
-                episodeNumber = myMyKeywords.getEpisodeNumber(torrent["name"])
-                if episodeNumber is None:
-                    logging.info(f'(qBittorrent) 에피소드 번호를 찾을 수 없습니다. {torrent["name"]}')
-                    continue
-                if episodeNumber < episode:
-                    self.deleteTorrent(torrent["hash"])
-                    logging.info(f'(qBittorrent) 이전 에피소드를 리스트에서 삭제했습니다. {torrent["name"]}')
+            if torrent["progress"] < 1.0:
+                continue
+            torrentName = torrent["name"]
+            if not keywords.isKeywordMatchForTitle(keyword, torrentName):
+                continue
+            torrentEpisodeNumber = keywords.getEpisodeNumber(torrentName)
+            if torrentEpisodeNumber is None:
+                logging.info(f'(qBittorrent) 에피소드 번호를 찾을 수 없습니다. {torrentName}')
+                continue
+            if torrentEpisodeNumber < episodeNumber:
+                self.deleteTorrent(torrent["hash"])
+                logging.info(f'(qBittorrent) 이전 에피소드를 리스트에서 삭제했습니다. {torrentName}')
 
     def getAllTorrents(self) -> List[Dict]:
         response = requests.get(f"{self.url}/torrents/info", headers=self.headers, auth=self.auth, cookies=self.cookies)

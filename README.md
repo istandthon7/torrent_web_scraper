@@ -1,6 +1,6 @@
 **실행 환경**  
 테스트 OS : 리눅스(우분투, 데비안, 라즈베리파이OS), 윈도우10, 윈도우11  
-실행 언어 : Python3.9이상  
+실행 언어 : Python3.10이상  
 토렌트 클라이언트: [Transmission](https://transmissionbt.com), [qBittorrent](https://www.qbittorrent.org/)
 
 # 1. 소개
@@ -110,6 +110,18 @@ __main__.py 폴더에서 다음 명령어를 실행하면 게시판에서 등록
 
 
 # 변경이력
+## 2.5.2
+* python 3.9 -> 3.10
+## 2.5.1.0
+* 알림제외 추가
+```json
+  "notification": {
+    
+    "keywords": ["키워드", "키워드2"],
+    "excludeKeywords": ["광고", "스팸", "테스트"],
+    
+  },
+```
 ## 2.5
 * python 3.8 -> 3.9
 * 보안이슈로 패키지 버전업(urllib3: 1.26.19->2.5.0, request: 2.32.2->2.32.4)

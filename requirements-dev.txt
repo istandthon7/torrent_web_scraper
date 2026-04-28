@@ -1,3 +1,6 @@
 pytest==7.4.0
 flake8==6.1.0
 testresources==2.0.1
+mypy==1.16.1
+types-requests
+types-beautifulsoup4

@@ -5,12 +5,13 @@ import logging
 import os
 import stat
 import sys
-from typing import Union
+from typing import List, Union
 from urllib.parse import urljoin
 
 import boardScraper
 import history
 import keywords
+from model.BoardItem import BoardItem
 import notification
 import osHelper
 import scraperHelpers
@@ -68,7 +69,7 @@ if __name__ == '__main__':
                 break
 
             myKeywords = keywords.Keywords()
-            myKeywords.load(os.path.join(mySetting.configDirPath, downloadRuleSetting['list']))
+            myKeywords.load(mySetting.configDirPath, downloadRuleSetting)
 
             #Step 3.  iterate page for this site/this category
             for pageNumber in range(1, board['scrapPage']+1):
@@ -77,7 +78,7 @@ if __name__ == '__main__':
                     logging.info(f'페이지 스크랩을 마칩니다.')
                     break;
 
-                boardItems = myBoardScraper.getBoardItems(site["mainUrl"]+board["url"], pageNumber, board["title"].get("tag"), board["title"].get("class"), board["title"].get("selector"))
+                boardItems: List[BoardItem] = myBoardScraper.getBoardItems(site["mainUrl"]+board["url"], pageNumber, board["title"].get("tag"), board["title"].get("class"), board["title"].get("selector"))
 
                 if not boardItems:
                     isScrapFail = True
@@ -99,7 +100,7 @@ if __name__ == '__main__':
                     boardItem.url = urljoin(site["mainUrl"], boardItem.url)
                     logging.debug(f'게시물 제목검색을 시작합니다. id: {boardItem.id}, {boardItem.title}, {boardItem.url}')
 
-                    regKeyword = myKeywords.getRegKeyword(boardItem.title, downloadRuleSetting)
+                    regKeyword = myKeywords.getRegKeyword(boardItem.title)
 
                     if boardItemIndex == 1 and pageNumber == 1:
                         toSaveBoardId = boardItem.id
@@ -138,6 +139,7 @@ if __name__ == '__main__':
 
                     if downloadRuleSetting.get("checkEpisodeNubmer", False):
                         episodeNumber = myKeywords.getEpisodeNumber(boardItem.title)
+                        logging.info(f'episode number : {episodeNumber}')
                         if episodeNumber is not None and magnetHistory.isEpisodeDownloaded(regKeyword["name"], episodeNumber):
                             logging.info(f"이미 추가한 회차입니다. [{regKeyword['name']}] '{boardItem.title}'")
                             continue;
@@ -154,11 +156,12 @@ if __name__ == '__main__':
 
                     client.addTorrent(magnet, downloadPath)
                     logging.info(f'추가하였습니다. [{regKeyword["name"]}] {magnet}, 폴더: [{downloadPath}]')
+                    # 추가 후 키워드 목록에서 제거
                     if downloadRuleSetting.get("removeFromList", False):
                         myKeywords.removeKeyword(regKeyword["name"])
-                        
+                    # 추가 후 토렌트 클라이언트에서 이전 에피소드 삭제
                     if downloadRuleSetting.get("deleteOlderEpisodes", False) and episodeNumber is not None:
-                        client.deleteOlderEpisodes(regKeyword["name"], episodeNumber)
+                        client.deleteOlderEpisodes(regKeyword, episodeNumber, myKeywords)
                         
                     magnetHistory.appendMagnet(site['name'], boardItem.title, magnet, regKeyword["name"])
                     

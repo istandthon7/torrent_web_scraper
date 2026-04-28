@@ -12,7 +12,7 @@ class Setting:
     설정파일을 self.json에 로딩, 저장한다. 
     버전이 변경되면 self.version을 변경해야 한다.(소스에서 아직 참조하지 않으나 필요할 수있음)
     """
-    version = '2.5.0.0'
+    version = '2.5.2'
 
     currentPath = os.path.realpath(os.path.dirname(__file__))
     configDirPath = os.path.join(currentPath, "config")
@@ -42,8 +42,9 @@ class Setting:
             handler = RotatingFileHandler(logFilePath, maxBytes=self.json["logging"].get("maxBytes", 1048576), backupCount=self.json["logging"].get("backupCount", 5))
             handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s:%(message)s'))
             logger = logging.getLogger()
+            if not any(isinstance(h, RotatingFileHandler) and h.baseFilename == logFilePath for h in logger.handlers):
+                logger.addHandler(handler)
             logger.setLevel(numericLevel)
-            logger.addHandler(handler)
             logging.debug("로그 레벨: "+loglevel)
             logging.debug("로그파일 경로: "+logFilePath)
 
